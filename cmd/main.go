@@ -8,7 +8,7 @@ import (
 	"log"
 	"runtime"
 
-	"github.com/miu200521358/pmx_renamer/pkg/ui"
+	"github.com/miu200521358/pmx_translator/pkg/ui"
 	"github.com/miu200521358/walk/pkg/walk"
 
 	"github.com/miu200521358/mlib_go/pkg/interface/app"

@@ -9,20 +9,21 @@ import (
 	"github.com/miu200521358/mlib_go/pkg/domain/core"
 	"github.com/miu200521358/mlib_go/pkg/domain/pmx"
 	"github.com/miu200521358/mlib_go/pkg/infrastructure/repository"
+	"github.com/miu200521358/mlib_go/pkg/mutils/mi18n"
 	"github.com/miu200521358/mlib_go/pkg/mutils/mlog"
 )
 
 func translate(text string, langDict *core.CsvModel, langIndex int, modelName string) string {
 	// 先にモデル名一致の翻訳を行う
 	for _, row := range langDict.Records() {
-		if row[0] == modelName {
+		if row[0] == modelName && row[1] != "" {
 			text = strings.ReplaceAll(text, row[1], row[langIndex])
 		}
 	}
 
 	// モデル名を問わない翻訳
 	for _, row := range langDict.Records() {
-		if row[0] == "" {
+		if row[0] == "" && row[1] != "" {
 			text = strings.ReplaceAll(text, row[1], row[langIndex])
 		}
 	}
@@ -96,7 +97,7 @@ func Save(model *pmx.PmxModel, langDict *core.CsvModel, outputPath string) error
 		return err
 	}
 
-	mlog.ILT("SUCCESS", "日本語化モデル出力成功\n%s", outputJpPath)
+	mlog.IT(mi18n.T("出力成功"), mi18n.T("出力成功メッセージ", map[string]interface{}{"Path": outputJpPath}))
 
 	return nil
 }

@@ -1,21 +1,20 @@
 package ui
 
 import (
-	"fmt"
-
 	"github.com/miu200521358/mlib_go/pkg/domain/core"
 	"github.com/miu200521358/mlib_go/pkg/domain/pmx"
 	"github.com/miu200521358/mlib_go/pkg/domain/vmd"
 	"github.com/miu200521358/mlib_go/pkg/interface/controller"
 	"github.com/miu200521358/mlib_go/pkg/interface/controller/widget"
 	"github.com/miu200521358/mlib_go/pkg/mutils"
+	"github.com/miu200521358/mlib_go/pkg/mutils/mi18n"
 	"github.com/miu200521358/mlib_go/pkg/mutils/mlog"
-	"github.com/miu200521358/pmx_renamer/pkg/usecase"
+	"github.com/miu200521358/pmx_translator/pkg/usecase"
 	"github.com/miu200521358/walk/pkg/walk"
 )
 
-func newTab(controlWindow *controller.ControlWindow, toolState *ToolState) {
-	toolState.Tab = widget.NewMTabPage("翻訳")
+func newTranslateTab(controlWindow *controller.ControlWindow, toolState *ToolState) {
+	toolState.Tab = widget.NewMTabPage(mi18n.T("名称置換"))
 	controlWindow.AddTabPage(toolState.Tab.TabPage)
 
 	toolState.Tab.SetLayout(walk.NewVBoxLayout())
@@ -28,7 +27,7 @@ func newTab(controlWindow *controller.ControlWindow, toolState *ToolState) {
 		if err != nil {
 			widget.RaiseError(err)
 		}
-		label.SetText("Step1Label")
+		label.SetText(mi18n.T("TranslateTabLabel"))
 	}
 
 	walk.NewVSeparator(toolState.Tab)
@@ -38,9 +37,9 @@ func newTab(controlWindow *controller.ControlWindow, toolState *ToolState) {
 			controlWindow,
 			toolState.Tab,
 			"OriginalPmx",
-			"日本語化対象モデル(Pmx)",
-			"日本語化対象モデルPmxファイルを選択してください",
-			"日本語化対象モデルの使い方")
+			mi18n.T("置換対象モデル(Pmx)"),
+			mi18n.T("置換対象モデルPmxファイルを選択してください"),
+			mi18n.T("置換対象モデルの使い方"))
 
 		toolState.OriginalPmxPicker.SetOnPathChanged(func(path string) {
 			if data, err := toolState.OriginalPmxPicker.Load(); err == nil {
@@ -50,7 +49,7 @@ func newTab(controlWindow *controller.ControlWindow, toolState *ToolState) {
 
 				toolState.TranslateModel.Model = data.(*pmx.PmxModel)
 			} else {
-				mlog.E(fmt.Sprintf("読み込み失敗: %s", err))
+				mlog.E(mi18n.T("読み込み失敗"), err)
 			}
 		})
 	}
@@ -60,15 +59,15 @@ func newTab(controlWindow *controller.ControlWindow, toolState *ToolState) {
 			controlWindow,
 			toolState.Tab,
 			"LangCsv",
-			"日本誤翻訳辞書(csv)",
-			"日本誤翻訳辞書Csvファイルを選択してください",
-			"日本誤翻訳辞書の使い方")
+			mi18n.T("置換辞書データ(Csv)"),
+			mi18n.T("置換辞書データファイルを選択してください"),
+			mi18n.T("置換辞書データの使い方"))
 
 		toolState.LangCsvPicker.SetOnPathChanged(func(path string) {
 			if data, err := toolState.LangCsvPicker.Load(); err == nil {
 				toolState.TranslateModel.LangCsv = data.(*core.CsvModel)
 			} else {
-				mlog.E(fmt.Sprintf("読み込み失敗: %s", err))
+				mlog.E(mi18n.T("読み込み失敗"), err)
 			}
 		})
 	}
@@ -77,9 +76,9 @@ func newTab(controlWindow *controller.ControlWindow, toolState *ToolState) {
 		toolState.OutputPmxPicker = widget.NewPmxSaveFilePicker(
 			controlWindow,
 			toolState.Tab,
-			"出力モデル(Pmx)",
-			"出力モデル(Pmx)ファイルパスを指定してください",
-			"出力モデルの使い方")
+			mi18n.T("出力モデル(Pmx)"),
+			mi18n.T("出力モデル(Pmx)ファイルパスを指定してください"),
+			mi18n.T("出力モデルの使い方"))
 	}
 
 	walk.NewVSpacer(toolState.Tab)
@@ -90,7 +89,7 @@ func newTab(controlWindow *controller.ControlWindow, toolState *ToolState) {
 		if err != nil {
 			widget.RaiseError(err)
 		}
-		toolState.SaveButton.SetText("保存")
+		toolState.SaveButton.SetText(mi18n.T("保存"))
 		toolState.SaveButton.Clicked().Attach(toolState.onClickSave)
 	}
 
@@ -113,7 +112,7 @@ func newTab(controlWindow *controller.ControlWindow, toolState *ToolState) {
 
 func (toolState *ToolState) onClickSave() {
 	if !toolState.OriginalPmxPicker.Exists() {
-		mlog.ILT("設定失敗", "Step1失敗")
+		mlog.ILT("生成失敗", "生成失敗メッセージ")
 		return
 	}
 
@@ -121,7 +120,7 @@ func (toolState *ToolState) onClickSave() {
 		toolState.OriginalPmxPicker.GetCache().(*pmx.PmxModel),
 		toolState.LangCsvPicker.GetCache().(*core.CsvModel),
 		toolState.OutputPmxPicker.GetPath()); err != nil {
-		mlog.E(fmt.Sprintf("保存失敗: %s", err))
+		mlog.ET(mi18n.T("出力失敗"), mi18n.T("出力失敗メッセージ", map[string]interface{}{"Error": err.Error()}))
 		return
 	}
 
