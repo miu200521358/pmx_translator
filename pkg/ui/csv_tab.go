@@ -84,7 +84,7 @@ func (toolState *ToolState) onClickCsvSave() {
 	if err := usecase.CsvSave(
 		toolState.OriginalCsvPmxPicker.GetCache().(*pmx.PmxModel),
 		toolState.OutputCsvPicker.GetPath()); err != nil {
-		mlog.ET(mi18n.T("出力失敗"), mi18n.T("出力失敗メッセージ", map[string]interface{}{"Error": err.Error()}))
+		mlog.ET(mi18n.T("出力失敗"), mi18n.T("Csv出力失敗メッセージ", map[string]interface{}{"Error": err.Error()}))
 		return
 	}
 

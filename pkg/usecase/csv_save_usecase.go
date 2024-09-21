@@ -1,102 +1,133 @@
 package usecase
 
 import (
-	"unicode"
+	"embed"
+	"io/fs"
+	"path/filepath"
+	"strings"
 
 	"github.com/miu200521358/mlib_go/pkg/domain/core"
 	"github.com/miu200521358/mlib_go/pkg/domain/pmx"
 	"github.com/miu200521358/mlib_go/pkg/infrastructure/repository"
+	"github.com/miu200521358/mlib_go/pkg/mutils"
 	"github.com/miu200521358/mlib_go/pkg/mutils/mi18n"
 	"github.com/miu200521358/mlib_go/pkg/mutils/mlog"
-	"golang.org/x/text/encoding/japanese"
-	"golang.org/x/text/transform"
 )
 
-// 簡体中国語の範囲を定義
-var simplifiedChineseRanges = []*unicode.RangeTable{
-	{
-		R16: []unicode.Range16{
-			{Lo: 0x4E00, Hi: 0x9FFF, Stride: 1}, // CJK Unified Ideographs
-			{Lo: 0x3400, Hi: 0x4DBF, Stride: 1}, // CJK Unified Ideographs Extension A
-			{Lo: 0xF900, Hi: 0xFAFF, Stride: 1}, // CJK Compatibility Ideographs
-		},
-		R32: []unicode.Range32{
-			{Lo: 0x20000, Hi: 0x2A6DF, Stride: 1}, // CJK Unified Ideographs Extension B
-			{Lo: 0x2A700, Hi: 0x2B73F, Stride: 1}, // CJK Unified Ideographs Extension C
-			{Lo: 0x2B740, Hi: 0x2B81F, Stride: 1}, // CJK Unified Ideographs Extension D
-			{Lo: 0x2B820, Hi: 0x2CEAF, Stride: 1}, // CJK Unified Ideographs Extension E
-		},
-	},
+//go:embed lang/*.txt
+var langFiles embed.FS
+
+func isJapaneseString(ks string, s string) bool {
+	for _, r := range s {
+		if isAllowedCharacter(r) {
+			continue
+		} else {
+			if strings.Contains(ks, string(r)) {
+				continue
+			}
+			return false
+		}
+	}
+	return true
 }
 
-// 文字列に簡体中国語の文字が含まれているかどうかをチェックする
-func containsSimplifiedChinese(s string) bool {
-	for _, r := range s {
-		if unicode.IsOneOf(simplifiedChineseRanges, r) {
+func isAllowedCharacter(r rune) bool {
+	switch {
+	case r >= 0x0000 && r <= 0x007F: // ASCII
+		return true
+	case r >= 0x00A2 && r <= 0x00F7: // ASCII
+		return true
+	case r >= 0x3000 && r <= 0x309F: // Hiragana
+		return true
+	case r >= 0xFF61 && r <= 0xFF9F: // Half-width Katakana
+		return true
+	case r >= 0x30A0 && r <= 0x30FF: // Full-width Katakana
+		return true
+	case r >= 0xFF01 && r <= 0xFF5D: // Full-width Alphanumeric
+		return true
+	case r >= 0x4E00 && r <= 0x9FA0: // Kanji (Shift-JIS)
+		return false
+	default:
+		return false
+	}
+}
+
+func loadKanji() (string, error) {
+	buf, err := fs.ReadFile(langFiles, "lang/kanji.txt")
+	if err != nil {
+		mlog.E("LoadKanji error: %v", err)
+		return "", err
+	}
+
+	return string(buf), nil
+}
+
+func existText(records [][]string, txt string) bool {
+	for _, row := range records {
+		if row[1] == txt {
 			return true
 		}
 	}
 	return false
 }
 
-// Shift-JISで解釈できる文字列かどうかを判定する
-func isValidShiftJis(str string) bool {
-	// 簡体中国語の文字が含まれているかチェック
-	if containsSimplifiedChinese(str) {
-		return false
-	}
-
-	// Create a transformer for Shift-JIS encoding
-	encoder := japanese.ShiftJIS.NewEncoder()
-
-	// Transform the input string to Shift-JIS
-	if _, _, err := transform.String(encoder, str); err != nil {
-		return false
-	}
-	return true
-}
-
 func CsvSave(model *pmx.PmxModel, outputPath string) error {
 	records := make([][]string, 0)
+	ks, err := loadKanji()
+	if err != nil {
+		return err
+	}
+
+	// ファイルパスの中国語もピックアップ
+	path, fileName, _ := mutils.SplitPath(model.Path())
+	if !isJapaneseString(ks, fileName) && !existText(records, fileName) {
+		records = append(records, []string{fileName, fileName})
+	}
+
+	for _, p := range strings.Split(path, string(filepath.Separator)) {
+		if !isJapaneseString(ks, p) && !existText(records, p) {
+			records = append(records, []string{fileName, p})
+		}
+	}
 
 	modelName := model.Name()
-	if !isValidShiftJis(modelName) {
-		records = append(records, []string{modelName, modelName})
+	if !isJapaneseString(ks, modelName) && !existText(records, modelName) {
+		records = append(records, []string{fileName, modelName})
 	}
 
 	for _, mat := range model.Materials.Data {
-		if !isValidShiftJis(mat.Name()) {
-			records = append(records, []string{modelName, mat.Name()})
+		if !isJapaneseString(ks, mat.Name()) && !existText(records, mat.Name()) {
+			records = append(records, []string{fileName, mat.Name()})
 		}
 	}
 
 	for _, bone := range model.Bones.Data {
-		if !isValidShiftJis(bone.Name()) {
-			records = append(records, []string{modelName, bone.Name()})
+		if !isJapaneseString(ks, bone.Name()) && !existText(records, bone.Name()) {
+			records = append(records, []string{fileName, bone.Name()})
 		}
 	}
 
 	for _, morph := range model.Morphs.Data {
-		if !isValidShiftJis(morph.Name()) {
-			records = append(records, []string{modelName, morph.Name()})
+		if !isJapaneseString(ks, morph.Name()) && !existText(records, morph.Name()) {
+			records = append(records, []string{fileName, morph.Name()})
 		}
 	}
 
 	for _, disp := range model.DisplaySlots.Data {
-		if !isValidShiftJis(disp.Name()) {
-			records = append(records, []string{modelName, disp.Name()})
+		if !isJapaneseString(ks, disp.Name()) && !existText(records, disp.Name()) {
+			records = append(records, []string{fileName, disp.Name()})
 		}
 	}
 
 	for _, rb := range model.RigidBodies.Data {
-		if !isValidShiftJis(rb.Name()) {
-			records = append(records, []string{modelName, rb.Name()})
+		if !isJapaneseString(ks, rb.Name()) && !existText(records, rb.Name()) {
+			records = append(records, []string{fileName, rb.Name()})
 		}
 	}
 
 	for _, joint := range model.Joints.Data {
-		if !isValidShiftJis(joint.Name()) {
-			records = append(records, []string{modelName, joint.Name()})
+		if !isJapaneseString(ks, joint.Name()) && !existText(records, joint.Name()) {
+			records = append(records, []string{fileName, joint.Name()})
 		}
 	}
 
@@ -107,7 +138,7 @@ func CsvSave(model *pmx.PmxModel, outputPath string) error {
 		return err
 	}
 
-	mlog.IT(mi18n.T("出力成功"), mi18n.T("出力成功メッセージ", map[string]interface{}{"Path": outputPath}))
+	mlog.IT(mi18n.T("出力成功"), mi18n.T("Csv出力成功メッセージ", map[string]interface{}{"Path": outputPath}))
 
 	return nil
 }

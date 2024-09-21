@@ -2,10 +2,7 @@ module github.com/miu200521358/pmx_translator
 
 go 1.22.4
 
-require (
-	github.com/miu200521358/walk v0.0.4
-	golang.org/x/text v0.14.0
-)
+require github.com/miu200521358/walk v0.0.4
 
 require (
 	github.com/go-gl/gl v0.0.0-20231021071112-07e5d0ea2e71 // indirect
@@ -19,6 +16,7 @@ require (
 	github.com/nicksnyder/go-i18n/v2 v2.4.0 // indirect
 	github.com/petar/GoLLRB v0.0.0-20210522233825-ae3b015fd3e9 // indirect
 	golang.org/x/exp v0.0.0-20231110203233-9a3e6036ecaa // indirect
+	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/tools v0.15.0 // indirect
 	gonum.org/v1/gonum v0.15.0 // indirect
 )

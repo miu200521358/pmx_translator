@@ -9,6 +9,7 @@ import (
 	"github.com/miu200521358/mlib_go/pkg/domain/core"
 	"github.com/miu200521358/mlib_go/pkg/domain/pmx"
 	"github.com/miu200521358/mlib_go/pkg/infrastructure/repository"
+	"github.com/miu200521358/mlib_go/pkg/mutils"
 	"github.com/miu200521358/mlib_go/pkg/mutils/mi18n"
 	"github.com/miu200521358/mlib_go/pkg/mutils/mlog"
 )
@@ -32,47 +33,49 @@ func translate(text string, langDict *core.CsvModel, langIndex int, modelName st
 }
 
 func Save(model *pmx.PmxModel, langDict *core.CsvModel, outputPath string) error {
+	_, fileName, _ := mutils.SplitPath(outputPath)
+
 	modelName := model.Name()
-	model.SetName(translate(modelName, langDict, 2, modelName))
-	model.SetEnglishName(translate(modelName, langDict, 3, modelName))
+	model.SetName(translate(modelName, langDict, 2, fileName))
+	model.SetEnglishName(translate(modelName, langDict, 3, fileName))
 
 	for _, mat := range model.Materials.Data {
 		chTxt := mat.Name()
-		mat.SetName(translate(chTxt, langDict, 2, modelName))
-		mat.SetEnglishName(translate(chTxt, langDict, 3, modelName))
+		mat.SetName(translate(chTxt, langDict, 2, fileName))
+		mat.SetEnglishName(translate(chTxt, langDict, 3, fileName))
 	}
 
 	for _, bone := range model.Bones.Data {
 		chTxt := bone.Name()
-		bone.SetName(translate(chTxt, langDict, 2, modelName))
-		bone.SetEnglishName(translate(chTxt, langDict, 3, modelName))
+		bone.SetName(translate(chTxt, langDict, 2, fileName))
+		bone.SetEnglishName(translate(chTxt, langDict, 3, fileName))
 	}
 
 	for _, morph := range model.Morphs.Data {
 		chTxt := morph.Name()
-		morph.SetName(translate(chTxt, langDict, 2, modelName))
-		morph.SetEnglishName(translate(chTxt, langDict, 3, modelName))
+		morph.SetName(translate(chTxt, langDict, 2, fileName))
+		morph.SetEnglishName(translate(chTxt, langDict, 3, fileName))
 	}
 
 	for _, disp := range model.DisplaySlots.Data {
 		chTxt := disp.Name()
-		disp.SetName(translate(chTxt, langDict, 2, modelName))
-		disp.SetEnglishName(translate(chTxt, langDict, 3, modelName))
+		disp.SetName(translate(chTxt, langDict, 2, fileName))
+		disp.SetEnglishName(translate(chTxt, langDict, 3, fileName))
 	}
 
 	for _, rb := range model.RigidBodies.Data {
 		chTxt := rb.Name()
-		rb.SetName(translate(chTxt, langDict, 2, modelName))
-		rb.SetEnglishName(translate(chTxt, langDict, 3, modelName))
+		rb.SetName(translate(chTxt, langDict, 2, fileName))
+		rb.SetEnglishName(translate(chTxt, langDict, 3, fileName))
 	}
 
 	for _, joint := range model.Joints.Data {
 		chTxt := joint.Name()
-		joint.SetName(translate(chTxt, langDict, 2, modelName))
-		joint.SetEnglishName(translate(chTxt, langDict, 3, modelName))
+		joint.SetName(translate(chTxt, langDict, 2, fileName))
+		joint.SetEnglishName(translate(chTxt, langDict, 3, fileName))
 	}
 
-	outputJpPath := translate(outputPath, langDict, 2, modelName)
+	outputJpPath := translate(outputPath, langDict, 2, fileName)
 
 	if outputJpPath != outputPath {
 		chDir, _ := filepath.Split(outputPath)
@@ -85,7 +88,7 @@ func Save(model *pmx.PmxModel, langDict *core.CsvModel, outputPath string) error
 
 		for _, tex := range model.Textures.Data {
 			chPath := tex.Name()
-			jpPath := translate(chPath, langDict, 2, modelName)
+			jpPath := translate(chPath, langDict, 2, fileName)
 			tex.SetName(jpPath)
 
 			copyTex(filepath.Join(chDir, chPath), filepath.Join(jpDir, jpPath))
