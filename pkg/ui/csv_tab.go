@@ -14,39 +14,42 @@ import (
 )
 
 func newCsvTab(controlWindow *controller.ControlWindow, toolState *ToolState) {
-	toolState.Tab = widget.NewMTabPage(mi18n.T("Csv出力"))
-	controlWindow.AddTabPage(toolState.Tab.TabPage)
+	toolState.CsvTab = widget.NewMTabPage(mi18n.T("Csv出力"))
+	controlWindow.AddTabPage(toolState.CsvTab.TabPage)
 
-	toolState.Tab.SetLayout(walk.NewVBoxLayout())
+	toolState.CsvTab.SetLayout(walk.NewVBoxLayout())
 
 	var err error
 
 	{
 		// Step1. ファイル選択文言
-		label, err := walk.NewTextLabel(toolState.Tab)
+		label, err := walk.NewTextLabel(toolState.CsvTab)
 		if err != nil {
 			widget.RaiseError(err)
 		}
 		label.SetText(mi18n.T("CsvTabLabel"))
 	}
 
-	walk.NewVSeparator(toolState.Tab)
+	walk.NewVSeparator(toolState.CsvTab)
 
 	{
 		toolState.OriginalCsvPmxPicker = widget.NewPmxReadFilePicker(
 			controlWindow,
-			toolState.Tab,
+			toolState.CsvTab,
 			"OriginalPmx",
 			mi18n.T("置換対象モデル(Pmx)"),
 			mi18n.T("置換対象モデルPmxファイルを選択してください"),
 			mi18n.T("置換対象モデルの使い方"))
 
 		toolState.OriginalCsvPmxPicker.SetOnPathChanged(func(path string) {
-			if _, err := toolState.OriginalCsvPmxPicker.Load(); err == nil {
+			if data, err := toolState.OriginalCsvPmxPicker.Load(); err == nil {
 				// 出力パス設定
 				outputPath := mutils.CreateOutputPath(path, "")
 				outputPath = strings.ReplaceAll(outputPath, ".pmx", ".csv")
 				toolState.OutputCsvPicker.SetPath(outputPath)
+
+				// CsvTableView
+				toolState.CsvTableView.ResetModel(data.(*pmx.PmxModel))
 			} else {
 				mlog.E(mi18n.T("読み込み失敗"), err)
 			}
@@ -56,17 +59,22 @@ func newCsvTab(controlWindow *controller.ControlWindow, toolState *ToolState) {
 	{
 		toolState.OutputCsvPicker = widget.NewCsvSaveFilePicker(
 			controlWindow,
-			toolState.Tab,
+			toolState.CsvTab,
 			mi18n.T("出力Csv"),
 			mi18n.T("出力Csvファイルパスを指定してください"),
 			mi18n.T("出力Csvファイルパスの使い方"))
 	}
 
-	walk.NewVSpacer(toolState.Tab)
+	{
+		// CsvTableView
+		toolState.CsvTableView = NewCsvTableView(toolState.CsvTab, nil)
+	}
+
+	walk.NewVSpacer(toolState.CsvTab)
 
 	// OKボタン
 	{
-		toolState.SaveButton, err = walk.NewPushButton(toolState.Tab)
+		toolState.SaveButton, err = walk.NewPushButton(toolState.CsvTab)
 		if err != nil {
 			widget.RaiseError(err)
 		}

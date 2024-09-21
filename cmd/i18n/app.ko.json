@@ -124,7 +124,7 @@
         "translation": "Csv 데이터 출력에 실패했습니다.\n에러 메시지: {{.Error}}"
     },
     {
-        "id": "Csv成功メッセージ",
+        "id": "Csv出力成功メッセージ",
         "translation": "Csv 데이터 출력에 성공했습니다.\n\n{{.Path}}"
     }
 ]

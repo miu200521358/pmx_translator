@@ -124,7 +124,55 @@
         "translation": "Csvデータの出力に失敗しました\nエラーメッセージ: {{.Error}}"
     },
     {
-        "id": "Csv成功メッセージ",
+        "id": "Csv出力成功メッセージ",
         "translation": "Csvデータの出力に成功しました\n\n{{.Path}}"
+    },
+    {
+        "id": "インデックス",
+        "translation": "Idx"
+    },
+    {
+        "id": "種類",
+        "translation": "種類"
+    },
+    {
+        "id": "名前",
+        "translation": "名前"
+    },
+    {
+        "id": "材質",
+        "translation": "材質"
+    },
+    {
+        "id": "ボーン",
+        "translation": "ボーン"
+    },
+    {
+        "id": "モーフ",
+        "translation": "モーフ"
+    },
+    {
+        "id": "表示枠",
+        "translation": "表示枠"
+    },
+    {
+        "id": "剛体",
+        "translation": "剛体"
+    },
+    {
+        "id": "ジョイント",
+        "translation": "ジョイント"
+    },
+    {
+        "id": "テクスチャ",
+        "translation": "テクスチャ"
+    },
+    {
+        "id": "日本語名称",
+        "translation": "日本語名称"
+    },
+    {
+        "id": "英語名称",
+        "translation": "英語名称"
     }
 ]

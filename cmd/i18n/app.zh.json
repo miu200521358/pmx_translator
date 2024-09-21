@@ -124,7 +124,7 @@
         "translation": "Csv数据输出失败。\n错误信息：{{.Error}}"
     },
     {
-        "id": "Csv成功メッセージ",
+        "id": "Csv出力成功メッセージ",
         "translation": "Csv数据输出成功。\n\n{{.Path}}"
     }
 ]

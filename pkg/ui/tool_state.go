@@ -19,6 +19,8 @@ type ToolState struct {
 	OriginalCsvPmxPicker *widget.FilePicker
 	OutputCsvPicker      *widget.FilePicker
 	SaveButton           *walk.PushButton
+	CsvTab               *widget.MTabPage
+	CsvTableView         *CsvTableView
 }
 
 func NewToolState(app *app.MApp, controlWindow *controller.ControlWindow) *ToolState {

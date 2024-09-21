@@ -14,8 +14,8 @@ import (
 	"github.com/miu200521358/mlib_go/pkg/mutils/mlog"
 )
 
-//go:embed lang/*.txt
-var langFiles embed.FS
+//go:embed chara/*.txt
+var charaFiles embed.FS
 
 func isJapaneseString(ks string, s string) bool {
 	for _, r := range s {
@@ -45,17 +45,15 @@ func isAllowedCharacter(r rune) bool {
 		return true
 	case r >= 0xFF01 && r <= 0xFF5D: // Full-width Alphanumeric
 		return true
-	case r >= 0x4E00 && r <= 0x9FA0: // Kanji (Shift-JIS)
-		return false
 	default:
 		return false
 	}
 }
 
 func loadKanji() (string, error) {
-	buf, err := fs.ReadFile(langFiles, "lang/kanji.txt")
+	buf, err := fs.ReadFile(charaFiles, "chara/shiftjis.txt")
 	if err != nil {
-		mlog.E("LoadKanji error: %v", err)
+		mlog.E("LoadShiftjis error: %v", err)
 		return "", err
 	}
 
