@@ -26,10 +26,10 @@ func TestIsJapaneseString(t *testing.T) {
 		{"こんにちは🍣🍣", false},   // Mixed Japanese and Emoji
 	}
 
-	ks, _ := loadKanji()
+	ks, _ := LoadKanji()
 
 	for _, test := range tests {
-		result := isJapaneseString(ks, test.input)
+		result := IsJapaneseString(ks, test.input)
 		if result != test.expected {
 			t.Errorf("isJapaneseString(%q) = %v; want %v", test.input, result, test.expected)
 		}

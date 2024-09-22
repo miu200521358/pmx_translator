@@ -6,7 +6,6 @@ import (
 	"github.com/miu200521358/mlib_go/pkg/domain/vmd"
 	"github.com/miu200521358/mlib_go/pkg/interface/controller"
 	"github.com/miu200521358/mlib_go/pkg/interface/controller/widget"
-	"github.com/miu200521358/mlib_go/pkg/mutils"
 	"github.com/miu200521358/mlib_go/pkg/mutils/mi18n"
 	"github.com/miu200521358/mlib_go/pkg/mutils/mlog"
 	"github.com/miu200521358/pmx_translator/pkg/usecase"
@@ -14,28 +13,27 @@ import (
 )
 
 func newTranslateTab(controlWindow *controller.ControlWindow, toolState *ToolState) {
-	toolState.Tab = widget.NewMTabPage(mi18n.T("名称置換"))
-	controlWindow.AddTabPage(toolState.Tab.TabPage)
+	toolState.TranslateTab = widget.NewMTabPage(mi18n.T("名称置換"))
+	controlWindow.AddTabPage(toolState.TranslateTab.TabPage)
 
-	toolState.Tab.SetLayout(walk.NewVBoxLayout())
+	toolState.TranslateTab.SetLayout(walk.NewVBoxLayout())
 
 	var err error
 
 	{
-		// Step1. ファイル選択文言
-		label, err := walk.NewTextLabel(toolState.Tab)
+		label, err := walk.NewTextLabel(toolState.TranslateTab)
 		if err != nil {
 			widget.RaiseError(err)
 		}
 		label.SetText(mi18n.T("TranslateTabLabel"))
 	}
 
-	walk.NewVSeparator(toolState.Tab)
+	walk.NewVSeparator(toolState.TranslateTab)
 
 	{
 		toolState.OriginalPmxPicker = widget.NewPmxReadFilePicker(
 			controlWindow,
-			toolState.Tab,
+			toolState.TranslateTab,
 			"OriginalPmx",
 			mi18n.T("置換対象モデル(Pmx)"),
 			mi18n.T("置換対象モデルPmxファイルを選択してください"),
@@ -43,11 +41,17 @@ func newTranslateTab(controlWindow *controller.ControlWindow, toolState *ToolSta
 
 		toolState.OriginalPmxPicker.SetOnPathChanged(func(path string) {
 			if data, err := toolState.OriginalPmxPicker.Load(); err == nil {
-				// 出力パス設定
-				outputPath := mutils.CreateOutputPath(path, "jp")
-				toolState.OutputPmxPicker.SetPath(outputPath)
-
 				toolState.TranslateModel.Model = data.(*pmx.PmxModel)
+
+				if toolState.TranslateModel.LangCsv != nil {
+					toolState.TranslateTableView.ResetModel(
+						toolState.TranslateModel.Model, toolState.TranslateModel.LangCsv)
+
+					// 出力パス設定
+					outputPath := usecase.TranslateOutputPath(
+						toolState.TranslateModel.Model, toolState.TranslateTableView.NameModel.Records)
+					toolState.OutputPmxPicker.SetPath(outputPath)
+				}
 			} else {
 				mlog.E(mi18n.T("読み込み失敗"), err)
 			}
@@ -57,7 +61,7 @@ func newTranslateTab(controlWindow *controller.ControlWindow, toolState *ToolSta
 	{
 		toolState.LangCsvPicker = widget.NewCsvReadFilePicker(
 			controlWindow,
-			toolState.Tab,
+			toolState.TranslateTab,
 			"LangCsv",
 			mi18n.T("置換辞書データ(Csv)"),
 			mi18n.T("置換辞書データファイルを選択してください"),
@@ -66,26 +70,38 @@ func newTranslateTab(controlWindow *controller.ControlWindow, toolState *ToolSta
 		toolState.LangCsvPicker.SetOnPathChanged(func(path string) {
 			if data, err := toolState.LangCsvPicker.Load(); err == nil {
 				toolState.TranslateModel.LangCsv = data.(*core.CsvModel)
+
+				if toolState.TranslateModel.Model != nil {
+					toolState.TranslateTableView.ResetModel(
+						toolState.TranslateModel.Model, toolState.TranslateModel.LangCsv)
+
+					// 出力パス設定
+					outputPath := usecase.TranslateOutputPath(
+						toolState.TranslateModel.Model, toolState.TranslateTableView.NameModel.Records)
+					toolState.OutputPmxPicker.SetPath(outputPath)
+				}
 			} else {
 				mlog.E(mi18n.T("読み込み失敗"), err)
 			}
 		})
 	}
 
+	toolState.TranslateTableView = NewTranslateTableView(toolState.TranslateTab, nil, nil)
+
 	{
 		toolState.OutputPmxPicker = widget.NewPmxSaveFilePicker(
 			controlWindow,
-			toolState.Tab,
+			toolState.TranslateTab,
 			mi18n.T("出力モデル(Pmx)"),
 			mi18n.T("出力モデル(Pmx)ファイルパスを指定してください"),
 			mi18n.T("出力モデルの使い方"))
 	}
 
-	walk.NewVSpacer(toolState.Tab)
+	walk.NewVSpacer(toolState.TranslateTab)
 
 	// OKボタン
 	{
-		toolState.SaveButton, err = walk.NewPushButton(toolState.Tab)
+		toolState.SaveButton, err = walk.NewPushButton(toolState.TranslateTab)
 		if err != nil {
 			widget.RaiseError(err)
 		}
@@ -118,7 +134,7 @@ func (toolState *ToolState) onClickSave() {
 
 	if err := usecase.Save(
 		toolState.OriginalPmxPicker.GetCache().(*pmx.PmxModel),
-		toolState.LangCsvPicker.GetCache().(*core.CsvModel),
+		toolState.TranslateTableView.NameModel.Records,
 		toolState.OutputPmxPicker.GetPath()); err != nil {
 		mlog.ET(mi18n.T("出力失敗"), mi18n.T("出力失敗メッセージ", map[string]interface{}{"Error": err.Error()}))
 		return

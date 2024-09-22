@@ -1,17 +1,22 @@
 package ui
 
 import (
+	"path/filepath"
 	"sort"
+	"strings"
 
 	"github.com/miu200521358/mlib_go/pkg/domain/pmx"
+	"github.com/miu200521358/mlib_go/pkg/mutils"
 	"github.com/miu200521358/mlib_go/pkg/mutils/mi18n"
+	"github.com/miu200521358/pmx_translator/pkg/domain"
+	"github.com/miu200521358/pmx_translator/pkg/usecase"
 	"github.com/miu200521358/walk/pkg/declarative"
 	"github.com/miu200521358/walk/pkg/walk"
 )
 
 type CsvTableView struct {
 	*declarative.TableView
-	model *CsvNameModel
+	Model *CsvNameModel
 }
 
 type CsvNameModel struct {
@@ -19,16 +24,7 @@ type CsvNameModel struct {
 	walk.SorterBase
 	sortColumn int
 	sortOrder  walk.SortOrder
-	items      []*NameItem
-}
-
-type NameItem struct {
-	number          int
-	checked         bool
-	typeText        string
-	index           int
-	nameText        string
-	englishNameText string
+	Records    []*domain.NameItem
 }
 
 func NewCsvNameModel(model *pmx.PmxModel) *CsvNameModel {
@@ -37,38 +33,48 @@ func NewCsvNameModel(model *pmx.PmxModel) *CsvNameModel {
 	return m
 }
 
+func (m *CsvNameModel) CheckedNames() []string {
+	var names []string
+	for _, item := range m.Records {
+		if item.Checked {
+			names = append(names, item.NameText)
+		}
+	}
+	return names
+}
+
 func (m *CsvNameModel) RowCount() int {
-	return len(m.items)
+	return len(m.Records)
 }
 
 // Called by the TableView when it needs the text to display for a given cell.
 func (m *CsvNameModel) Value(row, col int) interface{} {
-	item := m.items[row]
+	item := m.Records[row]
 
 	switch col {
 	case 0:
-		return item.checked
+		return item.Checked
 	case 1:
-		return item.number
+		return item.Number
 	case 2:
-		return item.typeText
+		return item.TypeText
 	case 3:
-		return item.index
+		return item.Index
 	case 4:
-		return item.nameText
+		return item.NameText
 	case 5:
-		return item.englishNameText
+		return item.EnglishNameText
 	}
 
 	panic("unexpected col")
 }
 
 func (m *CsvNameModel) Checked(row int) bool {
-	return m.items[row].checked
+	return m.Records[row].Checked
 }
 
-func (m *CsvNameModel) SetChecked(row int, checked bool) error {
-	m.items[row].checked = checked
+func (m *CsvNameModel) SetChecked(row int, Checked bool) error {
+	m.Records[row].Checked = Checked
 
 	return nil
 }
@@ -76,8 +82,8 @@ func (m *CsvNameModel) SetChecked(row int, checked bool) error {
 func (m *CsvNameModel) Sort(col int, order walk.SortOrder) error {
 	m.sortColumn, m.sortOrder = col, order
 
-	sort.SliceStable(m.items, func(i, j int) bool {
-		a, b := m.items[i], m.items[j]
+	sort.SliceStable(m.Records, func(i, j int) bool {
+		a, b := m.Records[i], m.Records[j]
 
 		c := func(ls bool) bool {
 			if m.sortOrder == walk.SortAscending {
@@ -90,24 +96,24 @@ func (m *CsvNameModel) Sort(col int, order walk.SortOrder) error {
 		switch m.sortColumn {
 		case 0:
 			av := 0
-			if a.checked {
+			if a.Checked {
 				av = 1
 			}
 			bv := 0
-			if b.checked {
+			if b.Checked {
 				bv = 1
 			}
 			return c(av < bv)
 		case 1:
-			return c(a.number < b.number)
+			return c(a.Number < b.Number)
 		case 2:
-			return c(a.typeText < b.typeText)
+			return c(a.TypeText < b.TypeText)
 		case 3:
-			return c(a.index < b.index)
+			return c(a.Index < b.Index)
 		case 4:
-			return c(a.nameText < b.nameText)
+			return c(a.NameText < b.NameText)
 		case 5:
-			return c(a.englishNameText < b.englishNameText)
+			return c(a.EnglishNameText < b.EnglishNameText)
 		}
 
 		panic("unreachable")
@@ -117,95 +123,128 @@ func (m *CsvNameModel) Sort(col int, order walk.SortOrder) error {
 }
 
 func (m *CsvNameModel) ResetRows(model *pmx.PmxModel) {
-	m.items = make([]*NameItem, 0)
+	m.Records = make([]*domain.NameItem, 0)
+
+	m.PublishRowsReset()
 
 	if model == nil {
-		m.PublishRowsReset()
 		return
 	}
 
-	for _, mat := range model.Materials.Data {
-		item := &NameItem{
-			checked:         false,
-			number:          len(m.items) + 1,
-			typeText:        mi18n.T("材質"),
-			index:           mat.Index(),
-			nameText:        mat.Name(),
-			englishNameText: mat.EnglishName(),
+	ks, err := usecase.LoadKanji()
+	if err != nil {
+		return
+	}
+
+	// ファイルパスの中国語もピックアップ
+	path, fileName, _ := mutils.SplitPath(model.Path())
+	item := &domain.NameItem{
+		Checked:         !usecase.IsJapaneseString(ks, fileName),
+		Number:          len(m.Records) + 1,
+		TypeText:        mi18n.T("ファイル"),
+		Index:           0,
+		NameText:        fileName,
+		EnglishNameText: "",
+	}
+	m.Records = append(m.Records, item)
+
+	for i, p := range strings.Split(path, string(filepath.Separator)) {
+		if p == "" {
+			continue
 		}
-		m.items = append(m.items, item)
+		item := &domain.NameItem{
+			Checked:         !usecase.IsJapaneseString(ks, p),
+			Number:          len(m.Records) + 1,
+			TypeText:        mi18n.T("ディレクトリ"),
+			Index:           i,
+			NameText:        p,
+			EnglishNameText: "",
+		}
+		m.Records = append(m.Records, item)
+	}
+
+	for _, mat := range model.Materials.Data {
+		item := &domain.NameItem{
+			Checked:         !usecase.IsJapaneseString(ks, mat.Name()),
+			Number:          len(m.Records) + 1,
+			TypeText:        mi18n.T("材質"),
+			Index:           mat.Index(),
+			NameText:        mat.Name(),
+			EnglishNameText: mat.EnglishName(),
+		}
+		m.Records = append(m.Records, item)
 	}
 
 	for _, tex := range model.Textures.Data {
-		item := &NameItem{
-			checked:         false,
-			number:          len(m.items) + 1,
-			typeText:        mi18n.T("テクスチャ"),
-			index:           tex.Index(),
-			nameText:        tex.Name(),
-			englishNameText: tex.EnglishName(),
+		item := &domain.NameItem{
+			Checked:         !usecase.IsJapaneseString(ks, tex.Name()),
+			Number:          len(m.Records) + 1,
+			TypeText:        mi18n.T("テクスチャ"),
+			Index:           tex.Index(),
+			NameText:        tex.Name(),
+			EnglishNameText: tex.EnglishName(),
 		}
-		m.items = append(m.items, item)
+		m.Records = append(m.Records, item)
 	}
 
 	for _, bone := range model.Bones.Data {
-		item := &NameItem{
-			checked:         false,
-			number:          len(m.items) + 1,
-			typeText:        mi18n.T("ボーン"),
-			index:           bone.Index(),
-			nameText:        bone.Name(),
-			englishNameText: bone.EnglishName(),
+		item := &domain.NameItem{
+			Checked:         !usecase.IsJapaneseString(ks, bone.Name()),
+			Number:          len(m.Records) + 1,
+			TypeText:        mi18n.T("ボーン"),
+			Index:           bone.Index(),
+			NameText:        bone.Name(),
+			EnglishNameText: bone.EnglishName(),
 		}
-		m.items = append(m.items, item)
+		m.Records = append(m.Records, item)
 	}
 
 	for _, morph := range model.Morphs.Data {
-		item := &NameItem{
-			checked:         false,
-			number:          len(m.items) + 1,
-			typeText:        mi18n.T("モーフ"),
-			index:           morph.Index(),
-			nameText:        morph.Name(),
-			englishNameText: morph.EnglishName(),
+		item := &domain.NameItem{
+			Checked:         !usecase.IsJapaneseString(ks, morph.Name()),
+			Number:          len(m.Records) + 1,
+			TypeText:        mi18n.T("モーフ"),
+			Index:           morph.Index(),
+			NameText:        morph.Name(),
+			EnglishNameText: morph.EnglishName(),
 		}
-		m.items = append(m.items, item)
+		m.Records = append(m.Records, item)
 	}
 
 	for _, disp := range model.DisplaySlots.Data {
-		item := &NameItem{
-			checked:         false,
-			number:          len(m.items) + 1,
-			typeText:        mi18n.T("表示枠"),
-			index:           disp.Index(),
-			nameText:        disp.Name(),
-			englishNameText: disp.EnglishName(),
+		item := &domain.NameItem{
+			Checked:         !usecase.IsJapaneseString(ks, disp.Name()),
+			Number:          len(m.Records) + 1,
+			TypeText:        mi18n.T("表示枠"),
+			Index:           disp.Index(),
+			NameText:        disp.Name(),
+			EnglishNameText: disp.EnglishName(),
 		}
-		m.items = append(m.items, item)
+		m.Records = append(m.Records, item)
 	}
 
 	for _, rb := range model.RigidBodies.Data {
-		item := &NameItem{
-			checked:         false,
-			number:          len(m.items) + 1,
-			typeText:        mi18n.T("剛体"),
-			index:           rb.Index(),
-			nameText:        rb.Name(),
-			englishNameText: rb.EnglishName(),
+		item := &domain.NameItem{
+			Checked:         !usecase.IsJapaneseString(ks, rb.Name()),
+			Number:          len(m.Records) + 1,
+			TypeText:        mi18n.T("剛体"),
+			Index:           rb.Index(),
+			NameText:        rb.Name(),
+			EnglishNameText: rb.EnglishName(),
 		}
-		m.items = append(m.items, item)
+		m.Records = append(m.Records, item)
 	}
 
 	for _, joint := range model.Joints.Data {
-		item := &NameItem{
-			checked:         false,
-			number:          len(m.items) + 1,
-			typeText:        mi18n.T("ジョイント"),
-			index:           joint.Index(),
-			nameText:        joint.Name(),
-			englishNameText: joint.EnglishName(),
+		item := &domain.NameItem{
+			Checked:         !usecase.IsJapaneseString(ks, joint.Name()),
+			Number:          len(m.Records) + 1,
+			TypeText:        mi18n.T("ジョイント"),
+			Index:           joint.Index(),
+			NameText:        joint.Name(),
+			EnglishNameText: joint.EnglishName(),
 		}
-		m.items = append(m.items, item)
+		m.Records = append(m.Records, item)
 	}
 
 	m.PublishRowsReset()
@@ -247,12 +286,12 @@ func NewCsvTableView(parent walk.Container, model *pmx.PmxModel) *CsvTableView {
 
 	nameTableView := &CsvTableView{
 		TableView: dTableView,
-		model:     nameModel,
+		Model:     nameModel,
 	}
 
 	return nameTableView
 }
 
 func (tv *CsvTableView) ResetModel(model *pmx.PmxModel) {
-	tv.model.ResetRows(model)
+	tv.Model.ResetRows(model)
 }
