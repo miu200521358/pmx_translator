@@ -77,7 +77,7 @@ func CsvSave(model *pmx.PmxModel, checkedNames []string, outputPath string) erro
 
 	for _, name := range checkedNames {
 		if !existText(records, name) {
-			records = append(records, []string{fileName, name})
+			records = append(records, []string{fileName, name, "", ""})
 		}
 	}
 

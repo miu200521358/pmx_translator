@@ -75,6 +75,18 @@ It is primarily intended for converting Chinese model names into Japanese, but t
 For detailed usage instructions, please refer to the video.
 
 ----------------------------------------------------------------
+Å°Å@How to create the dictionary
+----------------------------------------------------------------
+
+https://chatgpt.com/g/g-Cmchsxm6X-pmxtranslaordictionarygenerator
+
+- You can use ChatGPT to complete the dictionary CSV.
+- Open the URL above, input the text output from "CSV Export," and press the Enter key to get the completion results.
+- Copy the completion results and paste them into the original CSV file to create a dictionary that can be used for "Name Replacement."
+
+Note: You will need to create a ChatGPT account (free).
+
+----------------------------------------------------------------
 Å°Å@Community Information
 ----------------------------------------------------------------
 

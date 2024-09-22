@@ -23,3 +23,10 @@ PmxTranslator_1.0.0_beta_07
 - 多言語追加対応
 - リドミ追加
 
+PmxTranslator_1.0.0_beta_08
+- サフィックス除去処理追加
+- CSVのカラム数が足りなかったので追加
+- CSV出力タブのIndexを削除
+
+
+
