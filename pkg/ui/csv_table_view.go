@@ -175,16 +175,41 @@ func (m *CsvNameModel) ResetRows(model *pmx.PmxModel) {
 		m.Records = append(m.Records, item)
 	}
 
+	n := 0
 	for _, tex := range model.Textures.Data {
-		item := &domain.NameItem{
-			Checked:         !usecase.IsJapaneseString(ks, tex.Name()),
-			Number:          len(m.Records) + 1,
-			TypeText:        mi18n.T("テクスチャ"),
-			Index:           tex.Index(),
-			NameText:        tex.Name(),
-			EnglishNameText: tex.EnglishName(),
+		dirPath, fileName, _ := mutils.SplitPath(tex.Name())
+		for _, p := range strings.Split(dirPath, string(filepath.Separator)) {
+			if p == "" {
+				continue
+			}
+			for _, p2 := range strings.Split(p, "/") {
+				if p2 == "" {
+					continue
+				}
+				item := &domain.NameItem{
+					Checked:         !usecase.IsJapaneseString(ks, p2),
+					Number:          len(m.Records) + 1,
+					TypeText:        mi18n.T("ディレクトリ"),
+					Index:           n,
+					NameText:        p2,
+					EnglishNameText: "",
+				}
+				m.Records = append(m.Records, item)
+				n++
+			}
 		}
-		m.Records = append(m.Records, item)
+
+		{
+			item := &domain.NameItem{
+				Checked:         !usecase.IsJapaneseString(ks, fileName),
+				Number:          len(m.Records) + 1,
+				TypeText:        mi18n.T("ファイル"),
+				Index:           n,
+				NameText:        fileName,
+				EnglishNameText: "",
+			}
+			m.Records = append(m.Records, item)
+		}
 	}
 
 	for _, bone := range model.Bones.Data {

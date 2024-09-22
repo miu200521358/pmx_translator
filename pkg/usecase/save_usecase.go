@@ -34,13 +34,13 @@ func Translate(text string, langDict *core.CsvModel, langIndex int, modelName st
 }
 
 func getTranslatedNames(
-	typeName string, index int, jpText, enText string, nameItems []*domain.NameItem,
+	jpText, enText string, nameItems []*domain.NameItem,
 ) (string, string) {
 	newJpText := jpText
 	newEnText := enText
 
 	for _, item := range nameItems {
-		if item.TypeText == typeName && item.Index == index && item.Checked {
+		if item.Checked {
 			newJpText = strings.ReplaceAll(newJpText, item.NameText, item.JapaneseNameText)
 			newEnText = strings.ReplaceAll(newEnText, item.NameText, item.EnglishNameText)
 		}
@@ -50,7 +50,7 @@ func getTranslatedNames(
 
 func TranslateOutputPath(model *pmx.PmxModel, nameItems []*domain.NameItem) string {
 	{
-		jpName, enName := getTranslatedNames(mi18n.T("モデル"), 0, model.Name(), model.EnglishName(), nameItems)
+		jpName, enName := getTranslatedNames(model.Name(), model.EnglishName(), nameItems)
 		model.SetName(jpName)
 		model.SetEnglishName(enName)
 	}
@@ -58,17 +58,22 @@ func TranslateOutputPath(model *pmx.PmxModel, nameItems []*domain.NameItem) stri
 	outputJpPath := model.Path()
 	{
 		path, fileName, ext := mutils.SplitPath(outputJpPath)
-		jpFileName, _ := getTranslatedNames(mi18n.T("ファイル"), 0, fileName, "", nameItems)
+		jpFileName, _ := getTranslatedNames(fileName, "", nameItems)
 
 		paths := strings.Split(path, string(filepath.Separator))
 		for i, p := range paths {
+			if i < 2 {
+				paths[i] = p
+				continue
+			}
 			if p == "" {
 				continue
 			}
-			paths[i], _ = getTranslatedNames(mi18n.T("ディレクトリ"), i, p, "", nameItems)
+			paths[i], _ = getTranslatedNames(p, "", nameItems)
 		}
 
-		outputJpPath = filepath.Join(append(paths, jpFileName+ext)...)
+		outputJpPath = fmt.Sprintf(
+			"%s%s%s", paths[0], string(filepath.Separator), filepath.Join(append(paths[1:], jpFileName+ext)...))
 	}
 
 	return mutils.CreateOutputPath(outputJpPath, "")
@@ -76,13 +81,13 @@ func TranslateOutputPath(model *pmx.PmxModel, nameItems []*domain.NameItem) stri
 
 func Save(model *pmx.PmxModel, nameItems []*domain.NameItem, outputJpPath string) error {
 	{
-		jpName, enName := getTranslatedNames(mi18n.T("モデル"), 0, model.Name(), model.EnglishName(), nameItems)
+		jpName, enName := getTranslatedNames(model.Name(), model.EnglishName(), nameItems)
 		model.SetName(jpName)
 		model.SetEnglishName(enName)
 	}
 
 	for _, mat := range model.Materials.Data {
-		jpName, enName := getTranslatedNames(mi18n.T("材質"), mat.Index(), mat.Name(), mat.EnglishName(), nameItems)
+		jpName, enName := getTranslatedNames(mat.Name(), mat.EnglishName(), nameItems)
 		mat.SetName(jpName)
 		mat.SetEnglishName(enName)
 	}
@@ -90,7 +95,12 @@ func Save(model *pmx.PmxModel, nameItems []*domain.NameItem, outputJpPath string
 	jpDir, _, _ := mutils.SplitPath(outputJpPath)
 
 	for _, tex := range model.Textures.Data {
-		jpPath, _ := getTranslatedNames(mi18n.T("ファイル"), 0, tex.Name(), "", nameItems)
+		if tex.Name() == "" {
+			continue
+		}
+
+		orgName := tex.Name()
+		jpPath, _ := getTranslatedNames(orgName, "", nameItems)
 		tex.SetName(jpPath)
 
 		dir, _, _ := mutils.SplitPath(model.Path())
@@ -99,37 +109,41 @@ func Save(model *pmx.PmxModel, nameItems []*domain.NameItem, outputJpPath string
 				mlog.E("ディレクトリ作成失敗: %s", err)
 				return err
 			}
+		}
 
-			copyTex(filepath.Join(dir, tex.Name()), filepath.Join(jpDir, jpPath))
+		orgTexPath := filepath.Join(dir, orgName)
+		jpTexPath := filepath.Join(jpDir, jpPath)
+		if orgTexPath != jpTexPath {
+			copyTex(orgTexPath, jpTexPath)
 		}
 	}
 
 	for _, bone := range model.Bones.Data {
-		jpName, enName := getTranslatedNames(mi18n.T("ボーン"), bone.Index(), bone.Name(), bone.EnglishName(), nameItems)
+		jpName, enName := getTranslatedNames(bone.Name(), bone.EnglishName(), nameItems)
 		bone.SetName(jpName)
 		bone.SetEnglishName(enName)
 	}
 
 	for _, morph := range model.Morphs.Data {
-		jpName, enName := getTranslatedNames(mi18n.T("モーフ"), morph.Index(), morph.Name(), morph.EnglishName(), nameItems)
+		jpName, enName := getTranslatedNames(morph.Name(), morph.EnglishName(), nameItems)
 		morph.SetName(jpName)
 		morph.SetEnglishName(enName)
 	}
 
 	for _, disp := range model.DisplaySlots.Data {
-		jpName, enName := getTranslatedNames(mi18n.T("表示枠"), disp.Index(), disp.Name(), disp.EnglishName(), nameItems)
+		jpName, enName := getTranslatedNames(disp.Name(), disp.EnglishName(), nameItems)
 		disp.SetName(jpName)
 		disp.SetEnglishName(enName)
 	}
 
 	for _, rb := range model.RigidBodies.Data {
-		jpName, enName := getTranslatedNames(mi18n.T("剛体"), rb.Index(), rb.Name(), rb.EnglishName(), nameItems)
+		jpName, enName := getTranslatedNames(rb.Name(), rb.EnglishName(), nameItems)
 		rb.SetName(jpName)
 		rb.SetEnglishName(enName)
 	}
 
 	for _, joint := range model.Joints.Data {
-		jpName, enName := getTranslatedNames(mi18n.T("ジョイント"), joint.Index(), joint.Name(), joint.EnglishName(), nameItems)
+		jpName, enName := getTranslatedNames(joint.Name(), joint.EnglishName(), nameItems)
 		joint.SetName(jpName)
 		joint.SetEnglishName(enName)
 	}
