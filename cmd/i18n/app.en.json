@@ -41,11 +41,11 @@
     },
     {
         "id": "TranslateTabLabel",
-        "translation": "・Specify the Pmx model and replacement dictionary CSV data file for the language you want to replace in the name field.\n・You can save the replacement result model with the 'Save' button."
+        "translation": "・Please specify the Pmx model for which you want to replace the language in the name field, as well as the CSV data file for the replacement dictionary.\n・When you load the Pmx model and dictionary CSV, a list of name replacements will be displayed in the table below.\n・Name fields that contain words registered in the dictionary will be automatically checked.\n・You can save the model with the replacement results by clicking the 'Save' button."
     },
     {
         "id": "CsvTabLabel",
-        "translation": "・Specify the Pmx model you want to export to CSV in the name field.\n・You can save the CSV data for the replacement dictionary with the 'Save' button."
+        "translation": "・Please specify the Pmx model for which you want to output the name field as CSV.\n・When you load the Pmx model, a list of name fields will be displayed in the table below.\n・Name fields that contain characters that cannot be recognized by Shift-JIS, such as Simplified Chinese, will be automatically checked.\n・Additionally, you can optionally select target names for CSV output.\n・Clicking on the header allows you to sort the table.\n・You can save the list of names for the dictionary by clicking the 'Save' button."
     },
     {
         "id": "生成失敗",
@@ -126,5 +126,81 @@
     {
         "id": "Csv出力成功メッセージ",
         "translation": "Successfully output Csv data.\n\n{{.Path}}"
+    },
+    {
+        "id": "インデックス",
+        "translation": "Index"
+    },
+    {
+        "id": "種類",
+        "translation": "Type"
+    },
+    {
+        "id": "名前",
+        "translation": "Name"
+    },
+    {
+        "id": "材質",
+        "translation": "Material"
+    },
+    {
+        "id": "ボーン",
+        "translation": "Bone"
+    },
+    {
+        "id": "モーフ",
+        "translation": "Morph"
+    },
+    {
+        "id": "表示枠",
+        "translation": "Display Frame"
+    },
+    {
+        "id": "剛体",
+        "translation": "Rigid Body"
+    },
+    {
+        "id": "ジョイント",
+        "translation": "Joint"
+    },
+    {
+        "id": "テクスチャ",
+        "translation": "Texture"
+    },
+    {
+        "id": "日本語名称",
+        "translation": "Japanese Name"
+    },
+    {
+        "id": "英語名称",
+        "translation": "English Name"
+    },
+    {
+        "id": "元名称",
+        "translation": "Original Name"
+    },
+    {
+        "id": "翻訳名称",
+        "translation": "Translated Name"
+    },
+    {
+        "id": "英語名称",
+        "translation": "English Name"
+    },
+    {
+        "id": "ファイル",
+        "translation": "File"
+    },
+    {
+        "id": "ディレクトリ",
+        "translation": "Directory"
+    },
+    {
+        "id": "モデル",
+        "translation": "Model"
+    },
+    {
+        "id": "ファイル名",
+        "translation": "File Name"
     }
 ]

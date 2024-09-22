@@ -17,15 +17,15 @@ import (
 
 func Translate(text string, langDict *core.CsvModel, langIndex int, modelName string) string {
 	// 先にモデル名一致の翻訳を行う
-	for _, row := range langDict.Records() {
-		if row[0] == modelName && row[1] != "" {
+	for n, row := range langDict.Records() {
+		if n > 0 && row[0] == modelName && row[1] != "" {
 			text = strings.ReplaceAll(text, row[1], row[langIndex])
 		}
 	}
 
 	// モデル名を問わない翻訳
-	for _, row := range langDict.Records() {
-		if row[0] == "" && row[1] != "" {
+	for n, row := range langDict.Records() {
+		if n > 0 && row[0] == "" && row[1] != "" {
 			text = strings.ReplaceAll(text, row[1], row[langIndex])
 		}
 	}

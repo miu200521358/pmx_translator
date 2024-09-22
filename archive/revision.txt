@@ -18,3 +18,8 @@ PmxTranslator_1.0.0_beta_05
 PmxTranslator_1.0.0_beta_06
 - CSV出力と置換出力に変換結果テーブル欄を追加
 
+PmxTranslator_1.0.0_beta_07
+- CSVのヘッダ出力・読み飛ばし処理追加
+- 多言語追加対応
+- リドミ追加
+

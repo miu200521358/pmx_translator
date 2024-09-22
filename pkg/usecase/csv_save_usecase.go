@@ -70,6 +70,8 @@ func existText(records [][]string, txt string) bool {
 
 func CsvSave(model *pmx.PmxModel, checkedNames []string, outputPath string) error {
 	records := make([][]string, 0)
+	records = append(records, []string{
+		mi18n.T("ファイル名"), mi18n.T("元名称"), mi18n.T("日本語名称"), mi18n.T("英語名称")})
 
 	_, fileName, _ := mutils.SplitPath(model.Path())
 

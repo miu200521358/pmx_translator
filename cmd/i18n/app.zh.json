@@ -41,11 +41,11 @@
     },
     {
         "id": "TranslateTabLabel",
-        "translation": "・请指定名称栏中需要替换语言的Pmx模型和替换字典用的CSV数据文件。\n・点击“保存”按钮可以保存替换后的模型。"
+        "translation": "・请指定要替换名称栏语言的Pmx模型以及替换词典的CSV数据文件。\n・加载Pmx模型和词典CSV后，替换名称的列表将显示在下方表格中。\n・名称栏中包含词典中注册的单词时，将自动打勾。\n・点击“保存”按钮可以保存替换后的模型。"
     },
     {
         "id": "CsvTabLabel",
-        "translation": "・请指定名称栏中要输出到CSV的Pmx模型。\n・点击“保存”按钮可以保存替换字典用的CSV数据。"
+        "translation": "・请指定要将名称栏输出为CSV的Pmx模型。\n・加载Pmx模型后，名称栏的列表将显示在下方表格中。\n・包含Shift-JIS无法识别的字符（如简体中文）的名称将自动打勾。\n・此外，您也可以选择要输出到CSV的名称。\n・点击表头可以对表格进行排序。\n・点击“保存”按钮可以保存词典名称列表。"
     },
     {
         "id": "生成失敗",
@@ -126,5 +126,81 @@
     {
         "id": "Csv出力成功メッセージ",
         "translation": "Csv数据输出成功。\n\n{{.Path}}"
+    },
+    {
+        "id": "インデックス",
+        "translation": "索引"
+    },
+    {
+        "id": "種類",
+        "translation": "种类"
+    },
+    {
+        "id": "名前",
+        "translation": "名称"
+    },
+    {
+        "id": "材質",
+        "translation": "材质"
+    },
+    {
+        "id": "ボーン",
+        "translation": "骨骼"
+    },
+    {
+        "id": "モーフ",
+        "translation": "变形"
+    },
+    {
+        "id": "表示枠",
+        "translation": "显示框"
+    },
+    {
+        "id": "剛体",
+        "translation": "刚体"
+    },
+    {
+        "id": "ジョイント",
+        "translation": "关节"
+    },
+    {
+        "id": "テクスチャ",
+        "translation": "纹理"
+    },
+    {
+        "id": "日本語名称",
+        "translation": "日文名称"
+    },
+    {
+        "id": "英語名称",
+        "translation": "英文名称"
+    },
+    {
+        "id": "元名称",
+        "translation": "原名称"
+    },
+    {
+        "id": "翻訳名称",
+        "translation": "翻译名称"
+    },
+    {
+        "id": "英語名称",
+        "translation": "英文名称"
+    },
+    {
+        "id": "ファイル",
+        "translation": "文件"
+    },
+    {
+        "id": "ディレクトリ",
+        "translation": "目录"
+    },
+    {
+        "id": "モデル",
+        "translation": "模型"
+    },
+    {
+        "id": "ファイル名",
+        "translation": "文件名"
     }
 ]
