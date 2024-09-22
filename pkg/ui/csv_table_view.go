@@ -23,6 +23,7 @@ type CsvNameModel struct {
 }
 
 type NameItem struct {
+	number          int
 	checked         bool
 	typeText        string
 	index           int
@@ -48,15 +49,14 @@ func (m *CsvNameModel) Value(row, col int) interface{} {
 	case 0:
 		return item.checked
 	case 1:
-		return item.typeText
-
+		return item.number
 	case 2:
-		return item.index
-
+		return item.typeText
 	case 3:
-		return item.nameText
-
+		return item.index
 	case 4:
+		return item.nameText
+	case 5:
 		return item.englishNameText
 	}
 
@@ -97,18 +97,16 @@ func (m *CsvNameModel) Sort(col int, order walk.SortOrder) error {
 			if b.checked {
 				bv = 1
 			}
-
 			return c(av < bv)
 		case 1:
-			return c(a.typeText < b.typeText)
-
+			return c(a.number < b.number)
 		case 2:
-			return c(a.index < b.index)
-
+			return c(a.typeText < b.typeText)
 		case 3:
-			return c(a.nameText < b.nameText)
-
+			return c(a.index < b.index)
 		case 4:
+			return c(a.nameText < b.nameText)
+		case 5:
 			return c(a.englishNameText < b.englishNameText)
 		}
 
@@ -129,6 +127,7 @@ func (m *CsvNameModel) ResetRows(model *pmx.PmxModel) {
 	for _, mat := range model.Materials.Data {
 		item := &NameItem{
 			checked:         false,
+			number:          len(m.items) + 1,
 			typeText:        mi18n.T("材質"),
 			index:           mat.Index(),
 			nameText:        mat.Name(),
@@ -140,6 +139,7 @@ func (m *CsvNameModel) ResetRows(model *pmx.PmxModel) {
 	for _, tex := range model.Textures.Data {
 		item := &NameItem{
 			checked:         false,
+			number:          len(m.items) + 1,
 			typeText:        mi18n.T("テクスチャ"),
 			index:           tex.Index(),
 			nameText:        tex.Name(),
@@ -151,6 +151,7 @@ func (m *CsvNameModel) ResetRows(model *pmx.PmxModel) {
 	for _, bone := range model.Bones.Data {
 		item := &NameItem{
 			checked:         false,
+			number:          len(m.items) + 1,
 			typeText:        mi18n.T("ボーン"),
 			index:           bone.Index(),
 			nameText:        bone.Name(),
@@ -162,6 +163,7 @@ func (m *CsvNameModel) ResetRows(model *pmx.PmxModel) {
 	for _, morph := range model.Morphs.Data {
 		item := &NameItem{
 			checked:         false,
+			number:          len(m.items) + 1,
 			typeText:        mi18n.T("モーフ"),
 			index:           morph.Index(),
 			nameText:        morph.Name(),
@@ -173,6 +175,7 @@ func (m *CsvNameModel) ResetRows(model *pmx.PmxModel) {
 	for _, disp := range model.DisplaySlots.Data {
 		item := &NameItem{
 			checked:         false,
+			number:          len(m.items) + 1,
 			typeText:        mi18n.T("表示枠"),
 			index:           disp.Index(),
 			nameText:        disp.Name(),
@@ -184,6 +187,7 @@ func (m *CsvNameModel) ResetRows(model *pmx.PmxModel) {
 	for _, rb := range model.RigidBodies.Data {
 		item := &NameItem{
 			checked:         false,
+			number:          len(m.items) + 1,
 			typeText:        mi18n.T("剛体"),
 			index:           rb.Index(),
 			nameText:        rb.Name(),
@@ -195,6 +199,7 @@ func (m *CsvNameModel) ResetRows(model *pmx.PmxModel) {
 	for _, joint := range model.Joints.Data {
 		item := &NameItem{
 			checked:         false,
+			number:          len(m.items) + 1,
 			typeText:        mi18n.T("ジョイント"),
 			index:           joint.Index(),
 			nameText:        joint.Name(),
@@ -204,8 +209,6 @@ func (m *CsvNameModel) ResetRows(model *pmx.PmxModel) {
 	}
 
 	m.PublishRowsReset()
-
-	m.Sort(m.sortColumn, m.sortOrder)
 }
 
 func NewCsvTableView(parent walk.Container, model *pmx.PmxModel) *CsvTableView {
@@ -223,16 +226,17 @@ func NewCsvTableView(parent walk.Container, model *pmx.PmxModel) *CsvTableView {
 		Model:            nameModel,
 		Columns: []declarative.TableViewColumn{
 			{Title: "#", Width: 30},
-			{Title: mi18n.T("種類"), Width: 100},
-			{Title: mi18n.T("インデックス"), Width: 30},
+			{Title: "No.", Width: 50},
+			{Title: mi18n.T("種類"), Width: 80},
+			{Title: mi18n.T("インデックス"), Width: 40},
 			{Title: mi18n.T("日本語名称"), Width: 200},
 			{Title: mi18n.T("英語名称"), Width: 200},
 		},
 		StyleCell: func(style *walk.CellStyle) {
-			item := nameModel.items[style.Row()]
-
-			if item.checked {
+			if nameModel.Checked(style.Row()) {
 				style.BackgroundColor = walk.RGB(159, 255, 243)
+			} else {
+				style.BackgroundColor = walk.RGB(255, 255, 255)
 			}
 		},
 	}

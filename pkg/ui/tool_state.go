@@ -9,18 +9,24 @@ import (
 )
 
 type ToolState struct {
-	App                  *app.MApp
-	ControlWindow        *controller.ControlWindow
-	TranslateModel       *model.TranslateModel
-	Tab                  *widget.MTabPage
-	OriginalPmxPicker    *widget.FilePicker
-	LangCsvPicker        *widget.FilePicker
-	OutputPmxPicker      *widget.FilePicker
-	OriginalCsvPmxPicker *widget.FilePicker
-	OutputCsvPicker      *widget.FilePicker
-	SaveButton           *walk.PushButton
-	CsvTab               *widget.MTabPage
-	CsvTableView         *CsvTableView
+	App                       *app.MApp
+	ControlWindow             *controller.ControlWindow
+	TranslateModel            *model.TranslateModel
+	Tab                       *widget.MTabPage
+	OriginalPmxPicker         *widget.FilePicker
+	LangCsvPicker             *widget.FilePicker
+	OutputPmxPicker           *widget.FilePicker
+	OriginalCsvPmxPicker      *widget.FilePicker
+	OutputCsvPicker           *widget.FilePicker
+	SaveButton                *walk.PushButton
+	CsvTab                    *widget.MTabPage
+	AllowAsciiCheckBox        *walk.CheckBox
+	AllowHiraganaCheckBox     *walk.CheckBox
+	AllowKatakanaHanCheckBox  *walk.CheckBox
+	AllowKatakanaZenCheckBox  *walk.CheckBox
+	AllowAlphanumericCheckBox *walk.CheckBox
+	AllowKanjiCheckBox        *walk.CheckBox
+	CsvTableView              *CsvTableView
 }
 
 func NewToolState(app *app.MApp, controlWindow *controller.ControlWindow) *ToolState {

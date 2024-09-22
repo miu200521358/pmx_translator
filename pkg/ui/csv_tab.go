@@ -22,7 +22,6 @@ func newCsvTab(controlWindow *controller.ControlWindow, toolState *ToolState) {
 	var err error
 
 	{
-		// Step1. ファイル選択文言
 		label, err := walk.NewTextLabel(toolState.CsvTab)
 		if err != nil {
 			widget.RaiseError(err)
@@ -63,6 +62,67 @@ func newCsvTab(controlWindow *controller.ControlWindow, toolState *ToolState) {
 			mi18n.T("出力Csv"),
 			mi18n.T("出力Csvファイルパスを指定してください"),
 			mi18n.T("出力Csvファイルパスの使い方"))
+	}
+
+	walk.NewVSeparator(toolState.CsvTab)
+
+	{
+		// 対象チェックラベル
+		label, err := walk.NewTextLabel(toolState.CsvTab)
+		if err != nil {
+			widget.RaiseError(err)
+		}
+		label.SetText(mi18n.T("許可文字種別"))
+	}
+
+	{
+		checkComposite, err := walk.NewComposite(toolState.CsvTab)
+		if err != nil {
+			widget.RaiseError(err)
+		}
+		checkComposite.SetLayout(walk.NewHBoxLayout())
+
+		// ASCII文字
+		toolState.AllowAsciiCheckBox, err = walk.NewCheckBox(checkComposite)
+		if err != nil {
+			widget.RaiseError(err)
+		}
+		toolState.AllowAsciiCheckBox.SetText(mi18n.T("半角英数字"))
+
+		// 全角英数字
+		toolState.AllowAlphanumericCheckBox, err = walk.NewCheckBox(checkComposite)
+		if err != nil {
+			widget.RaiseError(err)
+		}
+		toolState.AllowAlphanumericCheckBox.SetText(mi18n.T("全角英数字"))
+
+		// ひらがな
+		toolState.AllowHiraganaCheckBox, err = walk.NewCheckBox(checkComposite)
+		if err != nil {
+			widget.RaiseError(err)
+		}
+		toolState.AllowHiraganaCheckBox.SetText(mi18n.T("ひらがな"))
+
+		// カタカナ(半角)
+		toolState.AllowKatakanaHanCheckBox, err = walk.NewCheckBox(checkComposite)
+		if err != nil {
+			widget.RaiseError(err)
+		}
+		toolState.AllowKatakanaHanCheckBox.SetText(mi18n.T("半角カタカナ"))
+
+		// カタカナ(全角)
+		toolState.AllowKatakanaZenCheckBox, err = walk.NewCheckBox(checkComposite)
+		if err != nil {
+			widget.RaiseError(err)
+		}
+		toolState.AllowKatakanaZenCheckBox.SetText(mi18n.T("全角カタカナ"))
+
+		// 漢字
+		toolState.AllowKanjiCheckBox, err = walk.NewCheckBox(checkComposite)
+		if err != nil {
+			widget.RaiseError(err)
+		}
+		toolState.AllowKanjiCheckBox.SetText(mi18n.T("漢字"))
 	}
 
 	{
