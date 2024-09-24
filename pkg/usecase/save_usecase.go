@@ -15,36 +15,51 @@ import (
 	"github.com/miu200521358/pmx_translator/pkg/domain"
 )
 
-func Translate(text string, langDict *core.CsvModel, langIndex int, modelName string) string {
+func Translate(text, enText string, langDict *core.CsvModel, modelName string) (string, string) {
+	newJpText := text
+	newEnText := enText
+
 	// モデル名一致＆完全一致の翻訳を行う
 	for n, row := range langDict.Records() {
-		if n > 0 && row[0] == modelName && row[1] == text {
-			text = strings.ReplaceAll(text, row[1], row[langIndex])
+		if n > 0 && row[0] == modelName && row[1] == newJpText {
+			newJpText = strings.ReplaceAll(newJpText, row[1], row[2])
+			if enText != "" && row[3] != "" {
+				newEnText = row[3]
+			}
 		}
 	}
 
 	// モデル名不問＆完全一致の翻訳を行う
 	for n, row := range langDict.Records() {
-		if n > 0 && row[0] == "" && row[1] == text {
-			text = strings.ReplaceAll(text, row[1], row[langIndex])
+		if n > 0 && row[0] == "" && row[1] == newJpText {
+			newJpText = strings.ReplaceAll(newJpText, row[1], row[2])
+			if enText != "" && row[3] != "" {
+				newEnText = row[3]
+			}
 		}
 	}
 
 	// モデル名一致＆部分一致翻訳を行う
 	for n, row := range langDict.Records() {
 		if n > 0 && row[0] == modelName && row[1] != "" {
-			text = strings.ReplaceAll(text, row[1], row[langIndex])
+			newJpText = strings.ReplaceAll(newJpText, row[1], row[2])
+			if enText != "" && row[3] != "" {
+				newEnText = strings.ReplaceAll(newEnText, row[1], row[3])
+			}
 		}
 	}
 
 	// モデル名不問＆部分一致翻訳
 	for n, row := range langDict.Records() {
 		if n > 0 && row[0] == "" && row[1] != "" {
-			text = strings.ReplaceAll(text, row[1], row[langIndex])
+			newJpText = strings.ReplaceAll(newJpText, row[1], row[2])
+			if enText != "" && row[3] != "" {
+				newEnText = strings.ReplaceAll(newEnText, row[1], row[3])
+			}
 		}
 	}
 
-	return text
+	return newJpText, newEnText
 }
 
 func getTranslatedNames(
@@ -59,6 +74,7 @@ func getTranslatedNames(
 			newEnText = strings.ReplaceAll(newEnText, item.NameText, item.EnglishNameText)
 		}
 	}
+
 	return newJpText, newEnText
 }
 

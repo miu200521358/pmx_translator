@@ -117,11 +117,10 @@ func (m *TranslateNameModel) Sort(col int, order walk.SortOrder) error {
 func (m *TranslateNameModel) AddRecord(
 	fileName string, index int, jpTxt, enTxt, fieldKey string, charaCsv *core.CsvModel,
 ) {
-	jpTransTxt := usecase.Translate(jpTxt, charaCsv, 2, fileName)
-	enTransTxt := usecase.Translate(enTxt, charaCsv, 3, fileName)
+	jpTransTxt, enTransTxt := usecase.Translate(jpTxt, enTxt, charaCsv, fileName)
 
 	item := &domain.NameItem{
-		Checked:          jpTxt != jpTransTxt,
+		Checked:          jpTxt != jpTransTxt || enTxt != enTransTxt,
 		Number:           len(m.Records) + 1,
 		TypeText:         mi18n.T(fieldKey),
 		Index:            index,

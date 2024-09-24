@@ -59,6 +59,8 @@ func (m *CsvNameModel) Value(row, col int) interface{} {
 		return item.TypeText
 	case 3:
 		return item.NameText
+	case 4:
+		return item.EnglishNameText
 	}
 
 	panic("unexpected col")
@@ -105,6 +107,8 @@ func (m *CsvNameModel) Sort(col int, order walk.SortOrder) error {
 			return c(a.TypeText < b.TypeText)
 		case 3:
 			return c(a.NameText < b.NameText)
+		case 4:
+			return c(a.EnglishNameText < b.EnglishNameText)
 		}
 
 		panic("unreachable")
@@ -124,16 +128,28 @@ func (m *CsvNameModel) exists(txt string) bool {
 
 var separators = []string{string(filepath.Separator), "_", "-", " ", "　", "/", ".", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}
 
-func (m *CsvNameModel) AddRecord(ks, txt, fieldKey string) {
-	for _, t := range mutils.SplitAll(txt, separators) {
+func (m *CsvNameModel) AddRecord(ks, jpTxt, enTxt, fieldKey string) {
+	for _, t := range mutils.SplitAll(jpTxt, separators) {
 		if t == "" || m.exists(t) {
 			continue
 		}
 		item := &domain.NameItem{
-			Checked:  !usecase.IsJapaneseString(ks, t),
-			Number:   len(m.Records) + 1,
-			TypeText: mi18n.T(fieldKey),
-			NameText: t,
+			Checked:         !usecase.IsJapaneseString(ks, t),
+			Number:          len(m.Records) + 1,
+			TypeText:        mi18n.T(fieldKey),
+			NameText:        t,
+			EnglishNameText: "",
+		}
+		m.Records = append(m.Records, item)
+	}
+
+	if !m.exists(jpTxt) {
+		item := &domain.NameItem{
+			Checked:         !usecase.IsJapaneseString(ks, jpTxt),
+			Number:          len(m.Records) + 1,
+			TypeText:        mi18n.T(fieldKey),
+			NameText:        jpTxt,
+			EnglishNameText: enTxt,
 		}
 		m.Records = append(m.Records, item)
 	}
@@ -154,42 +170,35 @@ func (m *CsvNameModel) ResetRows(model *pmx.PmxModel) {
 	}
 
 	// ファイルパスの中国語もピックアップ
-	m.AddRecord(ks, model.Path(), "パス")
-	m.AddRecord(ks, model.Name(), "モデル")
+	m.AddRecord(ks, model.Path(), "", "パス")
+	m.AddRecord(ks, model.Name(), model.EnglishName(), "モデル")
 
 	for _, mat := range model.Materials.Data {
-		m.AddRecord(ks, mat.Name(), "材質")
-		m.AddRecord(ks, mat.EnglishName(), "材質")
+		m.AddRecord(ks, mat.Name(), mat.EnglishName(), "材質")
 	}
 
 	for _, tex := range model.Textures.Data {
-		m.AddRecord(ks, tex.Name(), "テクスチャ")
-		m.AddRecord(ks, tex.EnglishName(), "テクスチャ")
+		m.AddRecord(ks, tex.Name(), tex.EnglishName(), "テクスチャ")
 	}
 
 	for _, bone := range model.Bones.Data {
-		m.AddRecord(ks, bone.Name(), "ボーン")
-		m.AddRecord(ks, bone.EnglishName(), "ボーン")
+		m.AddRecord(ks, bone.Name(), bone.EnglishName(), "ボーン")
 	}
 
 	for _, morph := range model.Morphs.Data {
-		m.AddRecord(ks, morph.Name(), "モーフ")
-		m.AddRecord(ks, morph.EnglishName(), "モーフ")
+		m.AddRecord(ks, morph.Name(), morph.EnglishName(), "モーフ")
 	}
 
 	for _, disp := range model.DisplaySlots.Data {
-		m.AddRecord(ks, disp.Name(), "表示枠")
-		m.AddRecord(ks, disp.EnglishName(), "表示枠")
+		m.AddRecord(ks, disp.Name(), disp.EnglishName(), "表示枠")
 	}
 
 	for _, rb := range model.RigidBodies.Data {
-		m.AddRecord(ks, rb.Name(), "剛体")
-		m.AddRecord(ks, rb.EnglishName(), "剛体")
+		m.AddRecord(ks, rb.Name(), rb.EnglishName(), "剛体")
 	}
 
 	for _, joint := range model.Joints.Data {
-		m.AddRecord(ks, joint.Name(), "ジョイント")
-		m.AddRecord(ks, joint.EnglishName(), "ジョイント")
+		m.AddRecord(ks, joint.Name(), joint.EnglishName(), "ジョイント")
 	}
 
 	m.PublishRowsReset()
@@ -212,7 +221,8 @@ func NewCsvTableView(parent walk.Container, model *pmx.PmxModel) *CsvTableView {
 			{Title: "#", Width: 30},
 			{Title: "No.", Width: 50},
 			{Title: mi18n.T("種類"), Width: 80},
-			{Title: mi18n.T("日本語名称(分割)"), Width: 200},
+			{Title: mi18n.T("日本語名称"), Width: 200},
+			{Title: mi18n.T("英語名称"), Width: 200},
 		},
 		StyleCell: func(style *walk.CellStyle) {
 			if nameModel.Checked(style.Row()) {
