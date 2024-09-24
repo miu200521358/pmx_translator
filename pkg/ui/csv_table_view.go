@@ -3,7 +3,6 @@ package ui
 import (
 	"path/filepath"
 	"sort"
-	"strings"
 
 	"github.com/miu200521358/mlib_go/pkg/domain/pmx"
 	"github.com/miu200521358/mlib_go/pkg/mutils"
@@ -60,8 +59,6 @@ func (m *CsvNameModel) Value(row, col int) interface{} {
 		return item.TypeText
 	case 3:
 		return item.NameText
-	case 4:
-		return item.EnglishNameText
 	}
 
 	panic("unexpected col")
@@ -108,8 +105,6 @@ func (m *CsvNameModel) Sort(col int, order walk.SortOrder) error {
 			return c(a.TypeText < b.TypeText)
 		case 3:
 			return c(a.NameText < b.NameText)
-		case 4:
-			return c(a.EnglishNameText < b.EnglishNameText)
 		}
 
 		panic("unreachable")
@@ -127,6 +122,23 @@ func (m *CsvNameModel) exists(txt string) bool {
 	return false
 }
 
+var separators = []string{string(filepath.Separator), "_", "-", " ", "　", "/", ".", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}
+
+func (m *CsvNameModel) AddRecord(ks, txt, fieldKey string) {
+	for _, t := range mutils.SplitAll(txt, separators) {
+		if t == "" || m.exists(t) {
+			continue
+		}
+		item := &domain.NameItem{
+			Checked:  !usecase.IsJapaneseString(ks, t),
+			Number:   len(m.Records) + 1,
+			TypeText: mi18n.T(fieldKey),
+			NameText: t,
+		}
+		m.Records = append(m.Records, item)
+	}
+}
+
 func (m *CsvNameModel) ResetRows(model *pmx.PmxModel) {
 	m.Records = make([]*domain.NameItem, 0)
 
@@ -142,171 +154,42 @@ func (m *CsvNameModel) ResetRows(model *pmx.PmxModel) {
 	}
 
 	// ファイルパスの中国語もピックアップ
-	path, fileName, _ := mutils.SplitPath(model.Path())
-	item := &domain.NameItem{
-		Checked:         !usecase.IsJapaneseString(ks, fileName),
-		Number:          len(m.Records) + 1,
-		TypeText:        mi18n.T("ファイル"),
-		NameText:        fileName,
-		EnglishNameText: "",
-	}
-	m.Records = append(m.Records, item)
-
-	for _, p := range strings.Split(path, string(filepath.Separator)) {
-		if p == "" || m.exists(p) {
-			continue
-		}
-		item := &domain.NameItem{
-			Checked:         !usecase.IsJapaneseString(ks, p),
-			Number:          len(m.Records) + 1,
-			TypeText:        mi18n.T("ディレクトリ"),
-			NameText:        p,
-			EnglishNameText: "",
-		}
-		m.Records = append(m.Records, item)
-	}
+	m.AddRecord(ks, model.Path(), "パス")
+	m.AddRecord(ks, model.Name(), "モデル")
 
 	for _, mat := range model.Materials.Data {
-		for _, p := range strings.Split(mat.Name(), "_") {
-			for _, p2 := range strings.Split(p, "-") {
-				if p2 == "" || m.exists(p2) {
-					continue
-				}
-				item := &domain.NameItem{
-					Checked:         !usecase.IsJapaneseString(ks, p2),
-					Number:          len(m.Records) + 1,
-					TypeText:        mi18n.T("材質"),
-					NameText:        p2,
-					EnglishNameText: mat.EnglishName(),
-				}
-				m.Records = append(m.Records, item)
-			}
-		}
+		m.AddRecord(ks, mat.Name(), "材質")
+		m.AddRecord(ks, mat.EnglishName(), "材質")
 	}
 
 	for _, tex := range model.Textures.Data {
-		dirPath, fileName, _ := mutils.SplitPath(tex.Name())
-		for _, p := range strings.Split(dirPath, string(filepath.Separator)) {
-			if p == "" {
-				continue
-			}
-			for _, p2 := range strings.Split(p, "/") {
-				if p2 == "" || m.exists(p2) {
-					continue
-				}
-				item := &domain.NameItem{
-					Checked:         !usecase.IsJapaneseString(ks, p2),
-					Number:          len(m.Records) + 1,
-					TypeText:        mi18n.T("ディレクトリ"),
-					NameText:        p2,
-					EnglishNameText: "",
-				}
-				m.Records = append(m.Records, item)
-			}
-		}
-
-		{
-			item := &domain.NameItem{
-				Checked:         !usecase.IsJapaneseString(ks, fileName),
-				Number:          len(m.Records) + 1,
-				TypeText:        mi18n.T("ファイル"),
-				NameText:        fileName,
-				EnglishNameText: "",
-			}
-			m.Records = append(m.Records, item)
-		}
+		m.AddRecord(ks, tex.Name(), "テクスチャ")
+		m.AddRecord(ks, tex.EnglishName(), "テクスチャ")
 	}
 
 	for _, bone := range model.Bones.Data {
-		for _, p := range strings.Split(bone.Name(), "_") {
-			for _, p2 := range strings.Split(p, "-") {
-				if p2 == "" || m.exists(p2) {
-					continue
-				}
-
-				item := &domain.NameItem{
-					Checked:         !usecase.IsJapaneseString(ks, p2),
-					Number:          len(m.Records) + 1,
-					TypeText:        mi18n.T("ボーン"),
-					NameText:        p2,
-					EnglishNameText: bone.EnglishName(),
-				}
-				m.Records = append(m.Records, item)
-			}
-		}
+		m.AddRecord(ks, bone.Name(), "ボーン")
+		m.AddRecord(ks, bone.EnglishName(), "ボーン")
 	}
 
 	for _, morph := range model.Morphs.Data {
-		for _, p := range strings.Split(morph.Name(), "_") {
-			for _, p2 := range strings.Split(p, "-") {
-				if p2 == "" || m.exists(p2) {
-					continue
-				}
-
-				item := &domain.NameItem{
-					Checked:         !usecase.IsJapaneseString(ks, p2),
-					Number:          len(m.Records) + 1,
-					TypeText:        mi18n.T("モーフ"),
-					NameText:        p2,
-					EnglishNameText: morph.EnglishName(),
-				}
-				m.Records = append(m.Records, item)
-			}
-		}
+		m.AddRecord(ks, morph.Name(), "モーフ")
+		m.AddRecord(ks, morph.EnglishName(), "モーフ")
 	}
 
 	for _, disp := range model.DisplaySlots.Data {
-		for _, p := range strings.Split(disp.Name(), "_") {
-			for _, p2 := range strings.Split(p, "-") {
-				if p2 == "" || m.exists(p2) {
-					continue
-				}
-				item := &domain.NameItem{
-					Checked:         !usecase.IsJapaneseString(ks, p2),
-					Number:          len(m.Records) + 1,
-					TypeText:        mi18n.T("表示枠"),
-					NameText:        p2,
-					EnglishNameText: disp.EnglishName(),
-				}
-				m.Records = append(m.Records, item)
-			}
-		}
+		m.AddRecord(ks, disp.Name(), "表示枠")
+		m.AddRecord(ks, disp.EnglishName(), "表示枠")
 	}
 
 	for _, rb := range model.RigidBodies.Data {
-		for _, p := range strings.Split(rb.Name(), "_") {
-			for _, p2 := range strings.Split(p, "-") {
-				if p2 == "" || m.exists(p2) {
-					continue
-				}
-				item := &domain.NameItem{
-					Checked:         !usecase.IsJapaneseString(ks, p2),
-					Number:          len(m.Records) + 1,
-					TypeText:        mi18n.T("剛体"),
-					NameText:        p2,
-					EnglishNameText: rb.EnglishName(),
-				}
-				m.Records = append(m.Records, item)
-			}
-		}
+		m.AddRecord(ks, rb.Name(), "剛体")
+		m.AddRecord(ks, rb.EnglishName(), "剛体")
 	}
 
 	for _, joint := range model.Joints.Data {
-		for _, p := range strings.Split(joint.Name(), "_") {
-			for _, p2 := range strings.Split(p, "-") {
-				if p2 == "" || m.exists(p2) {
-					continue
-				}
-				item := &domain.NameItem{
-					Checked:         !usecase.IsJapaneseString(ks, p2),
-					Number:          len(m.Records) + 1,
-					TypeText:        mi18n.T("ジョイント"),
-					NameText:        p2,
-					EnglishNameText: joint.EnglishName(),
-				}
-				m.Records = append(m.Records, item)
-			}
-		}
+		m.AddRecord(ks, joint.Name(), "ジョイント")
+		m.AddRecord(ks, joint.EnglishName(), "ジョイント")
 	}
 
 	m.PublishRowsReset()
@@ -329,8 +212,7 @@ func NewCsvTableView(parent walk.Container, model *pmx.PmxModel) *CsvTableView {
 			{Title: "#", Width: 30},
 			{Title: "No.", Width: 50},
 			{Title: mi18n.T("種類"), Width: 80},
-			{Title: mi18n.T("日本語名称"), Width: 200},
-			{Title: mi18n.T("英語名称"), Width: 200},
+			{Title: mi18n.T("日本語名称(分割)"), Width: 200},
 		},
 		StyleCell: func(style *walk.CellStyle) {
 			if nameModel.Checked(style.Row()) {

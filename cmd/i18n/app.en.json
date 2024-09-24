@@ -202,5 +202,17 @@
     {
         "id": "ファイル名",
         "translation": "File Name"
+    },
+    {
+        "id": "日本語名称(分割)",
+        "translation": "Japanese Name (Separated)"
+    },
+    {
+        "id": "パス",
+        "translation": "Path"
+    },
+    {
+        "id": "テクスチャ",
+        "translation": "Texture"
     }
 ]

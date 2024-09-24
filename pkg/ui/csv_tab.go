@@ -42,6 +42,10 @@ func newCsvTab(controlWindow *controller.ControlWindow, toolState *ToolState) {
 
 		toolState.OriginalCsvPmxPicker.SetOnPathChanged(func(path string) {
 			if data, err := toolState.OriginalCsvPmxPicker.Load(); err == nil {
+				if data == nil {
+					return
+				}
+
 				// 出力パス設定
 				outputPath := mutils.CreateOutputPath(path, "")
 				outputPath = strings.ReplaceAll(outputPath, ".pmx", ".csv")
@@ -85,6 +89,12 @@ func newCsvTab(controlWindow *controller.ControlWindow, toolState *ToolState) {
 func (toolState *ToolState) onClickCsvSave() {
 	if !toolState.OriginalCsvPmxPicker.Exists() {
 		mlog.ILT("生成失敗", "生成失敗メッセージ")
+		return
+	}
+
+	// No.でソート
+	if err := toolState.CsvTableView.Model.Sort(1, walk.SortAscending); err != nil {
+		mlog.ET(mi18n.T("出力失敗"), mi18n.T("Csv出力失敗メッセージ", map[string]interface{}{"Error": err.Error()}))
 		return
 	}
 

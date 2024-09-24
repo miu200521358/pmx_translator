@@ -16,14 +16,28 @@ import (
 )
 
 func Translate(text string, langDict *core.CsvModel, langIndex int, modelName string) string {
-	// 先にモデル名一致の翻訳を行う
+	// モデル名一致＆完全一致の翻訳を行う
+	for n, row := range langDict.Records() {
+		if n > 0 && row[0] == modelName && row[1] == text {
+			text = strings.ReplaceAll(text, row[1], row[langIndex])
+		}
+	}
+
+	// モデル名不問＆完全一致の翻訳を行う
+	for n, row := range langDict.Records() {
+		if n > 0 && row[0] == "" && row[1] == text {
+			text = strings.ReplaceAll(text, row[1], row[langIndex])
+		}
+	}
+
+	// モデル名一致＆部分一致翻訳を行う
 	for n, row := range langDict.Records() {
 		if n > 0 && row[0] == modelName && row[1] != "" {
 			text = strings.ReplaceAll(text, row[1], row[langIndex])
 		}
 	}
 
-	// モデル名を問わない翻訳
+	// モデル名不問＆部分一致翻訳
 	for n, row := range langDict.Records() {
 		if n > 0 && row[0] == "" && row[1] != "" {
 			text = strings.ReplaceAll(text, row[1], row[langIndex])
@@ -46,37 +60,6 @@ func getTranslatedNames(
 		}
 	}
 	return newJpText, newEnText
-}
-
-func TranslateOutputPath(model *pmx.PmxModel, nameItems []*domain.NameItem) string {
-	{
-		jpName, enName := getTranslatedNames(model.Name(), model.EnglishName(), nameItems)
-		model.SetName(jpName)
-		model.SetEnglishName(enName)
-	}
-
-	outputJpPath := model.Path()
-	{
-		path, fileName, ext := mutils.SplitPath(outputJpPath)
-		jpFileName, _ := getTranslatedNames(fileName, "", nameItems)
-
-		paths := strings.Split(path, string(filepath.Separator))
-		for i, p := range paths {
-			if i < 2 {
-				paths[i] = p
-				continue
-			}
-			if p == "" {
-				continue
-			}
-			paths[i], _ = getTranslatedNames(p, "", nameItems)
-		}
-
-		outputJpPath = fmt.Sprintf(
-			"%s%s%s", paths[0], string(filepath.Separator), filepath.Join(append(paths[1:], jpFileName+ext)...))
-	}
-
-	return mutils.CreateOutputPath(outputJpPath, "")
 }
 
 func Save(model *pmx.PmxModel, nameItems []*domain.NameItem, outputJpPath string) error {

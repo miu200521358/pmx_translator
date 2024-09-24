@@ -6,6 +6,7 @@ import (
 	"github.com/miu200521358/mlib_go/pkg/domain/vmd"
 	"github.com/miu200521358/mlib_go/pkg/interface/controller"
 	"github.com/miu200521358/mlib_go/pkg/interface/controller/widget"
+	"github.com/miu200521358/mlib_go/pkg/mutils"
 	"github.com/miu200521358/mlib_go/pkg/mutils/mi18n"
 	"github.com/miu200521358/mlib_go/pkg/mutils/mlog"
 	"github.com/miu200521358/pmx_translator/pkg/usecase"
@@ -41,6 +42,9 @@ func newTranslateTab(controlWindow *controller.ControlWindow, toolState *ToolSta
 
 		toolState.OriginalPmxPicker.SetOnPathChanged(func(path string) {
 			if data, err := toolState.OriginalPmxPicker.Load(); err == nil {
+				if data == nil {
+					return
+				}
 				toolState.TranslateModel.Model = data.(*pmx.PmxModel)
 
 				if toolState.TranslateModel.LangCsv != nil {
@@ -48,8 +52,8 @@ func newTranslateTab(controlWindow *controller.ControlWindow, toolState *ToolSta
 						toolState.TranslateModel.Model, toolState.TranslateModel.LangCsv)
 
 					// 出力パス設定
-					outputPath := usecase.TranslateOutputPath(
-						toolState.TranslateModel.Model, toolState.TranslateTableView.NameModel.Records)
+					outputPath := mutils.CreateOutputPath(
+						toolState.TranslateTableView.NameModel.Records[0].JapaneseNameText, "")
 					toolState.OutputPmxPicker.SetPath(outputPath)
 				}
 			} else {
@@ -69,6 +73,9 @@ func newTranslateTab(controlWindow *controller.ControlWindow, toolState *ToolSta
 
 		toolState.LangCsvPicker.SetOnPathChanged(func(path string) {
 			if data, err := toolState.LangCsvPicker.Load(); err == nil {
+				if data == nil {
+					return
+				}
 				toolState.TranslateModel.LangCsv = data.(*core.CsvModel)
 
 				if toolState.TranslateModel.Model != nil {
@@ -76,8 +83,8 @@ func newTranslateTab(controlWindow *controller.ControlWindow, toolState *ToolSta
 						toolState.TranslateModel.Model, toolState.TranslateModel.LangCsv)
 
 					// 出力パス設定
-					outputPath := usecase.TranslateOutputPath(
-						toolState.TranslateModel.Model, toolState.TranslateTableView.NameModel.Records)
+					outputPath := mutils.CreateOutputPath(
+						toolState.TranslateTableView.NameModel.Records[0].JapaneseNameText, "")
 					toolState.OutputPmxPicker.SetPath(outputPath)
 				}
 			} else {
