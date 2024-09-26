@@ -27,4 +27,5 @@ type NameItem struct {
 	NameText         string
 	JapaneseNameText string
 	EnglishNameText  string
+	Segmented        bool
 }

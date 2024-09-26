@@ -39,3 +39,5 @@ PmxTranslator_1.0.0_beta_10
 PmxTranslator_1.0.0_beta_11
 - Csv出力タブの英語名欄を復活
 
+PmxTranslator_1.0.0_beta_12
+- Csv出力タブで分割したかどうかの区別が分かるよう欄追加

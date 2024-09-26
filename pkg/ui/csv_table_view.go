@@ -2,7 +2,9 @@ package ui
 
 import (
 	"path/filepath"
+	"slices"
 	"sort"
+	"strings"
 
 	"github.com/miu200521358/mlib_go/pkg/domain/pmx"
 	"github.com/miu200521358/mlib_go/pkg/mutils"
@@ -61,6 +63,8 @@ func (m *CsvNameModel) Value(row, col int) interface{} {
 		return item.NameText
 	case 4:
 		return item.EnglishNameText
+	case 5:
+		return item.Segmented
 	}
 
 	panic("unexpected col")
@@ -109,6 +113,16 @@ func (m *CsvNameModel) Sort(col int, order walk.SortOrder) error {
 			return c(a.NameText < b.NameText)
 		case 4:
 			return c(a.EnglishNameText < b.EnglishNameText)
+		case 5:
+			av := 0
+			if a.Segmented {
+				av = 1
+			}
+			bv := 0
+			if b.Segmented {
+				bv = 1
+			}
+			return c(av < bv)
 		}
 
 		panic("unreachable")
@@ -129,8 +143,21 @@ func (m *CsvNameModel) exists(txt string) bool {
 var separators = []string{string(filepath.Separator), "_", "-", " ", "　", "/", ".", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}
 
 func (m *CsvNameModel) AddRecord(ks, jpTxt, enTxt, fieldKey string) {
+	if !m.exists(jpTxt) && fieldKey != "パス" && fieldKey != "テクスチャ" {
+		item := &domain.NameItem{
+			Checked:         !usecase.IsJapaneseString(ks, jpTxt),
+			Number:          len(m.Records) + 1,
+			TypeText:        mi18n.T(fieldKey),
+			NameText:        jpTxt,
+			EnglishNameText: enTxt,
+			Segmented:       false,
+		}
+		m.Records = append(m.Records, item)
+	}
+
 	for _, t := range mutils.SplitAll(jpTxt, separators) {
-		if t == "" || m.exists(t) {
+		if t == "" || m.exists(t) || (len(t) <= 1 && usecase.IsJapaneseString(ks, t)) ||
+			slices.Contains([]string{"png", "bmp", "jpg", "gif"}, strings.ToLower(t)) {
 			continue
 		}
 		item := &domain.NameItem{
@@ -139,17 +166,7 @@ func (m *CsvNameModel) AddRecord(ks, jpTxt, enTxt, fieldKey string) {
 			TypeText:        mi18n.T(fieldKey),
 			NameText:        t,
 			EnglishNameText: "",
-		}
-		m.Records = append(m.Records, item)
-	}
-
-	if !m.exists(jpTxt) {
-		item := &domain.NameItem{
-			Checked:         !usecase.IsJapaneseString(ks, jpTxt),
-			Number:          len(m.Records) + 1,
-			TypeText:        mi18n.T(fieldKey),
-			NameText:        jpTxt,
-			EnglishNameText: enTxt,
+			Segmented:       true,
 		}
 		m.Records = append(m.Records, item)
 	}
@@ -218,11 +235,12 @@ func NewCsvTableView(parent walk.Container, model *pmx.PmxModel) *CsvTableView {
 		MultiSelection:   true,
 		Model:            nameModel,
 		Columns: []declarative.TableViewColumn{
-			{Title: "#", Width: 30},
+			{Title: "#", Width: 50},
 			{Title: "No.", Width: 50},
 			{Title: mi18n.T("種類"), Width: 80},
 			{Title: mi18n.T("日本語名称"), Width: 200},
 			{Title: mi18n.T("英語名称"), Width: 200},
+			{Title: mi18n.T("分割"), Width: 50},
 		},
 		StyleCell: func(style *walk.CellStyle) {
 			if nameModel.Checked(style.Row()) {

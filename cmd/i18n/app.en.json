@@ -45,7 +45,7 @@
     },
     {
         "id": "CsvTabLabel",
-        "translation": "・Please specify the Pmx model for which you want to output the name field as CSV.\n・When you load the Pmx model, a list of name fields will be displayed in the table below.\n・Name fields that contain characters that cannot be recognized by Shift-JIS, such as Simplified Chinese, will be automatically checked.\n・Additionally, you can optionally select target names for CSV output.\n・Clicking on the header allows you to sort the table.\n・You can save the list of names for the dictionary by clicking the 'Save' button."
+        "translation": "・Please specify the Pmx model whose name fields you want to export to CSV.\n・Once the Pmx model is loaded, the list of name fields will be displayed in the table below.\n・Names containing characters that cannot be recognized in Shift-JIS, such as Simplified Chinese, will be automatically checked.\n・You can also manually select which name fields to export to CSV.\n・Replacement patterns for splitting names by symbols or numbers have also been added to the view.\n・Clicking on the header allows you to sort the table.\n・You can save the list of names for the dictionary using the 'Save' button."
     },
     {
         "id": "生成失敗",
@@ -214,5 +214,9 @@
     {
         "id": "テクスチャ",
         "translation": "Texture"
+    },
+    {
+        "id": "分割",
+        "translation": "Segmentation"
     }
 ]
