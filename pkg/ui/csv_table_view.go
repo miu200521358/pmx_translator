@@ -60,11 +60,11 @@ func (m *CsvNameModel) Value(row, col int) interface{} {
 	case 2:
 		return item.TypeText
 	case 3:
-		return item.NameText
-	case 4:
-		return item.EnglishNameText
-	case 5:
 		return item.Segmented
+	case 4:
+		return item.NameText
+	case 5:
+		return item.EnglishNameText
 	}
 
 	panic("unexpected col")
@@ -110,10 +110,6 @@ func (m *CsvNameModel) Sort(col int, order walk.SortOrder) error {
 		case 2:
 			return c(a.TypeText < b.TypeText)
 		case 3:
-			return c(a.NameText < b.NameText)
-		case 4:
-			return c(a.EnglishNameText < b.EnglishNameText)
-		case 5:
 			av := 0
 			if a.Segmented {
 				av = 1
@@ -123,6 +119,10 @@ func (m *CsvNameModel) Sort(col int, order walk.SortOrder) error {
 				bv = 1
 			}
 			return c(av < bv)
+		case 4:
+			return c(a.NameText < b.NameText)
+		case 5:
+			return c(a.EnglishNameText < b.EnglishNameText)
 		}
 
 		panic("unreachable")
@@ -157,7 +157,7 @@ func (m *CsvNameModel) AddRecord(ks, jpTxt, enTxt, fieldKey string) {
 
 	for _, t := range mutils.SplitAll(jpTxt, separators) {
 		if t == "" || m.exists(t) || (len(t) <= 1 && usecase.IsJapaneseString(ks, t)) ||
-			slices.Contains([]string{"png", "bmp", "jpg", "gif"}, strings.ToLower(t)) {
+			slices.Contains([]string{"png", "bmp", "jpg", "gif", "tga", "jpeg"}, strings.ToLower(t)) {
 			continue
 		}
 		item := &domain.NameItem{
@@ -238,9 +238,9 @@ func NewCsvTableView(parent walk.Container, model *pmx.PmxModel) *CsvTableView {
 			{Title: "#", Width: 50},
 			{Title: "No.", Width: 50},
 			{Title: mi18n.T("種類"), Width: 80},
+			{Title: mi18n.T("分割"), Width: 50},
 			{Title: mi18n.T("日本語名称"), Width: 200},
 			{Title: mi18n.T("英語名称"), Width: 200},
-			{Title: mi18n.T("分割"), Width: 50},
 		},
 		StyleCell: func(style *walk.CellStyle) {
 			if nameModel.Checked(style.Row()) {
