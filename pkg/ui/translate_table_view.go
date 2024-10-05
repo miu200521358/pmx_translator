@@ -191,7 +191,7 @@ func NewTranslateTableView(parent walk.Container, model *pmx.PmxModel, charaCsv 
 		MultiSelection:   true,
 		Model:            nameModel,
 		Columns: []declarative.TableViewColumn{
-			{Title: "#", Width: 30},
+			{Title: "#", Width: 50},
 			{Title: "No.", Width: 50},
 			{Title: mi18n.T("種類"), Width: 80},
 			{Title: mi18n.T("インデックス"), Width: 40},

@@ -41,3 +41,11 @@ PmxTranslator_1.0.0_beta_11
 
 PmxTranslator_1.0.0_beta_12
 - Csv出力タブで分割したかどうかの区別が分かるよう欄追加
+
+PmxTranslator_1.0.0_beta_13
+- Csv出力タブの分割欄を前に移動
+
+PmxTranslator_1.0.0_beta_14
+- 共通ライブラリ更新
+- ツールチップが出力されるようリビルド
+
