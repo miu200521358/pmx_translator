@@ -54,7 +54,7 @@ func newCsvTab(controlWindow *controller.ControlWindow, toolState *ToolState) {
 				// CsvTableView
 				toolState.CsvTableView.ResetModel(data.(*pmx.PmxModel))
 			} else {
-				mlog.E(mi18n.T("読み込み失敗"), err)
+				mlog.ET(mi18n.T("読み込み失敗"), err.Error())
 			}
 		})
 	}

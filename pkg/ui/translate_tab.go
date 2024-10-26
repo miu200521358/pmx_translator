@@ -57,7 +57,7 @@ func newTranslateTab(controlWindow *controller.ControlWindow, toolState *ToolSta
 					toolState.OutputPmxPicker.SetPath(outputPath)
 				}
 			} else {
-				mlog.E(mi18n.T("読み込み失敗"), err)
+				mlog.ET(mi18n.T("読み込み失敗"), err.Error())
 			}
 		})
 	}
@@ -88,7 +88,7 @@ func newTranslateTab(controlWindow *controller.ControlWindow, toolState *ToolSta
 					toolState.OutputPmxPicker.SetPath(outputPath)
 				}
 			} else {
-				mlog.E(mi18n.T("読み込み失敗"), err)
+				mlog.ET(mi18n.T("読み込み失敗"), err.Error())
 			}
 		})
 	}
