@@ -41,7 +41,7 @@ func newCsvTab(controlWindow *controller.ControlWindow, toolState *ToolState) {
 			mi18n.T("置換対象モデルの使い方"))
 
 		toolState.OriginalCsvPmxPicker.SetOnPathChanged(func(path string) {
-			if data, err := toolState.OriginalCsvPmxPicker.Load(); err == nil {
+			if data, err := toolState.OriginalCsvPmxPicker.Load(path); err == nil {
 				if data == nil {
 					return
 				}

@@ -41,7 +41,7 @@ func newTranslateTab(controlWindow *controller.ControlWindow, toolState *ToolSta
 			mi18n.T("置換対象モデルの使い方"))
 
 		toolState.OriginalPmxPicker.SetOnPathChanged(func(path string) {
-			if data, err := toolState.OriginalPmxPicker.Load(); err == nil {
+			if data, err := toolState.OriginalPmxPicker.Load(path); err == nil {
 				if data == nil {
 					return
 				}
@@ -72,7 +72,7 @@ func newTranslateTab(controlWindow *controller.ControlWindow, toolState *ToolSta
 			mi18n.T("置換辞書データの使い方"))
 
 		toolState.LangCsvPicker.SetOnPathChanged(func(path string) {
-			if data, err := toolState.LangCsvPicker.Load(); err == nil {
+			if data, err := toolState.LangCsvPicker.Load(path); err == nil {
 				if data == nil {
 					return
 				}
