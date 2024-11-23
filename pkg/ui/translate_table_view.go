@@ -5,6 +5,7 @@ import (
 
 	"github.com/miu200521358/mlib_go/pkg/domain/core"
 	"github.com/miu200521358/mlib_go/pkg/domain/pmx"
+	"github.com/miu200521358/mlib_go/pkg/interface/controller/widget"
 	"github.com/miu200521358/mlib_go/pkg/mutils"
 	"github.com/miu200521358/mlib_go/pkg/mutils/mi18n"
 	"github.com/miu200521358/pmx_translator/pkg/domain"
@@ -21,6 +22,7 @@ type TranslateTableView struct {
 type TranslateNameModel struct {
 	walk.TableModelBase
 	walk.SorterBase
+	tv         *walk.TableView
 	sortColumn int
 	sortOrder  walk.SortOrder
 	Records    []*domain.NameItem
@@ -34,6 +36,10 @@ func NewTranslateNameModel(model *pmx.PmxModel, charaCsv *core.CsvModel) *Transl
 
 func (m *TranslateNameModel) RowCount() int {
 	return len(m.Records)
+}
+
+func (m *TranslateNameModel) SetParent(parent *walk.TableView) {
+	m.tv = parent
 }
 
 func (m *TranslateNameModel) Value(row, col int) interface{} {
@@ -206,12 +212,100 @@ func NewTranslateTableView(parent walk.Container, model *pmx.PmxModel, charaCsv 
 				style.BackgroundColor = walk.RGB(255, 255, 255)
 			}
 		},
+		OnSelectedIndexesChanged: func() {
+			var dlg *walk.Dialog
+			var cancelBtn *walk.PushButton
+			var okBtn *walk.PushButton
+			var db *walk.DataBinder
+			var jpTxt *walk.TextEdit
+			var enTxt *walk.TextEdit
+
+			textChangeDialog := &declarative.Dialog{
+				AssignTo:      &dlg,
+				CancelButton:  &cancelBtn,
+				DefaultButton: &okBtn,
+				Title:         mi18n.T("名称変更"),
+				Layout:        declarative.VBox{},
+				MinSize:       declarative.Size{Width: 400, Height: 120},
+				DataBinder: declarative.DataBinder{
+					AssignTo:   &db,
+					DataSource: nameModel.Records[tv.CurrentIndex()],
+				},
+				Children: []declarative.Widget{
+					declarative.Composite{
+						Layout: declarative.Grid{Columns: 2},
+						Children: []declarative.Widget{
+							declarative.Label{
+								Text: mi18n.T("種類"),
+							},
+							declarative.Label{
+								Text: declarative.Bind("TypeText"),
+							},
+							declarative.Label{
+								Text: mi18n.T("元名称"),
+							},
+							declarative.Label{
+								Text: declarative.Bind("NameText"),
+							},
+							declarative.Label{
+								Text: mi18n.T("日本語名称"),
+							},
+							declarative.TextEdit{
+								AssignTo: &jpTxt,
+								Text:     declarative.Bind("JapaneseNameText", textRequired{title: mi18n.T("日本語名称")}),
+							},
+							declarative.Label{
+								Text: mi18n.T("英語名称"),
+							},
+							declarative.TextEdit{
+								AssignTo: &enTxt,
+								Text:     declarative.Bind("EnglishNameText", textRequired{title: mi18n.T("英語名称")}),
+							},
+						},
+					},
+					declarative.Composite{
+						Layout: declarative.HBox{
+							Alignment: declarative.AlignHFarVCenter,
+						},
+						Children: []declarative.Widget{
+							declarative.PushButton{
+								AssignTo: &okBtn,
+								Text:     mi18n.T("OK"),
+								OnClicked: func() {
+									if err := db.Submit(); err != nil {
+										widget.RaiseError(err)
+										return
+									}
+									dlg.Accept()
+								},
+							},
+							declarative.PushButton{
+								AssignTo: &cancelBtn,
+								Text:     mi18n.T("キャンセル"),
+								OnClicked: func() {
+									dlg.Cancel()
+								},
+							},
+						},
+					},
+				},
+			}
+
+			if cmd, err := textChangeDialog.Run(builder.Parent().Form()); err != nil {
+				widget.RaiseError(err)
+			} else if cmd == walk.DlgCmdOK {
+				nameModel.Records[tv.CurrentIndex()].Checked = true
+				// nameModel.Records[tv.CurrentIndex()].JapaneseNameText = jpTxt.Text()
+				// nameModel.Records[tv.CurrentIndex()].EnglishNameText = enTxt.Text()
+			}
+		},
 	}
 
 	if err := dTableView.Create(builder); err != nil {
-		panic(err)
+		widget.RaiseError(err)
 	}
 
+	nameModel.SetParent(tv)
 	nameTableView := &TranslateTableView{
 		TableView: dTableView,
 		NameModel: nameModel,
@@ -222,4 +316,33 @@ func NewTranslateTableView(parent walk.Container, model *pmx.PmxModel, charaCsv 
 
 func (tv *TranslateTableView) ResetModel(model *pmx.PmxModel, charaCsv *core.CsvModel) {
 	tv.NameModel.ResetRows(model, charaCsv)
+}
+
+// -----------------------
+
+type textRequired struct {
+	title string
+}
+
+func (tr textRequired) Create() (walk.Validator, error) {
+	return &textRequiredValidator{title: tr.title}, nil
+}
+
+type textRequiredValidator struct {
+	title string
+}
+
+func TextRequiredValidator(title string) walk.Validator {
+	return &textRequiredValidator{title: title}
+}
+
+func (tv textRequiredValidator) Validate(v interface{}) error {
+	if v == nil || v == "" {
+		return walk.NewValidationError(
+			mi18n.T("文字列未入力"),
+			mi18n.T("文字列未入力テキスト", map[string]interface{}{"Title": tv.title}),
+		)
+	}
+
+	return nil
 }

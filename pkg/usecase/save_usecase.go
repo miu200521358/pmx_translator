@@ -63,44 +63,50 @@ func Translate(text, enText string, langDict *core.CsvModel, modelName string) (
 }
 
 func getTranslatedNames(
-	jpText, enText string, nameItems []*domain.NameItem,
+	number int, jpText, enText string, nameItems []*domain.NameItem,
 ) (string, string) {
-	newJpText := jpText
-	newEnText := enText
-
-	for _, item := range nameItems {
-		if item.Checked {
-			newJpText = strings.ReplaceAll(newJpText, item.NameText, item.JapaneseNameText)
-			newEnText = strings.ReplaceAll(newEnText, item.NameText, item.EnglishNameText)
+	var item *domain.NameItem
+	for _, it := range nameItems {
+		if it.Number == number {
+			item = it
+			break
 		}
 	}
-
-	return newJpText, newEnText
+	if item.Checked {
+		return item.JapaneseNameText, item.EnglishNameText
+	}
+	return jpText, enText
 }
 
 func Save(model *pmx.PmxModel, nameItems []*domain.NameItem, outputJpPath string) error {
+	number := 2
+
 	{
-		jpName, enName := getTranslatedNames(model.Name(), model.EnglishName(), nameItems)
+		jpName, enName := getTranslatedNames(number, model.Name(), model.EnglishName(), nameItems)
 		model.SetName(jpName)
 		model.SetEnglishName(enName)
+		number++
 	}
 
 	for _, mat := range model.Materials.Data {
-		jpName, enName := getTranslatedNames(mat.Name(), mat.EnglishName(), nameItems)
+		jpName, enName := getTranslatedNames(number, mat.Name(), mat.EnglishName(), nameItems)
 		mat.SetName(jpName)
 		mat.SetEnglishName(enName)
+		number++
 	}
 
 	jpDir, _, _ := mutils.SplitPath(outputJpPath)
 
 	for _, tex := range model.Textures.Data {
 		if tex.Name() == "" {
+			number++
 			continue
 		}
 
 		orgName := tex.Name()
-		jpPath, _ := getTranslatedNames(orgName, "", nameItems)
+		jpPath, _ := getTranslatedNames(number, orgName, "", nameItems)
 		tex.SetName(jpPath)
+		number++
 
 		dir, _, _ := mutils.SplitPath(model.Path())
 		if !mutils.CanSave(outputJpPath) {
@@ -118,33 +124,38 @@ func Save(model *pmx.PmxModel, nameItems []*domain.NameItem, outputJpPath string
 	}
 
 	for _, bone := range model.Bones.Data {
-		jpName, enName := getTranslatedNames(bone.Name(), bone.EnglishName(), nameItems)
+		jpName, enName := getTranslatedNames(number, bone.Name(), bone.EnglishName(), nameItems)
 		bone.SetName(jpName)
 		bone.SetEnglishName(enName)
+		number++
 	}
 
 	for _, morph := range model.Morphs.Data {
-		jpName, enName := getTranslatedNames(morph.Name(), morph.EnglishName(), nameItems)
+		jpName, enName := getTranslatedNames(number, morph.Name(), morph.EnglishName(), nameItems)
 		morph.SetName(jpName)
 		morph.SetEnglishName(enName)
+		number++
 	}
 
 	for _, disp := range model.DisplaySlots.Data {
-		jpName, enName := getTranslatedNames(disp.Name(), disp.EnglishName(), nameItems)
+		jpName, enName := getTranslatedNames(number, disp.Name(), disp.EnglishName(), nameItems)
 		disp.SetName(jpName)
 		disp.SetEnglishName(enName)
+		number++
 	}
 
 	for _, rb := range model.RigidBodies.Data {
-		jpName, enName := getTranslatedNames(rb.Name(), rb.EnglishName(), nameItems)
+		jpName, enName := getTranslatedNames(number, rb.Name(), rb.EnglishName(), nameItems)
 		rb.SetName(jpName)
 		rb.SetEnglishName(enName)
+		number++
 	}
 
 	for _, joint := range model.Joints.Data {
-		jpName, enName := getTranslatedNames(joint.Name(), joint.EnglishName(), nameItems)
+		jpName, enName := getTranslatedNames(number, joint.Name(), joint.EnglishName(), nameItems)
 		joint.SetName(jpName)
 		joint.SetEnglishName(enName)
+		number++
 	}
 
 	if !mutils.CanSave(outputJpPath) {

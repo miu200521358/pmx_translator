@@ -86,6 +86,7 @@ func newTranslateTab(controlWindow *controller.ControlWindow, toolState *ToolSta
 					mlog.ET(mi18n.T("読み込み失敗"), err.Error())
 				} else if result.model != nil {
 					toolState.TranslateModel.Model = result.model
+					toolState.OriginalPmxPicker.SetCache(result.model)
 
 					if toolState.TranslateModel.LangCsv != nil {
 						toolState.TranslateTableView.ResetModel(
