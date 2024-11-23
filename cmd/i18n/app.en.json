@@ -41,7 +41,7 @@
     },
     {
         "id": "TranslateTabLabel",
-        "translation": "・Please specify the Pmx model where you want to replace the language in the name field, and the CSV data file for the replacement dictionary.\n・When the Pmx model and dictionary CSV are loaded, a list of replacement values for the name field will appear in the table below.\n・Fields in the name column containing words registered in the dictionary will automatically be checked.\nSelecting a row outside the checkbox will display a dialog for modifying the Japanese and English names, allowing changes.\n・You can save the model with the replacement results using the 'Save' button."
+        "translation": "・Please specify the Pmx model where you want to replace the language in the name field and the CSV data file for the replacement dictionary.\n・When the Pmx model and dictionary CSV are loaded, a list of replacement values for the name field will appear in the table below.\n・Fields in the name column containing words registered in the dictionary will automatically be checked.\n・Selecting a row outside the checkbox will display a dialog for individually modifying the names.\n・You can save the model with the replacement results using the 'Save' button."
     },
     {
         "id": "CsvTabLabel",

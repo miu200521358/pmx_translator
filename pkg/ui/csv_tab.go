@@ -86,6 +86,8 @@ func newCsvTab(controlWindow *controller.ControlWindow, toolState *ToolState) {
 				if result.err != nil {
 					mlog.ET(mi18n.T("読み込み失敗"), err.Error())
 				} else if result.model != nil {
+					toolState.OriginalCsvPmxPicker.SetCache(result.model)
+
 					// CsvTableView
 					toolState.CsvTableView.ResetModel(result.model)
 				}
