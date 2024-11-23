@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"github.com/miu200521358/mlib_go/pkg/domain/pmx"
 	"github.com/miu200521358/mlib_go/pkg/interface/app"
 	"github.com/miu200521358/mlib_go/pkg/interface/controller"
 	"github.com/miu200521358/mlib_go/pkg/interface/controller/widget"
@@ -35,4 +36,13 @@ func NewToolState(app *app.MApp, controlWindow *controller.ControlWindow) *ToolS
 	newCsvTab(controlWindow, toolState)
 
 	return toolState
+}
+
+func (toolState *ToolState) SetEnabled(enabled bool) {
+	toolState.ControlWindow.SetEnabled(enabled)
+}
+
+type loadPmxResult struct {
+	model *pmx.PmxModel
+	err   error
 }

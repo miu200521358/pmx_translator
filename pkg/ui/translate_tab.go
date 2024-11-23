@@ -1,9 +1,13 @@
 package ui
 
 import (
+	"runtime"
+	"sync"
+
 	"github.com/miu200521358/mlib_go/pkg/domain/core"
 	"github.com/miu200521358/mlib_go/pkg/domain/pmx"
 	"github.com/miu200521358/mlib_go/pkg/domain/vmd"
+	"github.com/miu200521358/mlib_go/pkg/infrastructure/repository"
 	"github.com/miu200521358/mlib_go/pkg/interface/controller"
 	"github.com/miu200521358/mlib_go/pkg/interface/controller/widget"
 	"github.com/miu200521358/mlib_go/pkg/mutils"
@@ -41,24 +45,68 @@ func newTranslateTab(controlWindow *controller.ControlWindow, toolState *ToolSta
 			mi18n.T("置換対象モデルの使い方"))
 
 		toolState.OriginalPmxPicker.SetOnPathChanged(func(path string) {
-			if data, err := toolState.OriginalPmxPicker.Load(path); err == nil {
-				if data == nil {
-					return
-				}
-				toolState.TranslateModel.Model = data.(*pmx.PmxModel)
+			toolState.SetEnabled(false)
 
-				if toolState.TranslateModel.LangCsv != nil {
-					toolState.TranslateTableView.ResetModel(
-						toolState.TranslateModel.Model, toolState.TranslateModel.LangCsv)
-
-					// 出力パス設定
-					outputPath := mutils.CreateOutputPath(
-						toolState.TranslateTableView.NameModel.Records[0].JapaneseNameText, "")
-					toolState.OutputPmxPicker.SetPath(outputPath)
+			if canLoad, err := toolState.OriginalPmxPicker.CanLoad(); !canLoad {
+				if err != nil {
+					mlog.ET(mi18n.T("読み込み失敗"), err.Error())
 				}
-			} else {
-				mlog.ET(mi18n.T("読み込み失敗"), err.Error())
+				return
 			}
+
+			resultChan := make(chan loadPmxResult, 1)
+			var wg sync.WaitGroup
+			wg.Add(1)
+
+			go func() {
+				defer wg.Done()
+
+				var loadResult loadPmxResult
+				rep := repository.NewPmxRepository()
+				if data, err := rep.Load(path); err != nil {
+					loadResult.model = nil
+					loadResult.err = err
+					resultChan <- loadResult
+					return
+				} else {
+					loadResult.model = data.(*pmx.PmxModel)
+					loadResult.err = nil
+					resultChan <- loadResult
+				}
+			}()
+
+			// 非同期で結果を受け取る
+			go func() {
+				wg.Wait()
+				close(resultChan)
+
+				result := <-resultChan
+
+				if result.err != nil {
+					mlog.ET(mi18n.T("読み込み失敗"), err.Error())
+				} else if result.model != nil {
+					toolState.TranslateModel.Model = result.model
+
+					if toolState.TranslateModel.LangCsv != nil {
+						toolState.TranslateTableView.ResetModel(
+							toolState.TranslateModel.Model, toolState.TranslateModel.LangCsv)
+
+						// 出力パス設定
+						outputPath := mutils.CreateOutputPath(
+							toolState.TranslateTableView.NameModel.Records[0].JapaneseNameText, "")
+						toolState.OutputPmxPicker.SetPath(outputPath)
+					}
+				}
+
+				go func() {
+					runtime.GC() // 読み込み時のメモリ解放
+				}()
+
+				defer toolState.ControlWindow.Synchronize(func() {
+					// 画面活性化
+					toolState.SetEnabled(true)
+				})
+			}()
 		})
 	}
 
