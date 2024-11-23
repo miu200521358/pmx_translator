@@ -259,7 +259,7 @@ func NewTranslateTableView(parent walk.Container, model *pmx.PmxModel, charaCsv 
 							},
 							declarative.TextEdit{
 								AssignTo: &enTxt,
-								Text:     declarative.Bind("EnglishNameText", textRequired{title: mi18n.T("英語名称")}),
+								Text:     declarative.Bind("EnglishNameText"),
 							},
 						},
 					},
