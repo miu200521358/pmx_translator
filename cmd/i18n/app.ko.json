@@ -238,5 +238,37 @@
     {
         "id": "文字列未入力テキスト",
         "translation": "{.Title}이(가) 입력되지 않았습니다"
+    },
+    {
+        "id": "Csv追加",
+        "translation": "CSV 추가"
+    },
+    {
+        "id": "AppendTabLabel",
+        "translation": "・추가 원본이 되는 CSV와 추가할 CSV를 지정하세요\n・두 개의 CSV 파일을 로드하면 아래 테이블에 이름 목록이 표시됩니다\n・원본 CSV에 없고 추가 CSV에만 있는 사전은 자동으로 체크됩니다\n・'저장' 버튼을 눌러 체크된 사전 데이터를 원본 CSV에 추가한 새로운 CSV를 생성합니다"
+    },
+    {
+        "id": "追加元CSVデータ",
+        "translation": "원본 사전 데이터 (CSV)"
+    },
+    {
+        "id": "追加元CSVデータファイルを選択してください",
+        "translation": "원본 사전 데이터 (CSV) 파일을 선택하세요"
+    },
+    {
+        "id": "追加元CSVデータの使い方",
+        "translation": "・원본 CSV 데이터 파일을 지정할 수 있습니다"
+    },
+    {
+        "id": "追加対象CSVデータ",
+        "translation": "대상 사전 데이터 (CSV)"
+    },
+    {
+        "id": "追加対象CSVデータファイルを選択してください",
+        "translation": "대상 사전 데이터 (CSV) 파일을 선택하세요"
+    },
+    {
+        "id": "追加対象CSVデータの使い方",
+        "translation": "・대상 CSV 데이터 파일을 지정할 수 있습니다"
     }
 ]

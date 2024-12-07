@@ -10,19 +10,25 @@ import (
 )
 
 type ToolState struct {
-	App                  *app.MApp
-	ControlWindow        *controller.ControlWindow
-	TranslateModel       *domain.TranslateModel
-	TranslateTab         *widget.MTabPage
-	OriginalPmxPicker    *widget.FilePicker
-	LangCsvPicker        *widget.FilePicker
-	OutputPmxPicker      *widget.FilePicker
-	OriginalCsvPmxPicker *widget.FilePicker
-	OutputCsvPicker      *widget.FilePicker
-	SaveButton           *walk.PushButton
-	CsvTab               *widget.MTabPage
-	CsvTableView         *CsvTableView
-	TranslateTableView   *TranslateTableView
+	App                     *app.MApp
+	ControlWindow           *controller.ControlWindow
+	TranslateModel          *domain.TranslateModel
+	TranslateTab            *widget.MTabPage
+	OriginalPmxPicker       *widget.FilePicker
+	LangCsvPicker           *widget.FilePicker
+	OutputPmxPicker         *widget.FilePicker
+	OriginalCsvPmxPicker    *widget.FilePicker
+	OutputCsvPicker         *widget.FilePicker
+	SaveButton              *walk.PushButton
+	CsvTab                  *widget.MTabPage
+	CsvTableView            *CsvTableView
+	TranslateTableView      *TranslateTableView
+	AppendTab               *widget.MTabPage
+	AppendTableView         *AppendTableView
+	AppendOriginalCsvPicker *widget.FilePicker
+	AppendCsvPicker         *widget.FilePicker
+	AppendOutputPicker      *widget.FilePicker
+	AppendSaveButton        *walk.PushButton
 }
 
 func NewToolState(app *app.MApp, controlWindow *controller.ControlWindow) *ToolState {
@@ -34,6 +40,7 @@ func NewToolState(app *app.MApp, controlWindow *controller.ControlWindow) *ToolS
 
 	newTranslateTab(controlWindow, toolState)
 	newCsvTab(controlWindow, toolState)
+	newAppendTab(controlWindow, toolState)
 
 	return toolState
 }

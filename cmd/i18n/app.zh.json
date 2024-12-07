@@ -238,5 +238,37 @@
     {
         "id": "文字列未入力テキスト",
         "translation": "尚未输入{.Title}"
+    },
+    {
+        "id": "Csv追加",
+        "translation": "添加CSV"
+    },
+    {
+        "id": "AppendTabLabel",
+        "translation": "・请指定作为追加源的CSV和要追加的CSV\n・加载两个CSV文件后，下方表格中将显示名称列表\n・在原CSV中不存在但在追加CSV中存在的词典会自动打勾\n・点击“保存”按钮，生成一个将勾选的词典数据追加到原CSV的新CSV"
+    },
+    {
+        "id": "追加元CSVデータ",
+        "translation": "源词典数据 (CSV)"
+    },
+    {
+        "id": "追加元CSVデータファイルを選択してください",
+        "translation": "请选择源词典数据 (CSV) 文件"
+    },
+    {
+        "id": "追加元CSVデータの使い方",
+        "translation": "・可以指定作为源的CSV数据文件"
+    },
+    {
+        "id": "追加対象CSVデータ",
+        "translation": "目标词典数据 (CSV)"
+    },
+    {
+        "id": "追加対象CSVデータファイルを選択してください",
+        "translation": "请选择目标词典数据 (CSV) 文件"
+    },
+    {
+        "id": "追加対象CSVデータの使い方",
+        "translation": "・可以指定作为目标的CSV数据文件"
     }
 ]

@@ -238,5 +238,37 @@
     {
         "id": "文字列未入力テキスト",
         "translation": "{.Title} has not been entered"
+    },
+    {
+        "id": "Csv追加",
+        "translation": "Add CSV"
+    },
+    {
+        "id": "AppendTabLabel",
+        "translation": "・Specify the source CSV and the CSV to append to it\n・Once the two CSV files are loaded, a list of names will be displayed in the table below\n・Dictionaries that exist only in the append CSV and not in the source CSV will be automatically checked\n・Click the 'Save' button to create a new CSV by adding the checked dictionary data to the source CSV"
+    },
+    {
+        "id": "追加元CSVデータ",
+        "translation": "Source Dictionary Data (CSV)"
+    },
+    {
+        "id": "追加元CSVデータファイルを選択してください",
+        "translation": "Please select the source dictionary data (CSV) file"
+    },
+    {
+        "id": "追加元CSVデータの使い方",
+        "translation": "・You can specify the source CSV data file"
+    },
+    {
+        "id": "追加対象CSVデータ",
+        "translation": "Target Dictionary Data (CSV)"
+    },
+    {
+        "id": "追加対象CSVデータファイルを選択してください",
+        "translation": "Please select the target dictionary data (CSV) file"
+    },
+    {
+        "id": "追加対象CSVデータの使い方",
+        "translation": "・You can specify the target CSV data file"
     }
 ]

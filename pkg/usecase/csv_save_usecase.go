@@ -11,6 +11,7 @@ import (
 	"github.com/miu200521358/mlib_go/pkg/mutils"
 	"github.com/miu200521358/mlib_go/pkg/mutils/mi18n"
 	"github.com/miu200521358/mlib_go/pkg/mutils/mlog"
+	"github.com/miu200521358/pmx_translator/pkg/domain"
 )
 
 //go:embed chara/*.txt
@@ -79,6 +80,52 @@ func CsvSave(model *pmx.PmxModel, checkedNames []string, outputPath string) erro
 		if !existText(records, name) {
 			records = append(records, []string{fileName, name, "", ""})
 		}
+	}
+
+	data := core.NewCsvModel(records)
+
+	csvRep := repository.NewCsvRepository()
+	if err := csvRep.Save(outputPath, data, false); err != nil {
+		return err
+	}
+
+	mlog.IT(mi18n.T("出力成功"), mi18n.T("Csv出力成功メッセージ", map[string]interface{}{"Path": outputPath}))
+
+	return nil
+}
+
+func CsvAppendSave(originalCsv, appendCsv *core.CsvModel, checkedItems []*domain.NameItem, outputPath string) error {
+	records := make([][]string, 0)
+	records = append(records, []string{
+		mi18n.T("ファイル名"), mi18n.T("元名称"), mi18n.T("日本語名称"), mi18n.T("英語名称")})
+
+	number := 1
+	for n, record := range originalCsv.Records() {
+		if n == 0 {
+			continue
+		}
+
+		for _, item := range checkedItems {
+			if item.Checked && number == item.Number && item.TypeText == record[1] {
+				records = append(records, record)
+			}
+		}
+
+		number++
+	}
+
+	for n, record := range appendCsv.Records() {
+		if n == 0 {
+			continue
+		}
+
+		for _, item := range checkedItems {
+			if item.Checked && number == item.Number && item.TypeText == record[1] {
+				records = append(records, record)
+			}
+		}
+
+		number++
 	}
 
 	data := core.NewCsvModel(records)

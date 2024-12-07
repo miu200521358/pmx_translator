@@ -7,10 +7,12 @@ import (
 )
 
 type TranslateModel struct {
-	Model           *pmx.PmxModel  // 処理対象モデル
-	Motion          *vmd.VmdMotion // 処理対象モーション
-	OutputModelPath string         // 出力パス
-	LangCsv         *core.CsvModel // 言語CSVパス
+	Model             *pmx.PmxModel  // 処理対象モデル
+	Motion            *vmd.VmdMotion // 処理対象モーション
+	OutputModelPath   string         // 出力パス
+	LangCsv           *core.CsvModel // 言語CSVデータ
+	AppendOriginalCsv *core.CsvModel // 追加元CSVデータ
+	AppendCsv         *core.CsvModel // 追加CSVデータ
 }
 
 func NewTranslateModel() *TranslateModel {
@@ -28,4 +30,5 @@ type NameItem struct {
 	JapaneseNameText string
 	EnglishNameText  string
 	Segmented        bool
+	IsOriginal       bool
 }

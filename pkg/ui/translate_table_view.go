@@ -226,7 +226,7 @@ func NewTranslateTableView(parent walk.Container, model *pmx.PmxModel, charaCsv 
 				DefaultButton: &okBtn,
 				Title:         mi18n.T("名称変更"),
 				Layout:        declarative.VBox{},
-				MinSize:       declarative.Size{Width: 400, Height: 120},
+				MinSize:       declarative.Size{Width: 400, Height: 200},
 				DataBinder: declarative.DataBinder{
 					AssignTo:   &db,
 					DataSource: nameModel.Records[tv.CurrentIndex()],
