@@ -234,6 +234,7 @@ func NewCsvTableView(parent walk.Container, model *pmx.PmxModel) *CsvTableView {
 		ColumnsOrderable: true,
 		MultiSelection:   true,
 		Model:            nameModel,
+		MinSize:          declarative.Size{Width: 512, Height: 250},
 		Columns: []declarative.TableViewColumn{
 			{Title: "#", Width: 50},
 			{Title: "No.", Width: 50},

@@ -178,6 +178,7 @@ func NewAppendTableView(parent walk.Container, originalCsv, appendCsv *core.CsvM
 		ColumnsOrderable: true,
 		MultiSelection:   true,
 		Model:            nameModel,
+		MinSize:          declarative.Size{Width: 512, Height: 250},
 		Columns: []declarative.TableViewColumn{
 			{Title: "#", Width: 50},
 			{Title: "No.", Width: 50},
