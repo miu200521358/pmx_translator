@@ -178,13 +178,13 @@ func NewAppendTableView(parent walk.Container, originalCsv, appendCsv *core.CsvM
 		ColumnsOrderable: true,
 		MultiSelection:   true,
 		Model:            nameModel,
-		MinSize:          declarative.Size{Width: 512, Height: 250},
+		MinSize:          declarative.Size{Width: 400, Height: 250},
 		Columns: []declarative.TableViewColumn{
 			{Title: "#", Width: 50},
 			{Title: "No.", Width: 50},
-			{Title: mi18n.T("元名称"), Width: 200},
-			{Title: mi18n.T("日本語名称"), Width: 200},
-			{Title: mi18n.T("英語名称"), Width: 200},
+			{Title: mi18n.T("元名称"), Width: 150},
+			{Title: mi18n.T("日本語名称"), Width: 150},
+			{Title: mi18n.T("英語名称"), Width: 150},
 		},
 		StyleCell: func(style *walk.CellStyle) {
 			if nameModel.Checked(style.Row()) {

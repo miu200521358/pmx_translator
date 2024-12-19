@@ -43,8 +43,12 @@ It is primarily intended for converting Chinese model names into Japanese, but t
 ■　Included Files
 ----------------------------------------------------------------
 
-- PmxTranslator_x.xx.xx.exe　…　exe file
-- Readme.txt　　　　　　 …　Readme
+- PmxTranslator_x.xx.xx.exe     …　exe file
+- Readme.txt　　　　　　         …　Readme
+- content_tree.txt              …　Content tree set.
+- dict_csv_sample.csv           …　Sample dictionary Csv.
+- Community Link - miu's Lab    … Invitation link to miu's Lab Discord server.
+- Chinese-to-Japanese Conversion Dictionary - Provided by Kanna @MMD JC at their BOOTH store …　A dictionary for use with PmxTranslator shared by Kanna.
 
 
 ----------------------------------------------------------------
@@ -59,20 +63,26 @@ It is primarily intended for converting Chinese model names into Japanese, but t
 ■　How to use
 ----------------------------------------------------------------
 
-- Basically, you can simply run the exe as is.
-- File history can be copied by placing "user_config.json" in the same directory as the exe.
-- Name Replacement
-    - Specify the PMX model and CSV dictionary to replace names that match the specified strings.
-    - The output path is also replaced according to the dictionary, and it outputs everything, including textures.
-    - When you load the model and dictionary, the replacement results are displayed in the table field.
-    - The background color of the name fields that are scheduled to be replaced is changed.
-- CSV Output
-    - Outputs CSV data, which serves as the source data for the dictionary.
-    - When you load the PMX model, the list of names is displayed in the table field.
-    - If there are characters that cannot be recognized by Shift-JIS (such as Simplified Chinese characters), a check is added when initially displayed.
-    - You can also include any other name fields you want to convert by checking them.
+- Basically, you can run the .exe as-is without any additional setup.
+- File history can be copied by placing user_config.json in the same directory as the .exe.
 
-For detailed usage instructions, please refer to the video.
+- Name Replacement
+  - Specify a Pmx model and a Csv dictionary to replace names containing matching strings.
+  - The output path is also replaced according to the dictionary, including textures and other related files.
+  - When the model and dictionary are loaded, the replacement results are displayed in the table section.
+  - The fields where replacement is planned have a changed background color.
+  - Clicking on any row outside the checkbox will open a dialog to convert Japanese names and English names individually.
+    The Japanese field cannot be left empty. (Leaving the English field blank will not cause an error.)
+- Csv Output
+  - Outputs Csv data as source data for the dictionary.
+  - When a Pmx model is loaded, the name list is displayed in the table section.
+  - If characters that cannot be recognized in Shift-JIS (e.g., simplified Chinese characters) are included, a checkmark is set during the initial display.
+  - You can include other fields you want to convert by checking them as output targets.
+- Csv Merge
+  - Combines two Csv files and outputs a new Csv without duplicates.
+
+For detailed instructions, please refer to the video.
+
 
 ----------------------------------------------------------------
 ■　How to create the dictionary
@@ -135,7 +145,7 @@ miuの実験室：https://discord.gg/MW2Bn47aCN
   - Claiming the work as entirely self-made.
   - Actions that may cause inconvenience to the original rights holders.
   - Using the models for the purpose of defaming or slandering others (regardless of whether it is two-dimensional or three-dimensional).
-  
+
   - The following are not prohibited, but I ask for your consideration:
     - Using the models in works containing excessive violence, obscenity, romantic content, grotesque elements, political or religious expressions (equivalent to R-15 or above).
     - Please ensure that your use of the tool and models complies with the original model's terms.
