@@ -10,6 +10,7 @@ import (
 
 	"github.com/miu200521358/pmx_translator/pkg/ui"
 	"github.com/miu200521358/walk/pkg/walk"
+	"golang.org/x/sys/windows"
 
 	"github.com/miu200521358/mlib_go/pkg/interface/app"
 	"github.com/miu200521358/mlib_go/pkg/interface/controller"
@@ -21,8 +22,16 @@ import (
 
 var env string
 
+var (
+	user32             = windows.NewLazySystemDLL("user32.dll")
+	setProcessDPIAware = user32.NewProc("SetProcessDPIAware")
+)
+
 func init() {
 	runtime.LockOSThread()
+
+	// DPI Aware を有効化
+	setProcessDPIAware.Call()
 
 	// システム上の25%の論理プロセッサを使用させる
 	runtime.GOMAXPROCS(max(1, int(runtime.NumCPU()/4)))

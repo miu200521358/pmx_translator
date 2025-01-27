@@ -27,11 +27,11 @@ require (
 	github.com/miu200521358/mlib_go v0.0.1
 	github.com/miu200521358/win v0.0.1 // indirect
 	golang.org/x/image v0.15.0 // indirect
-	golang.org/x/sys v0.14.0 // indirect
+	golang.org/x/sys v0.14.0
 	gopkg.in/Knetic/govaluate.v3 v3.0.0 // indirect
 )
 
-replace github.com/miu200521358/mlib_go => ../mlib_go
+replace github.com/miu200521358/mlib_go => ../mlib_go_t3
 
 replace github.com/miu200521358/walk => ../walk
 

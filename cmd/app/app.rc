@@ -1,2 +1,4 @@
 // app.rc
+#include "winuser.h"
+ID_MANIFEST RT_MANIFEST "main.manifest"
 IDI_ICON1 ICON DISCARDABLE "app.ico"
