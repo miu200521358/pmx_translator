@@ -1,11 +1,11 @@
 ----------------------------------------------------------------
 ----------------------------------------------------------------
 
-Å@ÅuPmxTranslatorÅv
+  „ÄåPmxTranslator„Äç
 
-Å@Å@ver1.00.00
+    ver1.00.00
 
-Å@Å@Å@Å@Å@Å@Å@Å@Å@Å@Å@Å@Å@Å@Å@Å@Å@miu200521358
+                                  miu200521358
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
@@ -18,41 +18,45 @@ Please take a moment to review the following before using it.
 
 
 ----------------------------------------------------------------
-Å°Å@Summary
+‚ñ†  Summary
 ----------------------------------------------------------------
 
 This is a tool that allows you to batch replace the name fields in PMX models.
 It is primarily intended for converting Chinese model names into Japanese, but there are no restrictions on loading models, so it can also be used for renaming existing models.
+If the file path contains characters outside of Shift-JIS, the file name will be modified accordingly.
 
 
 ----------------------------------------------------------------
-Å°Å@Distribution Video
+‚ñ†  Distribution Video
 ----------------------------------------------------------------
 
-ÅiworkingÅj
-
-
-----------------------------------------------------------------
-Å°Å@Static Images for Content Tree
-----------------------------------------------------------------
-
-ÅiworkingÅj
+„ÄêMMD„ÄëPmx„ÅÆÂêçÁß∞Ê¨Ñ„Çí‰∏ÄÊã¨ÁΩÆÊèõ„Åß„Åç„Çã„ÉÑ„Éº„É´„Çí‰Ωú„Å£„Å¶„Åø„Åü„ÄêPmxTranslator ver1.00„Äë
+https://www.nicovideo.jp/watch/sm44133638
 
 
 ----------------------------------------------------------------
-Å°Å@Included Files
+‚ñ†  Static Images for Content Tree
 ----------------------------------------------------------------
 
-- PmxTranslator_x.xx.xx.exe     ÅcÅ@exe file
-- Readme.txtÅ@Å@Å@Å@Å@Å@         ÅcÅ@Readme
-- content_tree.txt              ÅcÅ@Content tree set.
-- dict_csv_sample.csv           ÅcÅ@Sample dictionary Csv.
-- Community Link - miu's Lab    Åc Invitation link to miu's Lab Discord server.
-- Chinese-to-Japanese Conversion Dictionary - Provided by Kanna @MMD JC at their BOOTH store ÅcÅ@A dictionary for use with PmxTranslator shared by Kanna.
+PmxTranslator - „Ç≥„É≥„ÉÜ„É≥„ÉÑ„ÉÑ„É™„ÉºÁî®ÈùôÁîª
+https://youtu.be/Ne0MqQDOzYs
+https://seiga.nicovideo.jp/seiga/im11561836
 
 
 ----------------------------------------------------------------
-Å°Å@System Requirements
+‚ñ†  Included Files
+----------------------------------------------------------------
+
+- PmxTranslator_x.xx.xx.exe     ‚Ä¶  exe file
+- Readme.txt                    ‚Ä¶  Readme
+- content_tree.txt              ‚Ä¶  Content tree set.
+- dict_csv_sample.csv           ‚Ä¶  Sample dictionary Csv.
+- Community Link - miu's Lab    ‚Ä¶ Invitation link to miu's Lab Discord server.
+- Chinese-to-Japanese Conversion Dictionary - Provided by Kanna @MMD JC at their BOOTH store ‚Ä¶  A dictionary for use with PmxTranslator shared by Kanna.
+
+
+----------------------------------------------------------------
+‚ñ†  System Requirements
 ----------------------------------------------------------------
 
 - Windows10/11 64bit
@@ -60,7 +64,7 @@ It is primarily intended for converting Chinese model names into Japanese, but t
 
 
 ----------------------------------------------------------------
-Å°Å@How to use
+‚ñ†  How to use
 ----------------------------------------------------------------
 
 - Basically, you can run the .exe as-is without any additional setup.
@@ -85,7 +89,7 @@ For detailed instructions, please refer to the video.
 
 
 ----------------------------------------------------------------
-Å°Å@How to create the dictionary
+‚ñ†  How to create the dictionary
 ----------------------------------------------------------------
 
 https://chatgpt.com/g/g-Cmchsxm6X-pmxtranslaordictionarygenerator
@@ -97,38 +101,42 @@ https://chatgpt.com/g/g-Cmchsxm6X-pmxtranslaordictionarygenerator
 Note: You will need to create a ChatGPT account (free).
 
 ----------------------------------------------------------------
-Å°Å@Community Information
+‚ñ†  Community Information
 ----------------------------------------------------------------
 
-MMDí∑âÆÅFhttps://discord.gg/jDqU6qRaKj
+MMDÈï∑Â±ãÔºöhttps://discord.gg/jDqU6qRaKj
 
-Å@This is a unique Discord server where each category has an owner, and you can join the category of your choice.
-Å@It is intended for use in distributing community-limited content and interacting, such as through the Nico Nico Community.
-Å@You can also apply to open new categories.
+  This is a unique Discord server where each category has an owner, and you can join the category of your choice.
+  It is intended for use in distributing community-limited content and interacting, such as through the Nico Nico Community.
+  You can also apply to open new categories.
 
-miuÇÃé¿å±é∫ÅFhttps://discord.gg/MW2Bn47aCN
+miu„ÅÆÂÆüÈ®ìÂÆ§Ôºöhttps://discord.gg/MW2Bn47aCN
 
-Å@This lab focuses on various experiments with self-made tools, such as VMD sizing and Motion Supporter.
-Å@I welcome questions and consultations regarding my tools. An FAQ page is also available.
-Å@Additionally, you can try out beta versions of tools in advance.
-Å@It is one category in the "MMD Nagaya" server, so please join the server and then apply to join this category.
+  This lab focuses on various experiments with self-made tools, such as VMD sizing and Motion Supporter.
+  I welcome questions and consultations regarding my tools. An FAQ page is also available.
+  Additionally, you can try out beta versions of tools in advance.
+  It is one category in the "MMD Nagaya" server, so please join the server and then apply to join this category.
 
 
 ----------------------------------------------------------------
-Å°Å@Terms of Use and Other Information
+‚ñ†  Terms of Use and Other Information
 ----------------------------------------------------------------
 
-ÅsMandatory RequirementsÅt
+„ÄäMandatory Requirements„Äã
+
+Please make sure to perform the following actions regarding this tool and the modified model:
 
 - If you publish or distribute a modified model, please include proper credit.
+  - It would be helpful if it could be searched with "(Tool name or MMD) miu."
 - For Nico Nico Douga, please register the work in the content tree using a tree image (currently in preparation).
   - If you register as a parent in the content tree, credit listing is optional.
 - When distributing the model to an unspecified large number of people, please include credit or register it in the content tree only in the source (e.g., video) announcing the distribution.
   - It is not necessary to list credits for works using the relevant model.
 
-ÅsOptional ItemsÅt
 
-- Regarding this tool and modified models, you are free to do the following within the scope of the original model's terms:
+„ÄäOptional Items„Äã
+
+Regarding this tool and modified models, you are free to do the following within the scope of the original model's terms:
 
 - Adjusting and modifying the modified model
   - For distributed models, please check if modifications are permitted by the original terms.
@@ -137,9 +145,10 @@ miuÇÃé¿å±é∫ÅFhttps://discord.gg/MW2Bn47aCN
 - Distributing the modified model to an unspecified large number of people
   - Only for self-made models or models that are permitted to be distributed to an unspecified large number of people.
 
-ÅsProhibited ItemsÅt
 
-- Regarding this tool and the models generated with it, please refrain from the following actions:
+„ÄäProhibited Items„Äã
+
+Regarding this tool and the models generated with it, please refrain from the following actions:
 
   - Actions beyond the scope of the original model's terms.
   - Claiming the work as entirely self-made.
@@ -151,27 +160,28 @@ miuÇÃé¿å±é∫ÅFhttps://discord.gg/MW2Bn47aCN
     - Please ensure that your use of the tool and models complies with the original model's terms.
     - When publishing your work, please take care to avoid search engine indexing, etc.
 
-Å@- Please note that while 'use for commercial purposes' is not prohibited for this tool, it is prohibited under the terms of PMXEditor.
+  - Please note that while 'use for commercial purposes' is not prohibited for this tool, it is prohibited under the terms of PMXEditor.
 
-ÅsDisclaimerÅt
+
+„ÄäDisclaimer„Äã
 
 - Please use the tool at your own risk.
 - The author assumes no responsibility for any issues arising from the use of this tool.
 
 
 ----------------------------------------------------------------
-Å°Å@Source Code & Libraries
+‚ñ†  Source Code & Libraries
 ----------------------------------------------------------------
 
 This tool is created using Go, and includes the following libraries:
 
-ÅEhttps://github.com/lxn/walk
-ÅEhttps://github.com/go-gl/gl
-ÅEhttps://github.com/go-gl/glfw/v3.3/glfw
-ÅEhttps://github.com/go-gl/mathgl
-ÅEhttps://github.com/nicksnyder/go-i18n/v2
-ÅEhttps://github.com/petar/GoLLRB
-ÅEhttps://github.com/ftrvxmtrx/tga
+„Éªhttps://github.com/lxn/walk
+„Éªhttps://github.com/go-gl/gl
+„Éªhttps://github.com/go-gl/glfw/v3.3/glfw
+„Éªhttps://github.com/go-gl/mathgl
+„Éªhttps://github.com/nicksnyder/go-i18n/v2
+„Éªhttps://github.com/petar/GoLLRB
+„Éªhttps://github.com/ftrvxmtrx/tga
 
 The source code is available on GitHub (MIT License).
 However, the copyright is not waived.
@@ -182,19 +192,22 @@ I created the icon myself based on a rough draft from ChatGPT.
 
 
 ----------------------------------------------------------------
-Å°Å@Credit
+‚ñ†  Credit
 ----------------------------------------------------------------
 
-Å@Tool NameÅF PmxTranslator
-Å@AuthorÅFÅ@miu (miu200521358)
+  Tool NameÔºö PmxTranslator
+  AuthorÔºö  miu (miu200521358)
 
-Å@http://www.nicovideo.jp/user/2776342
-Å@Twitter: @miu200521358
-Å@Mail: garnet200521358@gmail.com
+  http://www.nicovideo.jp/user/2776342
+  Twitter: @miu200521358
+  Mail: garnet200521358@gmail.com
 
 
 ----------------------------------------------------------------
-Å°Å@Revision
+‚ñ†  Revision
 ----------------------------------------------------------------
+
+PmxTranslator_1.0.0 (2025/02/09)
+- General distribution start.
 
 

@@ -13,7 +13,7 @@
       "preLaunchTask": "go: mod tidy",
       "env": {
         "WORKSPACE_FOLDER": "${workspaceFolder}",
-        "ENV": "debug"
+        "ENV": "prod"
       },
     },
     {

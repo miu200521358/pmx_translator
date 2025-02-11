@@ -1,29 +1,29 @@
 -------------------------------------------------
 -------------------------------------------------
 
-@@PmxTranslator
+    PmxTranslator
 
-@@Additional Readme for Beta Version
+    Additional Readme for Beta Version
 
-@@@@@@@@@@@@@@@@@miu200521358
+                                  miu200521358
 
 -------------------------------------------------
 -------------------------------------------------
 
 ----------------------------------------------------------------
-¡@Distribution source
+â–   Distribution source
 ----------------------------------------------------------------
 
-@EDiscordumiu‚ÌÀŒ±ºv
-@@@https://discord.gg/MW2Bn47aCN
-@EDiscorduMMD‚ÌW‚¢@Discordx•”v
-@@@https://discord.gg/wBcwFreHJ8
+  ãƒ»Discordã€Œmiuã®å®Ÿé¨“å®¤ã€
+      https://discord.gg/MW2Bn47aCN
+  ãƒ»Discordã€ŒMMDã®é›†ã„  Discordæ”¯éƒ¨ã€
+      https://discord.gg/wBcwFreHJ8
 
 - The beta version is basically distributed only at the two places mentioned above. If you find it elsewhere, please let me know.
 
 
 ----------------------------------------------------------------
-¡@I request your cooperation in using the beta version.
+â–   I request your cooperation in using the beta version.
 ----------------------------------------------------------------
 
 Thank you for participating as a beta tester.
@@ -39,7 +39,7 @@ When reporting bugs, please provide the following details:
   - Error message displayed in any dialog that appears at the time of the error
     - The error message is copied to the clipboard when the dialog is displayed.
     - If using a publicly distributed model, the URL where it can be accessed
-  - miu‚ÌÀŒ±º - 00_¿–âE‘Š’kE•ñ
+  - miuã®å®Ÿé¨“å®¤ - 00_è³ªå•ãƒ»ç›¸è«‡ãƒ»å ±å‘Š
     - https://discord.gg/MW2Bn47aCN
     - You need to join the category, so please apply via "Category Participation Request."
 
