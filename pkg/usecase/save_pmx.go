@@ -5,7 +5,6 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/miu200521358/mlib_go/pkg/config/mi18n"
 	"github.com/miu200521358/mlib_go/pkg/config/mlog"
 	"github.com/miu200521358/mlib_go/pkg/domain/pmx"
 	"github.com/miu200521358/mlib_go/pkg/infrastructure/mfile"
@@ -121,8 +120,6 @@ func Save(model *pmx.PmxModel, nameItems []*domain.NameItem, outputJpPath string
 	if err := pmxRep.Save(outputJpPath, model, false); err != nil {
 		return err
 	}
-
-	mlog.IT(mi18n.T("出力成功"), mi18n.T("出力成功メッセージ", map[string]interface{}{"Path": outputJpPath}))
 
 	return nil
 }

@@ -6,9 +6,11 @@ import (
 	"github.com/miu200521358/mlib_go/pkg/domain/mcsv"
 	"github.com/miu200521358/mlib_go/pkg/domain/pmx"
 	"github.com/miu200521358/mlib_go/pkg/infrastructure/repository"
+	"github.com/miu200521358/mlib_go/pkg/interface/app"
 	"github.com/miu200521358/mlib_go/pkg/interface/controller"
 	"github.com/miu200521358/mlib_go/pkg/interface/controller/widget"
 	"github.com/miu200521358/pmx_translator/pkg/domain"
+	"github.com/miu200521358/pmx_translator/pkg/usecase"
 	"github.com/miu200521358/walk/pkg/declarative"
 	"github.com/miu200521358/walk/pkg/walk"
 )
@@ -19,6 +21,13 @@ func NewTranslatePages(mWidgets *controller.MWidgets) []declarative.TabPage {
 	translateState := domain.NewTranslateState()
 
 	var translateTableView *walk.TableView
+
+	pmxSavePicker := widget.NewPmxSaveFilePicker(
+		mi18n.T("出力モデル(Pmx)"),
+		mi18n.T("出力モデル(Pmx)ファイルパスを指定してください"),
+		func(cw *controller.ControlWindow, rep repository.IRepository, path string) {
+		},
+	)
 
 	pmxLoadPicker := widget.NewPmxLoadFilePicker(
 		"OriginalPmx",
@@ -31,6 +40,8 @@ func NewTranslatePages(mWidgets *controller.MWidgets) []declarative.TabPage {
 
 				translateState.Model = model
 				translateState.LoadData()
+
+				pmxSavePicker.SetPath(translateState.OutputPath)
 			} else {
 				mlog.ET(mi18n.T("読み込み失敗"), err.Error())
 			}
@@ -47,16 +58,11 @@ func NewTranslatePages(mWidgets *controller.MWidgets) []declarative.TabPage {
 
 				translateState.CsvData = csvData
 				translateState.LoadData()
+
+				pmxSavePicker.SetPath(translateState.OutputPath)
 			} else {
 				mlog.ET(mi18n.T("読み込み失敗"), err.Error())
 			}
-		},
-	)
-
-	pmxSavePicker := widget.NewPmxSaveFilePicker(
-		mi18n.T("出力モデル(Pmx)"),
-		mi18n.T("出力モデル(Pmx)ファイルパスを指定してください"),
-		func(cw *controller.ControlWindow, rep repository.IRepository, path string) {
 		},
 	)
 
@@ -122,7 +128,15 @@ func NewTranslatePages(mWidgets *controller.MWidgets) []declarative.TabPage {
 						declarative.PushButton{
 							Text: mi18n.T("保存"),
 							OnClicked: func() {
-								mlog.I("保存ボタン押下")
+								if err := usecase.Save(
+									translateState.Model,
+									translateState.NameModel.Records,
+									translateState.OutputPath,
+								); err == nil {
+									mlog.IT(mi18n.T("出力成功"), mi18n.T("出力成功メッセージ", map[string]interface{}{"Path": translateState.OutputPath}))
+								}
+
+								app.Beep()
 							},
 						},
 						declarative.VSpacer{},

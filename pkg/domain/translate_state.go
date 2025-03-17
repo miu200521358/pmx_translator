@@ -15,6 +15,7 @@ type TranslateState struct {
 	CsvData          *mcsv.CsvModel      // 言語CSVデータ
 	NameModel        *TranslateNameModel // 名称モデル
 	TextChangeDialog *walk.Dialog        // テキスト変更ダイアログ
+	OutputPath       string              // 出力パス
 }
 
 func NewTranslateState() *TranslateState {
@@ -29,6 +30,7 @@ func (t *TranslateState) LoadData() {
 	}
 
 	t.NameModel.ResetRows(t.Model, t.CsvData)
+	t.OutputPath = mfile.CreateOutputPath(t.NameModel.Records[0].JapaneseNameText, "")
 }
 
 // --------------------------------------------------
