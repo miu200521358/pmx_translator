@@ -15,7 +15,7 @@ import (
 	"github.com/miu200521358/walk/pkg/walk"
 )
 
-func NewTranslatePages(mWidgets *controller.MWidgets) []declarative.TabPage {
+func NewTranslatePage(mWidgets *controller.MWidgets) declarative.TabPage {
 	var translateTab *walk.TabPage
 
 	translateState := domain.NewTranslateState()
@@ -68,102 +68,114 @@ func NewTranslatePages(mWidgets *controller.MWidgets) []declarative.TabPage {
 
 	mWidgets.Widgets = append(mWidgets.Widgets, pmxLoadPicker, csvLoadPicker, pmxSavePicker)
 
-	return []declarative.TabPage{
-		{
-			Title:    mi18n.T(mi18n.T("名称置換")),
-			AssignTo: &translateTab,
-			Layout:   declarative.VBox{},
-			Background: declarative.SystemColorBrush{
-				Color: walk.SysColorInactiveCaption,
-			},
-			Children: []declarative.Widget{
-				declarative.Composite{
-					Layout: declarative.VBox{},
-					Children: []declarative.Widget{
-						pmxLoadPicker.Widgets(),
-						csvLoadPicker.Widgets(),
-						declarative.TableView{
-							AssignTo:         &translateTableView,
-							AlternatingRowBG: true,
-							CheckBoxes:       true,
-							ColumnsOrderable: true,
-							MultiSelection:   true,
-							Model:            translateState.NameModel,
-							MinSize:          declarative.Size{Width: 400, Height: 250},
-							Columns: []declarative.TableViewColumn{
-								{Title: "#", Width: 50},
-								{Title: "No.", Width: 50},
-								{Title: mi18n.T("種類"), Width: 80},
-								{Title: mi18n.T("インデックス"), Width: 40},
-								{Title: mi18n.T("元名称"), Width: 150},
-								{Title: mi18n.T("日本語名称"), Width: 150},
-								{Title: mi18n.T("英語名称"), Width: 150},
-							},
-							StyleCell: func(style *walk.CellStyle) {
-								if translateState.NameModel.Checked(style.Row()) {
-									style.BackgroundColor = walk.RGB(159, 255, 243)
-								} else {
-									style.BackgroundColor = walk.RGB(255, 255, 255)
-								}
-							},
-							OnSelectedIndexesChanged: func() {
-								if err := newTextChangeDialog(
-									translateState,
-									translateTableView.CurrentIndex(),
-								).Create(nil); err != nil {
-									panic(err)
-								}
+	return declarative.TabPage{
 
-								translateState.TextChangeDialog.SetXPixels(mWidgets.Position.X + 100)
-								translateState.TextChangeDialog.SetYPixels(mWidgets.Position.Y + 100)
-
-								if cmd := translateState.TextChangeDialog.Run(); cmd == walk.DlgCmdOK {
-									translateState.NameModel.Records[translateTableView.CurrentIndex()].Checked = true
-									translateState.NameModel.PublishRowsReset()
-								}
-							},
+		Title:    mi18n.T(mi18n.T("名称置換")),
+		AssignTo: &translateTab,
+		Layout:   declarative.VBox{},
+		Background: declarative.SystemColorBrush{
+			Color: walk.SysColorInactiveCaption,
+		},
+		Children: []declarative.Widget{
+			declarative.Composite{
+				Layout: declarative.VBox{},
+				Children: []declarative.Widget{
+					pmxLoadPicker.Widgets(),
+					csvLoadPicker.Widgets(),
+					declarative.TableView{
+						AssignTo:         &translateTableView,
+						AlternatingRowBG: true,
+						CheckBoxes:       true,
+						ColumnsOrderable: true,
+						MultiSelection:   true,
+						Model:            translateState.NameModel,
+						MinSize:          declarative.Size{Width: 400, Height: 250},
+						Columns: []declarative.TableViewColumn{
+							{Title: "#", Width: 50},
+							{Title: "No.", Width: 50},
+							{Title: mi18n.T("種類"), Width: 80},
+							{Title: mi18n.T("インデックス"), Width: 40},
+							{Title: mi18n.T("元名称"), Width: 150},
+							{Title: mi18n.T("日本語名称"), Width: 150},
+							{Title: mi18n.T("英語名称"), Width: 150},
 						},
-						pmxSavePicker.Widgets(),
-						declarative.VSeparator{},
-						declarative.PushButton{
-							Text: mi18n.T("保存"),
-							OnClicked: func() {
-								if err := usecase.Save(
-									translateState.Model,
-									translateState.NameModel.Records,
-									translateState.OutputPath,
-								); err == nil {
-									mlog.IT(mi18n.T("出力成功"), mi18n.T("出力成功メッセージ", map[string]interface{}{"Path": translateState.OutputPath}))
-								}
-
-								app.Beep()
-							},
+						StyleCell: func(style *walk.CellStyle) {
+							if translateState.NameModel.Checked(style.Row()) {
+								style.BackgroundColor = walk.RGB(159, 255, 243)
+							} else {
+								style.BackgroundColor = walk.RGB(255, 255, 255)
+							}
 						},
-						declarative.VSpacer{},
+						OnSelectedIndexesChanged: func() {
+							if err := newTranslateTextChangeDialog(
+								translateState,
+								translateTableView.CurrentIndex(),
+							).Create(nil); err != nil {
+								panic(err)
+							}
+
+							translateState.TextChangeDialog.SetXPixels(mWidgets.Position.X + 100)
+							translateState.TextChangeDialog.SetYPixels(mWidgets.Position.Y + 100)
+
+							if cmd := translateState.TextChangeDialog.Run(); cmd == walk.DlgCmdOK {
+								translateState.NameModel.Records[translateTableView.CurrentIndex()].Checked = true
+								translateState.NameModel.PublishRowsReset()
+							}
+						},
 					},
+					pmxSavePicker.Widgets(),
+					declarative.VSeparator{},
+					declarative.PushButton{
+						Text: mi18n.T("保存"),
+						OnClicked: func() {
+							if err := usecase.SavePmx(
+								translateState.Model,
+								translateState.NameModel.Records,
+								translateState.OutputPath,
+							); err == nil {
+								mlog.IT(mi18n.T("出力成功"), mi18n.T("出力成功メッセージ", map[string]interface{}{"Path": translateState.OutputPath}))
+							}
+
+							app.Beep()
+						},
+					},
+					declarative.VSpacer{},
 				},
 			},
 		},
 	}
 }
 
-func newTextChangeDialog(translateState *domain.TranslateState, recordIndex int) *declarative.Dialog {
+func newTranslateTextChangeDialog(translateState *domain.TranslateState, recordIndex int) *declarative.Dialog {
 	var cancelBtn *walk.PushButton
 	var okBtn *walk.PushButton
 	var db *walk.DataBinder
 	var jpTxt *walk.TextEdit
 	var enTxt *walk.TextEdit
 
+	dlg := newTextChangeDialog(okBtn, cancelBtn, db, jpTxt, enTxt,
+		translateState.TextChangeDialog.Accept, translateState.TextChangeDialog.Cancel)
+	dlg.AssignTo = &translateState.TextChangeDialog
+	dlg.DataBinder.DataSource = translateState.NameModel.Records[recordIndex]
+
+	return dlg
+}
+
+func newTextChangeDialog(
+	okBtn, cancelBtn *walk.PushButton,
+	db *walk.DataBinder,
+	jpTxt, enTxt *walk.TextEdit,
+	acceptFunc, cancelFunc func(),
+) *declarative.Dialog {
+
 	return &declarative.Dialog{
-		AssignTo:      &translateState.TextChangeDialog,
 		CancelButton:  &cancelBtn,
 		DefaultButton: &okBtn,
 		Title:         mi18n.T("名称変更"),
 		Layout:        declarative.VBox{},
 		MinSize:       declarative.Size{Width: 400, Height: 200},
 		DataBinder: declarative.DataBinder{
-			AssignTo:   &db,
-			DataSource: translateState.NameModel.Records[recordIndex],
+			AssignTo: &db,
 		},
 		Children: []declarative.Widget{
 			declarative.Composite{
@@ -209,14 +221,14 @@ func newTextChangeDialog(translateState *domain.TranslateState, recordIndex int)
 							if err := db.Submit(); err != nil {
 								panic(err)
 							}
-							translateState.TextChangeDialog.Accept()
+							acceptFunc()
 						},
 					},
 					declarative.PushButton{
 						AssignTo: &cancelBtn,
 						Text:     mi18n.T("キャンセル"),
 						OnClicked: func() {
-							translateState.TextChangeDialog.Cancel()
+							cancelFunc()
 						},
 					},
 				},

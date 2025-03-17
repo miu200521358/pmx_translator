@@ -38,7 +38,6 @@ func (t *TranslateState) LoadData() {
 type TranslateNameModel struct {
 	walk.TableModelBase
 	walk.SorterBase
-	tv         *walk.TableView
 	sortColumn int
 	sortOrder  walk.SortOrder
 	Records    []*NameItem
@@ -46,10 +45,6 @@ type TranslateNameModel struct {
 
 func (m *TranslateNameModel) RowCount() int {
 	return len(m.Records)
-}
-
-func (m *TranslateNameModel) SetParent(parent *walk.TableView) {
-	m.tv = parent
 }
 
 func (m *TranslateNameModel) Value(row, col int) interface{} {

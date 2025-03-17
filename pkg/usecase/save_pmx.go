@@ -28,7 +28,7 @@ func getTranslatedNames(
 	return jpText, enText
 }
 
-func Save(model *pmx.PmxModel, nameItems []*domain.NameItem, outputJpPath string) error {
+func SavePmx(model *pmx.PmxModel, nameItems []*domain.NameItem, outputJpPath string) error {
 	number := 2
 
 	{

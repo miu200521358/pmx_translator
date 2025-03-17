@@ -10,6 +10,7 @@ import (
 
 	"github.com/go-gl/glfw/v3.3/glfw"
 	"github.com/miu200521358/pmx_translator/pkg/ui"
+	"github.com/miu200521358/walk/pkg/declarative"
 	"github.com/miu200521358/walk/pkg/walk"
 
 	"github.com/miu200521358/mlib_go/pkg/config/mconfig"
@@ -46,6 +47,7 @@ func main() {
 	appConfig.Env = env
 	mi18n.Initialize(appI18nFiles)
 	shared := state.NewSharedState(viewerCount)
+	appConfig.Env = "prod"
 
 	widths, heights, positionXs, positionYs := app.GetCenterSizeAndWidth(appConfig, viewerCount)
 
@@ -61,7 +63,8 @@ func main() {
 			}
 
 			controlWindow, err = controller.NewControlWindow(shared, appConfig,
-				ui.NewMenuItems(), ui.NewTranslatePages(widgets), widgets.EnabledInPlaying,
+				ui.NewMenuItems(), []declarative.TabPage{
+					ui.NewTranslatePage(widgets), ui.NewCsvPage(widgets)}, widgets.EnabledInPlaying,
 				widths[0], heights[0], positionXs[0], positionYs[0])
 			if err != nil {
 				app.ShowErrorDialog(appConfig.IsSetEnv(), err)
