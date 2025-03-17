@@ -5,18 +5,19 @@ package main
 
 import (
 	"embed"
-	"log"
+	"fmt"
 	"runtime"
 
+	"github.com/go-gl/glfw/v3.3/glfw"
 	"github.com/miu200521358/pmx_translator/pkg/ui"
 	"github.com/miu200521358/walk/pkg/walk"
 
+	"github.com/miu200521358/mlib_go/pkg/config/mconfig"
+	"github.com/miu200521358/mlib_go/pkg/config/mi18n"
+	"github.com/miu200521358/mlib_go/pkg/domain/state"
 	"github.com/miu200521358/mlib_go/pkg/interface/app"
 	"github.com/miu200521358/mlib_go/pkg/interface/controller"
-	"github.com/miu200521358/mlib_go/pkg/interface/controller/widget"
 	"github.com/miu200521358/mlib_go/pkg/interface/viewer"
-	"github.com/miu200521358/mlib_go/pkg/mutils/mconfig"
-	"github.com/miu200521358/mlib_go/pkg/mutils/mi18n"
 )
 
 var env string
@@ -24,11 +25,11 @@ var env string
 func init() {
 	runtime.LockOSThread()
 
-	// システム上の25%の論理プロセッサを使用させる
+	// システム上の半分の論理プロセッサを使用させる
 	runtime.GOMAXPROCS(max(1, int(runtime.NumCPU()/4)))
 
 	walk.AppendToWalkInit(func() {
-		walk.MustRegisterWindowClass(widget.ConsoleViewClass)
+		walk.MustRegisterWindowClass(controller.ConsoleViewClass)
 	})
 }
 
@@ -39,31 +40,56 @@ var appFiles embed.FS
 var appI18nFiles embed.FS
 
 func main() {
+	viewerCount := 1
+
 	appConfig := mconfig.LoadAppConfig(appFiles)
 	appConfig.Env = env
 	mi18n.Initialize(appI18nFiles)
+	shared := state.NewSharedState(viewerCount)
 
-	mApp := app.NewMApp(appConfig)
-	mApp.RunViewerToControlChannel()
-	mApp.RunControlToViewerChannel()
+	widths, heights, positionXs, positionYs := app.GetCenterSizeAndWidth(appConfig, viewerCount)
+
+	var controlWindow *controller.ControlWindow
+	viewerWindowList := viewer.NewViewerList(shared, appConfig)
+	var err error
 
 	go func() {
 		// 操作ウィンドウは別スレッドで起動
-		controlWindow := controller.NewControlWindow(appConfig, mApp.ControlToViewerChannel(), ui.GetMenuItems, 1)
-		mApp.SetControlWindow(controlWindow)
+		defer app.SafeExecute(appConfig.IsSetEnv(), func() {
+			widgets := &controller.MWidgets{}
 
-		controlWindow.InitTabWidget()
-		ui.NewToolState(mApp, controlWindow)
+			controlWindow, err = controller.NewControlWindow(shared, appConfig,
+				ui.NewMenuItems(), ui.NewTranslatePages(widgets), widgets.EnabledInPlaying,
+				widths[0], heights[0], positionXs[0], positionYs[0])
+			if err != nil {
+				app.ShowErrorDialog(appConfig.IsSetEnv(), err)
+				return
+			}
 
-		consoleView := widget.NewConsoleView(controlWindow.MainWindow, 256, 50)
-		log.SetOutput(consoleView)
+			widgets.SetWindow(controlWindow)
+			widgets.OnLoaded()
 
-		mApp.RunController()
+			controlWindow.Run()
+		})
 	}()
 
-	mApp.AddViewWindow(viewer.NewViewWindow(
-		mApp.ViewerCount(), appConfig, mApp, mApp.ViewerToControlChannel(), "メインビューワー", nil))
+	// GL初期化
+	if err := glfw.Init(); err != nil {
+		app.ShowErrorDialog(appConfig.IsSetEnv(), fmt.Errorf("failed to initialize GLFW: %v", err))
+		return
+	}
 
-	mApp.Center()
-	mApp.RunViewer()
+	// 描画ウィンドウはメインスレッドで起動
+	defer app.SafeExecute(appConfig.IsSetEnv(), func() {
+		for n := range viewerCount {
+			nIdx := n + 1
+			if err := viewerWindowList.Add("Viewer",
+				widths[nIdx], heights[nIdx], positionXs[nIdx], positionYs[nIdx]); err != nil {
+				app.ShowErrorDialog(appConfig.IsSetEnv(), err)
+				return
+			}
+		}
+
+		viewerWindowList.Run()
+	})
 }
