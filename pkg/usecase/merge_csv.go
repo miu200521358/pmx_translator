@@ -19,7 +19,7 @@ func MergeCsv(mergeState *domain.MergeState) error {
 		}
 
 		for _, item := range mergeState.NameModel.CheckedItems() {
-			if item.Checked && number == item.Number && item.TypeText == record[1] {
+			if item.Checked && number == item.Number && item.NameText == record[1] {
 				records = append(records, record)
 			}
 		}
@@ -33,7 +33,7 @@ func MergeCsv(mergeState *domain.MergeState) error {
 		}
 
 		for _, item := range mergeState.NameModel.CheckedItems() {
-			if item.Checked && number == item.Number && item.TypeText == record[1] {
+			if item.Checked && number == item.Number && item.NameText == record[1] {
 				records = append(records, record)
 			}
 		}

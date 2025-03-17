@@ -64,9 +64,9 @@ func (m *MergeNameModel) Value(row, col int) any {
 	case 1:
 		return item.Number
 	case 2:
-		return item.TypeText
-	case 3:
 		return item.NameText
+	case 3:
+		return item.JapaneseNameText
 	case 4:
 		return item.EnglishNameText
 	}
@@ -127,9 +127,9 @@ func (m *MergeNameModel) Sort(col int, order walk.SortOrder) error {
 		case 1:
 			return c(a.Number < b.Number)
 		case 2:
-			return c(a.TypeText < b.TypeText)
-		case 3:
 			return c(a.NameText < b.NameText)
+		case 3:
+			return c(a.JapaneseNameText < b.JapaneseNameText)
 		case 4:
 			return c(a.EnglishNameText < b.EnglishNameText)
 		}
@@ -154,12 +154,12 @@ func (m *MergeNameModel) exists(txt string) bool {
 
 func (m *MergeNameModel) AddRecord(record []string, isOriginal bool) {
 	item := &NameItem{
-		Checked:         !m.exists(record[1]),
-		Number:          len(m.Records) + 1,
-		TypeText:        record[1],
-		NameText:        record[2],
-		EnglishNameText: record[3],
-		IsOriginal:      isOriginal,
+		Checked:          !m.exists(record[1]),
+		Number:           len(m.Records) + 1,
+		NameText:         record[1],
+		JapaneseNameText: record[2],
+		EnglishNameText:  record[3],
+		IsOriginal:       isOriginal,
 	}
 	m.Records = append(m.Records, item)
 }
