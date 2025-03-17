@@ -56,7 +56,9 @@ func main() {
 	go func() {
 		// 操作ウィンドウは別スレッドで起動
 		defer app.SafeExecute(appConfig.IsSetEnv(), func() {
-			widgets := &controller.MWidgets{}
+			widgets := &controller.MWidgets{
+				Position: &walk.Point{X: positionXs[0], Y: positionYs[0]},
+			}
 
 			controlWindow, err = controller.NewControlWindow(shared, appConfig,
 				ui.NewMenuItems(), ui.NewTranslatePages(widgets), widgets.EnabledInPlaying,
