@@ -86,20 +86,17 @@ func NewCsvPage(mWidgets *controller.MWidgets) declarative.TabPage {
 							}
 						},
 						OnSelectedIndexesChanged: func() {
-							if err := newCsvTextChangeDialog(
+							if cmd, err := newCsvTextChangeDialog(
 								csvState,
 								csvTableView.CurrentIndex(),
 								&walk.Point{X: mWidgets.Position.X + 100, Y: mWidgets.Position.Y + 100},
-							).Create(nil); err != nil {
+							).Run(nil); err == nil {
+								if cmd == walk.DlgCmdOK {
+									csvState.NameModel.Records[csvTableView.CurrentIndex()].Checked = true
+									csvState.NameModel.PublishRowsReset()
+								}
+							} else {
 								panic(err)
-							}
-
-							csvState.TextChangeDialog.SetXPixels(mWidgets.Position.X + 100)
-							csvState.TextChangeDialog.SetYPixels(mWidgets.Position.Y + 100)
-
-							if cmd := csvState.TextChangeDialog.Run(); cmd == walk.DlgCmdOK {
-								csvState.NameModel.Records[csvTableView.CurrentIndex()].Checked = true
-								csvState.NameModel.PublishRowsReset()
 							}
 						},
 					},

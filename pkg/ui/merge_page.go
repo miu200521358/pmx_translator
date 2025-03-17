@@ -109,20 +109,17 @@ func NewMergePage(mWidgets *controller.MWidgets) declarative.TabPage {
 							}
 						},
 						OnSelectedIndexesChanged: func() {
-							if err := newMergeTextChangeDialog(
+							if cmd, err := newMergeTextChangeDialog(
 								mergeState,
 								mergeTableView.CurrentIndex(),
 								&walk.Point{X: mWidgets.Position.X + 100, Y: mWidgets.Position.Y + 100},
-							).Create(nil); err != nil {
+							).Run(nil); err == nil {
+								if cmd == walk.DlgCmdOK {
+									mergeState.NameModel.Records[mergeTableView.CurrentIndex()].Checked = true
+									mergeState.NameModel.PublishRowsReset()
+								}
+							} else {
 								panic(err)
-							}
-
-							mergeState.TextChangeDialog.SetXPixels(mWidgets.Position.X + 100)
-							mergeState.TextChangeDialog.SetYPixels(mWidgets.Position.Y + 100)
-
-							if cmd := mergeState.TextChangeDialog.Run(); cmd == walk.DlgCmdOK {
-								mergeState.NameModel.Records[mergeTableView.CurrentIndex()].Checked = true
-								mergeState.NameModel.PublishRowsReset()
 							}
 						},
 					},
