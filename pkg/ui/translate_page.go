@@ -107,19 +107,17 @@ func NewTranslatePage(mWidgets *controller.MWidgets) declarative.TabPage {
 							}
 						},
 						OnSelectedIndexesChanged: func() {
-							if err := newTranslateTextChangeDialog(
+							if cmd, err := newTranslateTextChangeDialog(
 								translateState,
 								translateTableView.CurrentIndex(),
-							).Create(nil); err != nil {
+								&walk.Point{X: mWidgets.Position.X + 100, Y: mWidgets.Position.Y + 100},
+							).Run(nil); err == nil {
+								if cmd == walk.DlgCmdOK {
+									translateState.NameModel.Records[translateTableView.CurrentIndex()].Checked = true
+									translateState.NameModel.PublishRowsReset()
+								}
+							} else {
 								panic(err)
-							}
-
-							translateState.TextChangeDialog.SetXPixels(mWidgets.Position.X + 100)
-							translateState.TextChangeDialog.SetYPixels(mWidgets.Position.Y + 100)
-
-							if cmd := translateState.TextChangeDialog.Run(); cmd == walk.DlgCmdOK {
-								translateState.NameModel.Records[translateTableView.CurrentIndex()].Checked = true
-								translateState.NameModel.PublishRowsReset()
 							}
 						},
 					},
@@ -146,93 +144,13 @@ func NewTranslatePage(mWidgets *controller.MWidgets) declarative.TabPage {
 	}
 }
 
-func newTranslateTextChangeDialog(translateState *domain.TranslateState, recordIndex int) *declarative.Dialog {
-	var cancelBtn *walk.PushButton
+func newTranslateTextChangeDialog(translateState *domain.TranslateState, recordIndex int, position *walk.Point) *declarative.Dialog {
 	var okBtn *walk.PushButton
+	var cancelBtn *walk.PushButton
 	var db *walk.DataBinder
 	var jpTxt *walk.TextEdit
 	var enTxt *walk.TextEdit
 
-	dlg := newTextChangeDialog(okBtn, cancelBtn, db, jpTxt, enTxt,
-		translateState.TextChangeDialog.Accept, translateState.TextChangeDialog.Cancel)
-	dlg.AssignTo = &translateState.TextChangeDialog
-	dlg.DataBinder.DataSource = translateState.NameModel.Records[recordIndex]
-
-	return dlg
-}
-
-func newTextChangeDialog(
-	okBtn, cancelBtn *walk.PushButton,
-	db *walk.DataBinder,
-	jpTxt, enTxt *walk.TextEdit,
-	acceptFunc, cancelFunc func(),
-) *declarative.Dialog {
-
-	return &declarative.Dialog{
-		CancelButton:  &cancelBtn,
-		DefaultButton: &okBtn,
-		Title:         mi18n.T("名称変更"),
-		Layout:        declarative.VBox{},
-		MinSize:       declarative.Size{Width: 400, Height: 200},
-		DataBinder: declarative.DataBinder{
-			AssignTo: &db,
-		},
-		Children: []declarative.Widget{
-			declarative.Composite{
-				Layout: declarative.Grid{Columns: 2},
-				Children: []declarative.Widget{
-					declarative.Label{
-						Text: mi18n.T("種類"),
-					},
-					declarative.Label{
-						Text: declarative.Bind("TypeText"),
-					},
-					declarative.Label{
-						Text: mi18n.T("元名称"),
-					},
-					declarative.Label{
-						Text: declarative.Bind("NameText"),
-					},
-					declarative.Label{
-						Text: mi18n.T("日本語名称"),
-					},
-					declarative.TextEdit{
-						AssignTo: &jpTxt,
-						Text:     declarative.Bind("JapaneseNameText", textRequired{title: mi18n.T("日本語名称")}),
-					},
-					declarative.Label{
-						Text: mi18n.T("英語名称"),
-					},
-					declarative.TextEdit{
-						AssignTo: &enTxt,
-						Text:     declarative.Bind("EnglishNameText"),
-					},
-				},
-			},
-			declarative.Composite{
-				Layout: declarative.HBox{
-					Alignment: declarative.AlignHFarVCenter,
-				},
-				Children: []declarative.Widget{
-					declarative.PushButton{
-						AssignTo: &okBtn,
-						Text:     mi18n.T("OK"),
-						OnClicked: func() {
-							if err := db.Submit(); err != nil {
-								panic(err)
-							}
-							acceptFunc()
-						},
-					},
-					declarative.PushButton{
-						AssignTo: &cancelBtn,
-						Text:     mi18n.T("キャンセル"),
-						OnClicked: func() {
-							cancelFunc()
-						},
-					},
-				},
-			},
-		},
-	}
+	return newTextChangeDialog(translateState.TextChangeDialog, okBtn, cancelBtn, db,
+		translateState.NameModel.Records[recordIndex], jpTxt, enTxt, position)
 }

@@ -89,6 +89,7 @@ func NewCsvPage(mWidgets *controller.MWidgets) declarative.TabPage {
 							if err := newCsvTextChangeDialog(
 								csvState,
 								csvTableView.CurrentIndex(),
+								&walk.Point{X: mWidgets.Position.X + 100, Y: mWidgets.Position.Y + 100},
 							).Create(nil); err != nil {
 								panic(err)
 							}
@@ -121,17 +122,13 @@ func NewCsvPage(mWidgets *controller.MWidgets) declarative.TabPage {
 	}
 }
 
-func newCsvTextChangeDialog(csvState *domain.CsvState, recordIndex int) *declarative.Dialog {
-	var cancelBtn *walk.PushButton
+func newCsvTextChangeDialog(csvState *domain.CsvState, recordIndex int, position *walk.Point) *declarative.Dialog {
 	var okBtn *walk.PushButton
+	var cancelBtn *walk.PushButton
 	var db *walk.DataBinder
 	var jpTxt *walk.TextEdit
 	var enTxt *walk.TextEdit
 
-	dlg := newTextChangeDialog(okBtn, cancelBtn, db, jpTxt, enTxt,
-		csvState.TextChangeDialog.Accept, csvState.TextChangeDialog.Cancel)
-	dlg.AssignTo = &csvState.TextChangeDialog
-	dlg.DataBinder.DataSource = csvState.NameModel.Records[recordIndex]
-
-	return dlg
+	return newTextChangeDialog(csvState.TextChangeDialog, okBtn, cancelBtn, db,
+		csvState.NameModel.Records[recordIndex], jpTxt, enTxt, position)
 }

@@ -47,7 +47,6 @@ func main() {
 	appConfig.Env = env
 	mi18n.Initialize(appI18nFiles)
 	shared := state.NewSharedState(viewerCount)
-	appConfig.Env = "prod"
 
 	widths, heights, positionXs, positionYs := app.GetCenterSizeAndWidth(appConfig, viewerCount)
 
@@ -64,7 +63,8 @@ func main() {
 
 			controlWindow, err = controller.NewControlWindow(shared, appConfig,
 				ui.NewMenuItems(), []declarative.TabPage{
-					ui.NewTranslatePage(widgets), ui.NewCsvPage(widgets)}, widgets.EnabledInPlaying,
+					ui.NewTranslatePage(widgets), ui.NewCsvPage(widgets), ui.NewMergePage(widgets)},
+				widgets.EnabledInPlaying,
 				widths[0], heights[0], positionXs[0], positionYs[0])
 			if err != nil {
 				app.ShowErrorDialog(appConfig.IsSetEnv(), err)
