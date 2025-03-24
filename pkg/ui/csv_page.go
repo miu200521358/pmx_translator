@@ -51,7 +51,7 @@ func NewCsvPage(mWidgets *controller.MWidgets) declarative.TabPage {
 
 	return declarative.TabPage{
 
-		Title:    mi18n.T(mi18n.T("Csv出力")),
+		Title:    mi18n.T("Csv出力"),
 		AssignTo: &csvTab,
 		Layout:   declarative.VBox{},
 		Background: declarative.SystemColorBrush{

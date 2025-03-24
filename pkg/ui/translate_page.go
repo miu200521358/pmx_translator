@@ -70,7 +70,7 @@ func NewTranslatePage(mWidgets *controller.MWidgets) declarative.TabPage {
 
 	return declarative.TabPage{
 
-		Title:    mi18n.T(mi18n.T("名称置換")),
+		Title:    mi18n.T("名称置換"),
 		AssignTo: &translateTab,
 		Layout:   declarative.VBox{},
 		Background: declarative.SystemColorBrush{

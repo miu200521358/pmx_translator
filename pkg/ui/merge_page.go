@@ -68,7 +68,7 @@ func NewMergePage(mWidgets *controller.MWidgets) declarative.TabPage {
 
 	return declarative.TabPage{
 
-		Title:    mi18n.T(mi18n.T("Csv追加")),
+		Title:    mi18n.T("Csv追加"),
 		AssignTo: &mergeTab,
 		Layout:   declarative.VBox{},
 		Background: declarative.SystemColorBrush{
