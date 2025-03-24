@@ -80,7 +80,7 @@ func (m *CsvNameModel) Value(row, col int) any {
 	case 3:
 		return item.Segmented
 	case 4:
-		return item.NameText
+		return item.JapaneseNameText
 	case 5:
 		return item.EnglishNameText
 	}
@@ -138,7 +138,7 @@ func (m *CsvNameModel) Sort(col int, order walk.SortOrder) error {
 			}
 			return c(av < bv)
 		case 4:
-			return c(a.NameText < b.NameText)
+			return c(a.JapaneseNameText < b.JapaneseNameText)
 		case 5:
 			return c(a.EnglishNameText < b.EnglishNameText)
 		}
@@ -219,12 +219,13 @@ var separators = []string{string(filepath.Separator), "_", "-", " ", "　", "/",
 func (m *CsvNameModel) AddRecord(ks, jpTxt, enTxt, fieldKey string) {
 	if !m.exists(jpTxt) && fieldKey != "パス" && fieldKey != "テクスチャ" {
 		item := &NameItem{
-			Checked:         !IsJapaneseString(ks, jpTxt),
-			Number:          len(m.Records) + 1,
-			TypeText:        mi18n.T(fieldKey),
-			NameText:        jpTxt,
-			EnglishNameText: enTxt,
-			Segmented:       false,
+			Checked:          !IsJapaneseString(ks, jpTxt),
+			Number:           len(m.Records) + 1,
+			TypeText:         mi18n.T(fieldKey),
+			NameText:         jpTxt,
+			JapaneseNameText: jpTxt,
+			EnglishNameText:  enTxt,
+			Segmented:        false,
 		}
 		m.Records = append(m.Records, item)
 	}
@@ -235,12 +236,13 @@ func (m *CsvNameModel) AddRecord(ks, jpTxt, enTxt, fieldKey string) {
 			continue
 		}
 		item := &NameItem{
-			Checked:         !IsJapaneseString(ks, t),
-			Number:          len(m.Records) + 1,
-			TypeText:        mi18n.T(fieldKey),
-			NameText:        t,
-			EnglishNameText: "",
-			Segmented:       true,
+			Checked:          !IsJapaneseString(ks, t),
+			Number:           len(m.Records) + 1,
+			TypeText:         mi18n.T(fieldKey),
+			NameText:         t,
+			JapaneseNameText: t,
+			EnglishNameText:  "",
+			Segmented:        true,
 		}
 		m.Records = append(m.Records, item)
 	}
