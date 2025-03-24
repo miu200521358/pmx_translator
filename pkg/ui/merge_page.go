@@ -30,8 +30,8 @@ func NewMergePage(mWidgets *controller.MWidgets) declarative.TabPage {
 
 	originalCsvLoadPicker := widget.NewCsvLoadFilePicker(
 		"AppendOriginalCsv",
-		mi18n.T("追加元CSVデータ"),
-		mi18n.T("追加元CSVデータファイルを選択してください"),
+		mi18n.T("追加元Csvデータ"),
+		mi18n.T("追加元Csvデータファイルを選択してください"),
 		func(cw *controller.ControlWindow, rep repository.IRepository, path string) {
 			if data, err := rep.Load(path); err == nil {
 				csvData := data.(*mcsv.CsvModel)
@@ -48,8 +48,8 @@ func NewMergePage(mWidgets *controller.MWidgets) declarative.TabPage {
 
 	mergedCsvLoadPicker := widget.NewCsvLoadFilePicker(
 		"AppendCsv",
-		mi18n.T("追加対象CSVデータ"),
-		mi18n.T("追加対象CSVデータファイルを選択してください"),
+		mi18n.T("追加対象Csvデータ"),
+		mi18n.T("追加対象Csvデータファイルを選択してください"),
 		func(cw *controller.ControlWindow, rep repository.IRepository, path string) {
 			if data, err := rep.Load(path); err == nil {
 				csvData := data.(*mcsv.CsvModel)

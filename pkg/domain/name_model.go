@@ -10,9 +10,9 @@ type TranslateModel struct {
 	Model             *pmx.PmxModel  // 処理対象モデル
 	Motion            *vmd.VmdMotion // 処理対象モーション
 	OutputModelPath   string         // 出力パス
-	LangCsv           *mcsv.CsvModel // 言語CSVデータ
-	AppendOriginalCsv *mcsv.CsvModel // 追加元CSVデータ
-	AppendCsv         *mcsv.CsvModel // 追加CSVデータ
+	LangCsv           *mcsv.CsvModel // 言語Csvデータ
+	AppendOriginalCsv *mcsv.CsvModel // 追加元Csvデータ
+	AppendCsv         *mcsv.CsvModel // 追加Csvデータ
 }
 
 func NewTranslateModel() *TranslateModel {

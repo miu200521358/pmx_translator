@@ -9,8 +9,8 @@ import (
 )
 
 type MergeState struct {
-	OriginalCsvModel *mcsv.CsvModel  // 追加元CSVモデル
-	MergedCsvModel   *mcsv.CsvModel  // 追加先CSVモデル
+	OriginalCsvModel *mcsv.CsvModel  // 追加元Csvモデル
+	MergedCsvModel   *mcsv.CsvModel  // 追加先Csvモデル
 	NameModel        *MergeNameModel // 名称モデル
 	TextChangeDialog *walk.Dialog    // テキスト変更ダイアログ
 	OutputPath       string          // 出力パス

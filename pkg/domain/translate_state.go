@@ -12,7 +12,7 @@ import (
 
 type TranslateState struct {
 	Model            *pmx.PmxModel       // 処理対象モデル
-	CsvData          *mcsv.CsvModel      // 言語CSVデータ
+	CsvData          *mcsv.CsvModel      // 言語Csvデータ
 	NameModel        *TranslateNameModel // 名称モデル
 	TextChangeDialog *walk.Dialog        // テキスト変更ダイアログ
 	OutputPath       string              // 出力パス

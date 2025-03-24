@@ -21,7 +21,7 @@
     },
     {
         "id": "置換辞書データの使い方",
-        "translation": "・You can specify the CSV data file that registers the replacement dictionary in the name field."
+        "translation": "・You can specify the Csv data file that registers the replacement dictionary in the name field."
     },
     {
         "id": "出力モデル(Pmx)",
@@ -40,12 +40,12 @@
         "translation": "Save"
     },
     {
-        "id": "TranslateTabLabel",
-        "translation": "・Please specify the Pmx model where you want to replace the language in the name field and the CSV data file for the replacement dictionary.\n・When the Pmx model and dictionary CSV are loaded, a list of replacement values for the name field will appear in the table below.\n・Fields in the name column containing words registered in the dictionary will automatically be checked.\n・Selecting a row outside the checkbox will display a dialog for individually modifying the names.\n・You can save the model with the replacement results using the 'Save' button."
+        "id": "名称置換使い方",
+        "translation": "・Please specify the Pmx model where you want to replace the language in the name field and the Csv data file for the replacement dictionary.\n・When the Pmx model and dictionary Csv are loaded, a list of replacement values for the name field will appear in the table below.\n・Fields in the name column containing words registered in the dictionary will automatically be checked.\n・Selecting a row outside the checkbox will display a dialog for individually modifying the names.\n・You can save the model with the replacement results using the 'Save' button."
     },
     {
-        "id": "CsvTabLabel",
-        "translation": "・Please specify the Pmx model whose name fields you want to export to CSV.\n・Once the Pmx model is loaded, the list of name fields will be displayed in the table below.\n・Names containing characters that cannot be recognized in Shift-JIS, such as Simplified Chinese, will be automatically checked.\n・You can also manually select which name fields to export to CSV.\n・Replacement patterns for splitting names by symbols or numbers have also been added to the view.\n・Clicking on the header allows you to sort the table.\n・You can save the list of names for the dictionary using the 'Save' button."
+        "id": "Csv出力使い方",
+        "translation": "・Please specify the Pmx model whose name fields you want to export to Csv.\n・Once the Pmx model is loaded, the list of name fields will be displayed in the table below.\n・Names containing characters that cannot be recognized in Shift-JIS, such as Simplified Chinese, will be automatically checked.\n・You can also manually select which name fields to export to Csv.\n・Replacement patterns for splitting names by symbols or numbers have also been added to the view.\n・Clicking on the header allows you to sort the table.\n・You can save the list of names for the dictionary using the 'Save' button."
     },
     {
         "id": "生成失敗",
@@ -96,7 +96,7 @@
         "translation": "Tool Overview"
     },
     {
-        "id": "概要メッセージ",
+        "id": "概要説明",
         "translation": "This tool is used to replace the name field of models that contain characters not recognized by Shift-JIS.\nIf the model's path contains characters outside Shift-JIS, the path will also be converted based on the replacement dictionary."
     },
     {
@@ -241,34 +241,34 @@
     },
     {
         "id": "Csv追加",
-        "translation": "Add CSV"
+        "translation": "Add Csv"
     },
     {
-        "id": "AppendTabLabel",
-        "translation": "・Specify the source CSV and the CSV to append to it\n・Once the two CSV files are loaded, a list of names will be displayed in the table below\n・Dictionaries that exist only in the append CSV and not in the source CSV will be automatically checked\n・Click the 'Save' button to create a new CSV by adding the checked dictionary data to the source CSV"
+        "id": "Csv追加使い方",
+        "translation": "・Specify the source Csv and the Csv to append to it\n・Once the two Csv files are loaded, a list of names will be displayed in the table below\n・Dictionaries that exist only in the append Csv and not in the source Csv will be automatically checked\n・Click the 'Save' button to create a new Csv by adding the checked dictionary data to the source Csv"
     },
     {
-        "id": "追加元CSVデータ",
-        "translation": "Source Dictionary Data (CSV)"
+        "id": "追加元Csvデータ",
+        "translation": "Source Dictionary Data (Csv)"
     },
     {
-        "id": "追加元CSVデータファイルを選択してください",
-        "translation": "Please select the source dictionary data (CSV) file"
+        "id": "追加元Csvデータファイルを選択してください",
+        "translation": "Please select the source dictionary data (Csv) file"
     },
     {
-        "id": "追加元CSVデータの使い方",
-        "translation": "・You can specify the source CSV data file"
+        "id": "追加元Csvデータの使い方",
+        "translation": "・You can specify the source Csv data file"
     },
     {
-        "id": "追加対象CSVデータ",
-        "translation": "Target Dictionary Data (CSV)"
+        "id": "追加対象Csvデータ",
+        "translation": "Target Dictionary Data (Csv)"
     },
     {
-        "id": "追加対象CSVデータファイルを選択してください",
-        "translation": "Please select the target dictionary data (CSV) file"
+        "id": "追加対象Csvデータファイルを選択してください",
+        "translation": "Please select the target dictionary data (Csv) file"
     },
     {
-        "id": "追加対象CSVデータの使い方",
-        "translation": "・You can specify the target CSV data file"
+        "id": "追加対象Csvデータの使い方",
+        "translation": "・You can specify the target Csv data file"
     }
 ]
