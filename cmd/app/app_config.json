@@ -1,8 +1,8 @@
 {
     "Name": "PmxTranslator",
-    "Version": "1.1.0_beta_01",
+    "Version": "1.1.0_beta_02",
     "Horizontal": true,
-    "CloseConfirm": false,
+    "CloseConfirm": true,
     "ControlWindowSize": {
         "Width": 512,
         "Height": 768
