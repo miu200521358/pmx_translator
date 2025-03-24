@@ -107,17 +107,19 @@ func NewTranslatePage(mWidgets *controller.MWidgets) declarative.TabPage {
 							}
 						},
 						OnSelectedIndexesChanged: func() {
-							if cmd, err := newTranslateTextChangeDialog(
+							if dlg := newTranslateTextChangeDialog(
 								translateState,
 								translateTableView.CurrentIndex(),
 								&walk.Point{X: mWidgets.Position.X + 100, Y: mWidgets.Position.Y + 100},
-							).Run(nil); err == nil {
-								if cmd == walk.DlgCmdOK {
-									translateState.NameModel.Records[translateTableView.CurrentIndex()].Checked = true
-									translateState.NameModel.PublishRowsReset()
+							); dlg != nil {
+								if cmd, err := dlg.Run(nil); err == nil {
+									if cmd == walk.DlgCmdOK {
+										translateState.NameModel.Records[translateTableView.CurrentIndex()].Checked = true
+										translateState.NameModel.PublishRowsReset()
+									}
+								} else {
+									panic(err)
 								}
-							} else {
-								panic(err)
 							}
 						},
 					},
@@ -150,6 +152,10 @@ func newTranslateTextChangeDialog(translateState *domain.TranslateState, recordI
 	var db *walk.DataBinder
 	var jpTxt *walk.TextEdit
 	var enTxt *walk.TextEdit
+
+	if len(translateState.NameModel.Records) == 0 || recordIndex < 0 {
+		return nil
+	}
 
 	return newTextChangeDialog(translateState.TextChangeDialog, okBtn, cancelBtn, db,
 		translateState.NameModel.Records[recordIndex], jpTxt, enTxt, position)

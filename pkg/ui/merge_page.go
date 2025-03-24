@@ -109,17 +109,19 @@ func NewMergePage(mWidgets *controller.MWidgets) declarative.TabPage {
 							}
 						},
 						OnSelectedIndexesChanged: func() {
-							if cmd, err := newMergeTextChangeDialog(
+							if dlg := newMergeTextChangeDialog(
 								mergeState,
 								mergeTableView.CurrentIndex(),
 								&walk.Point{X: mWidgets.Position.X + 100, Y: mWidgets.Position.Y + 100},
-							).Run(nil); err == nil {
-								if cmd == walk.DlgCmdOK {
-									mergeState.NameModel.Records[mergeTableView.CurrentIndex()].Checked = true
-									mergeState.NameModel.PublishRowsReset()
+							); dlg != nil {
+								if cmd, err := dlg.Run(nil); err == nil {
+									if cmd == walk.DlgCmdOK {
+										mergeState.NameModel.Records[mergeTableView.CurrentIndex()].Checked = true
+										mergeState.NameModel.PublishRowsReset()
+									}
+								} else {
+									panic(err)
 								}
-							} else {
-								panic(err)
 							}
 						},
 					},
@@ -148,6 +150,10 @@ func newMergeTextChangeDialog(mergeState *domain.MergeState, recordIndex int, po
 	var db *walk.DataBinder
 	var jpTxt *walk.TextEdit
 	var enTxt *walk.TextEdit
+
+	if len(mergeState.NameModel.Records) == 0 || recordIndex < 0 {
+		return nil
+	}
 
 	return newTextChangeDialog(mergeState.TextChangeDialog, okBtn, cancelBtn, db,
 		mergeState.NameModel.Records[recordIndex], jpTxt, enTxt, position)
