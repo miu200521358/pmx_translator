@@ -34,6 +34,11 @@ func NewTranslatePage(mWidgets *controller.MWidgets) declarative.TabPage {
 		mi18n.T("置換対象モデル(Pmx)"),
 		mi18n.T("置換対象モデルPmxファイルを選択してください"),
 		func(cw *controller.ControlWindow, rep repository.IRepository, path string) {
+			if path == "" {
+				cw.StoreModel(0, 0, nil)
+				return
+			}
+
 			if data, err := rep.Load(path); err == nil {
 				model := data.(*pmx.PmxModel)
 				cw.StoreModel(0, 0, model)
