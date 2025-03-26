@@ -78,8 +78,8 @@ func NewTranslatePage(mWidgets *controller.MWidgets) declarative.TabPage {
 		Title:    mi18n.T("名称置換"),
 		AssignTo: &translateTab,
 		Layout:   declarative.VBox{},
-		Background: declarative.SystemColorBrush{
-			Color: walk.SysColorInactiveCaption,
+		Background: declarative.SolidColorBrush{
+			Color: controller.ColorTabBackground,
 		},
 		Children: []declarative.Widget{
 			declarative.Composite{
