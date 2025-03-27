@@ -64,7 +64,7 @@ func main() {
 			controlWindow, err = controller.NewControlWindow(shared, appConfig,
 				ui.NewMenuItems(), []declarative.TabPage{
 					ui.NewTranslatePage(widgets), ui.NewCsvPage(widgets), ui.NewMergePage(widgets)},
-				widgets.EnabledInPlaying,
+				widgets.SetEnabledInPlaying,
 				widths[0], heights[0], positionXs[0], positionYs[0])
 			if err != nil {
 				app.ShowErrorDialog(appConfig.IsSetEnv(), err)

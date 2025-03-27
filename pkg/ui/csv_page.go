@@ -5,7 +5,6 @@ import (
 	"github.com/miu200521358/mlib_go/pkg/config/mlog"
 	"github.com/miu200521358/mlib_go/pkg/domain/pmx"
 	"github.com/miu200521358/mlib_go/pkg/infrastructure/repository"
-	"github.com/miu200521358/mlib_go/pkg/interface/app"
 	"github.com/miu200521358/mlib_go/pkg/interface/controller"
 	"github.com/miu200521358/mlib_go/pkg/interface/controller/widget"
 	"github.com/miu200521358/pmx_translator/pkg/domain"
@@ -116,7 +115,7 @@ func NewCsvPage(mWidgets *controller.MWidgets) declarative.TabPage {
 								mlog.IT(mi18n.T("出力成功"), mi18n.T("出力成功メッセージ", map[string]any{"Path": csvState.OutputPath}))
 							}
 
-							app.Beep()
+							controller.Beep()
 						},
 					},
 					declarative.VSpacer{},
