@@ -116,7 +116,7 @@ func SavePmx(model *pmx.PmxModel, nameItems []*domain.NameItem, outputJpPath str
 		}
 	}
 
-	pmxRep := repository.NewPmxRepository()
+	pmxRep := repository.NewPmxRepository(true)
 	if err := pmxRep.Save(outputJpPath, model, false); err != nil {
 		return err
 	}
