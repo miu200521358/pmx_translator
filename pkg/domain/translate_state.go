@@ -157,32 +157,39 @@ func (m *TranslateNameModel) ResetRows(model *pmx.PmxModel, charaCsv *mcsv.CsvMo
 	m.AddRecord(fileName, 0, model.Path(), "", "パス", charaCsv)
 	m.AddRecord(fileName, 0, model.Name(), model.EnglishName(), "モデル", charaCsv)
 
-	model.Materials.ForEach(func(i int, mat *pmx.Material) {
+	model.Materials.ForEach(func(i int, mat *pmx.Material) bool {
 		m.AddRecord(fileName, mat.Index(), mat.Name(), mat.EnglishName(), "材質", charaCsv)
+		return true
 	})
 
-	model.Textures.ForEach(func(i int, tex *pmx.Texture) {
+	model.Textures.ForEach(func(i int, tex *pmx.Texture) bool {
 		m.AddRecord(fileName, tex.Index(), tex.Name(), "", "テクスチャ", charaCsv)
+		return true
 	})
 
-	model.Bones.ForEach(func(i int, bone *pmx.Bone) {
+	model.Bones.ForEach(func(i int, bone *pmx.Bone) bool {
 		m.AddRecord(fileName, bone.Index(), bone.Name(), bone.EnglishName(), "ボーン", charaCsv)
+		return true
 	})
 
-	model.Morphs.ForEach(func(i int, morph *pmx.Morph) {
+	model.Morphs.ForEach(func(i int, morph *pmx.Morph) bool {
 		m.AddRecord(fileName, morph.Index(), morph.Name(), morph.EnglishName(), "モーフ", charaCsv)
+		return true
 	})
 
-	model.DisplaySlots.ForEach(func(i int, disp *pmx.DisplaySlot) {
+	model.DisplaySlots.ForEach(func(i int, disp *pmx.DisplaySlot) bool {
 		m.AddRecord(fileName, disp.Index(), disp.Name(), disp.EnglishName(), "表示枠", charaCsv)
+		return true
 	})
 
-	model.RigidBodies.ForEach(func(i int, rb *pmx.RigidBody) {
+	model.RigidBodies.ForEach(func(i int, rb *pmx.RigidBody) bool {
 		m.AddRecord(fileName, rb.Index(), rb.Name(), rb.EnglishName(), "剛体", charaCsv)
+		return true
 	})
 
-	model.Joints.ForEach(func(i int, joint *pmx.Joint) {
+	model.Joints.ForEach(func(i int, joint *pmx.Joint) bool {
 		m.AddRecord(fileName, joint.Index(), joint.Name(), joint.EnglishName(), "ジョイント", charaCsv)
+		return true
 	})
 
 	m.PublishRowsReset()

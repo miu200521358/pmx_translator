@@ -266,32 +266,39 @@ func (m *CsvNameModel) ResetRows(model *pmx.PmxModel) {
 	m.AddRecord(ks, model.Path(), "", "パス")
 	m.AddRecord(ks, model.Name(), model.EnglishName(), "モデル")
 
-	model.Materials.ForEach(func(i int, mat *pmx.Material) {
+	model.Materials.ForEach(func(i int, mat *pmx.Material) bool {
 		m.AddRecord(ks, mat.Name(), mat.EnglishName(), "材質")
+		return true
 	})
 
-	model.Textures.ForEach(func(i int, tex *pmx.Texture) {
+	model.Textures.ForEach(func(i int, tex *pmx.Texture) bool {
 		m.AddRecord(ks, tex.Name(), tex.EnglishName(), "テクスチャ")
+		return true
 	})
 
-	model.Bones.ForEach(func(i int, bone *pmx.Bone) {
+	model.Bones.ForEach(func(i int, bone *pmx.Bone) bool {
 		m.AddRecord(ks, bone.Name(), bone.EnglishName(), "ボーン")
+		return true
 	})
 
-	model.Morphs.ForEach(func(i int, morph *pmx.Morph) {
+	model.Morphs.ForEach(func(i int, morph *pmx.Morph) bool {
 		m.AddRecord(ks, morph.Name(), morph.EnglishName(), "モーフ")
+		return true
 	})
 
-	model.DisplaySlots.ForEach(func(i int, disp *pmx.DisplaySlot) {
+	model.DisplaySlots.ForEach(func(i int, disp *pmx.DisplaySlot) bool {
 		m.AddRecord(ks, disp.Name(), disp.EnglishName(), "表示枠")
+		return true
 	})
 
-	model.RigidBodies.ForEach(func(i int, rb *pmx.RigidBody) {
+	model.RigidBodies.ForEach(func(i int, rb *pmx.RigidBody) bool {
 		m.AddRecord(ks, rb.Name(), rb.EnglishName(), "剛体")
+		return true
 	})
 
-	model.Joints.ForEach(func(i int, joint *pmx.Joint) {
+	model.Joints.ForEach(func(i int, joint *pmx.Joint) bool {
 		m.AddRecord(ks, joint.Name(), joint.EnglishName(), "ジョイント")
+		return true
 	})
 
 	m.PublishRowsReset()

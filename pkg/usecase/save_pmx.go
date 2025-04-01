@@ -38,19 +38,20 @@ func SavePmx(model *pmx.PmxModel, nameItems []*domain.NameItem, outputJpPath str
 		number++
 	}
 
-	model.Materials.ForEach(func(i int, mat *pmx.Material) {
+	model.Materials.ForEach(func(i int, mat *pmx.Material) bool {
 		jpName, enName := getTranslatedNames(number, mat.Name(), mat.EnglishName(), nameItems)
 		mat.SetName(jpName)
 		mat.SetEnglishName(enName)
 		number++
+		return true
 	})
 
 	jpDir, _, _ := mfile.SplitPath(outputJpPath)
 
-	model.Textures.ForEach(func(i int, tex *pmx.Texture) {
+	model.Textures.ForEach(func(i int, tex *pmx.Texture) bool {
 		if tex.Name() == "" {
 			number++
-			return
+			return true
 		}
 
 		orgName := tex.Name()
@@ -62,7 +63,7 @@ func SavePmx(model *pmx.PmxModel, nameItems []*domain.NameItem, outputJpPath str
 		if !mfile.CanSave(outputJpPath) {
 			if err := os.MkdirAll(jpDir, 0755); err != nil {
 				mlog.E("ディレクトリ作成失敗: %s", err)
-				return
+				return false
 			}
 		}
 
@@ -71,41 +72,48 @@ func SavePmx(model *pmx.PmxModel, nameItems []*domain.NameItem, outputJpPath str
 		if orgTexPath != jpTexPath {
 			copyTex(orgTexPath, jpTexPath)
 		}
+
+		return true
 	})
 
-	model.Bones.ForEach(func(i int, bone *pmx.Bone) {
+	model.Bones.ForEach(func(i int, bone *pmx.Bone) bool {
 		jpName, enName := getTranslatedNames(number, bone.Name(), bone.EnglishName(), nameItems)
 		bone.SetName(jpName)
 		bone.SetEnglishName(enName)
 		number++
+		return true
 	})
 
-	model.Morphs.ForEach(func(i int, morph *pmx.Morph) {
+	model.Morphs.ForEach(func(i int, morph *pmx.Morph) bool {
 		jpName, enName := getTranslatedNames(number, morph.Name(), morph.EnglishName(), nameItems)
 		morph.SetName(jpName)
 		morph.SetEnglishName(enName)
 		number++
+		return true
 	})
 
-	model.DisplaySlots.ForEach(func(i int, disp *pmx.DisplaySlot) {
+	model.DisplaySlots.ForEach(func(i int, disp *pmx.DisplaySlot) bool {
 		jpName, enName := getTranslatedNames(number, disp.Name(), disp.EnglishName(), nameItems)
 		disp.SetName(jpName)
 		disp.SetEnglishName(enName)
 		number++
+		return true
 	})
 
-	model.RigidBodies.ForEach(func(i int, rb *pmx.RigidBody) {
+	model.RigidBodies.ForEach(func(i int, rb *pmx.RigidBody) bool {
 		jpName, enName := getTranslatedNames(number, rb.Name(), rb.EnglishName(), nameItems)
 		rb.SetName(jpName)
 		rb.SetEnglishName(enName)
 		number++
+		return true
 	})
 
-	model.Joints.ForEach(func(i int, joint *pmx.Joint) {
+	model.Joints.ForEach(func(i int, joint *pmx.Joint) bool {
 		jpName, enName := getTranslatedNames(number, joint.Name(), joint.EnglishName(), nameItems)
 		joint.SetName(jpName)
 		joint.SetEnglishName(enName)
 		number++
+		return true
 	})
 
 	if !mfile.CanSave(outputJpPath) {
