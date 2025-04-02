@@ -65,7 +65,7 @@ func main() {
 				ui.NewMenuItems(), []declarative.TabPage{
 					ui.NewTranslatePage(widgets), ui.NewCsvPage(widgets), ui.NewMergePage(widgets)},
 				widgets.SetEnabledInPlaying,
-				widths[0], heights[0], positionXs[0], positionYs[0])
+				widths[0], heights[0], positionXs[0], positionYs[0], viewerCount)
 			if err != nil {
 				app.ShowErrorDialog(appConfig, err)
 				return
