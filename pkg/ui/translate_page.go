@@ -47,7 +47,7 @@ func NewTranslatePage(mWidgets *controller.MWidgets) declarative.TabPage {
 
 				pmxSavePicker.SetPath(translateState.OutputPath)
 			} else {
-				mlog.ET(mi18n.T("読み込み失敗"), err.Error())
+				mlog.ET(mi18n.T("読み込み失敗"), err, "")
 			}
 		},
 	)
@@ -65,7 +65,7 @@ func NewTranslatePage(mWidgets *controller.MWidgets) declarative.TabPage {
 
 				pmxSavePicker.SetPath(translateState.OutputPath)
 			} else {
-				mlog.ET(mi18n.T("読み込み失敗"), err.Error())
+				mlog.ET(mi18n.T("読み込み失敗"), err, "")
 			}
 		},
 	)

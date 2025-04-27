@@ -40,7 +40,7 @@ func NewMergePage(mWidgets *controller.MWidgets) declarative.TabPage {
 
 				mergedCsvSavePicker.SetPath(mergeState.OutputPath)
 			} else {
-				mlog.ET(mi18n.T("読み込み失敗"), err.Error())
+				mlog.ET(mi18n.T("読み込み失敗"), err, "")
 			}
 		},
 	)
@@ -58,7 +58,7 @@ func NewMergePage(mWidgets *controller.MWidgets) declarative.TabPage {
 
 				mergedCsvSavePicker.SetPath(mergeState.OutputPath)
 			} else {
-				mlog.ET(mi18n.T("読み込み失敗"), err.Error())
+				mlog.ET(mi18n.T("読み込み失敗"), err, "")
 			}
 		},
 	)

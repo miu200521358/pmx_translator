@@ -46,7 +46,7 @@ func NewCsvPage(mWidgets *controller.MWidgets) declarative.TabPage {
 
 				csvSavePicker.SetPath(csvState.OutputPath)
 			} else {
-				mlog.ET(mi18n.T("読み込み失敗"), err.Error())
+				mlog.ET(mi18n.T("読み込み失敗"), err, "")
 			}
 		},
 	)
