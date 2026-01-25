@@ -13,6 +13,7 @@
       "preLaunchTask": "go: mod tidy",
       "env": {
         "WORKSPACE_FOLDER": "${workspaceFolder}",
+        "GOEXPERIMENT": "nodwarf5",
         "ENV": "debug"
       },
     },
@@ -25,17 +26,6 @@
       "env": {
         "WORKSPACE_FOLDER": "${workspaceFolder}",
         "ENV": "dev"
-      },
-    },
-    {
-      "name": "[stg] Build",
-      "type": "debugpy",
-      "request": "launch",
-      "program": "${workspaceFolder}/.vscode/scripts/build_exe.py",
-      "cwd": "${workspaceFolder}/cmd",
-      "env": {
-        "WORKSPACE_FOLDER": "${workspaceFolder}",
-        "ENV": "stg"
       },
     },
     {
