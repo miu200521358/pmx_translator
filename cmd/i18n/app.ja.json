@@ -282,5 +282,65 @@
     {
         "id": "追加対象Csvデータの使い方",
         "translation": "・追加対象となるCsvデータファイルを指定できます"
+    },
+    {
+        "id": "error_csv_reader_missing",
+        "translation": "CSV読み込みリポジトリがありません"
+    },
+    {
+        "id": "error_csv_model_convert_failed",
+        "translation": "CSVモデル変換に失敗しました"
+    },
+    {
+        "id": "error_csv_model_nil",
+        "translation": "CSVモデルがnilです"
+    },
+    {
+        "id": "error_csv_header_not_found",
+        "translation": "CSVヘッダが見つかりません"
+    },
+    {
+        "id": "error_translation_csv_columns_invalid",
+        "translation": "翻訳CSVの列数が不正です(行:%d 期待:%d 実際:%d)"
+    },
+    {
+        "id": "error_translate_target_model_required",
+        "translation": "置換対象モデルが読み込まれていません"
+    },
+    {
+        "id": "error_output_model_path_required",
+        "translation": "出力モデル(Pmx)ファイルパスを指定してください"
+    },
+    {
+        "id": "error_model_writer_missing",
+        "translation": "モデル保存リポジトリがありません"
+    },
+    {
+        "id": "error_output_dir_create_failed",
+        "translation": "出力ディレクトリ作成に失敗しました"
+    },
+    {
+        "id": "error_csv_target_model_required",
+        "translation": "置換対象モデル(Pmx)が読み込まれていません"
+    },
+    {
+        "id": "error_output_csv_path_required",
+        "translation": "出力Csvファイルパスを指定してください"
+    },
+    {
+        "id": "error_csv_writer_missing",
+        "translation": "CSV保存リポジトリがありません"
+    },
+    {
+        "id": "error_texture_output_dir_create_failed",
+        "translation": "テクスチャ出力先ディレクトリ作成に失敗しました"
+    },
+    {
+        "id": "error_texture_save_failed",
+        "translation": "テクスチャ保存に失敗しました"
+    },
+    {
+        "id": "error_prerequisite_missing",
+        "translation": "前提不足で処理開始できない"
     }
 ]

@@ -2,7 +2,6 @@
 package minteractor
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -22,13 +21,13 @@ const (
 // SaveTranslatedModel は名称置換結果をPMXとして保存する。
 func (uc *PmxTranslatorUsecase) SaveTranslatedModel(outputPath string, sourceModel *model.PmxModel, nameItems []domain.TranslateNameItem, options SaveOptions) error {
 	if sourceModel == nil {
-		return newPrerequisiteMissingError("置換対象モデルが読み込まれていません")
+		return newPrerequisiteMissingError(errorTranslateTargetModelRequired)
 	}
 	if strings.TrimSpace(outputPath) == "" {
-		return newPrerequisiteMissingError("出力モデル(Pmx)ファイルパスを指定してください")
+		return newPrerequisiteMissingError(errorOutputModelPathRequired)
 	}
 	if uc.modelWriter == nil {
-		return newPrerequisiteMissingError("モデル保存リポジトリがありません")
+		return newPrerequisiteMissingError(errorModelWriterMissing)
 	}
 
 	copiedModel, err := sourceModel.Copy()
@@ -60,7 +59,7 @@ func (uc *PmxTranslatorUsecase) SaveTranslatedModel(outputPath string, sourceMod
 	outputDir, _, _ := mfile.SplitPath(outputPath)
 	if strings.TrimSpace(outputDir) != "" {
 		if err := os.MkdirAll(outputDir, 0o755); err != nil {
-			return fmt.Errorf("出力ディレクトリ作成に失敗しました: %w", err)
+			return io_common.NewIoSaveFailed(errorOutputDirCreateFailed, err)
 		}
 	}
 	if modelData.Textures != nil {
@@ -149,13 +148,13 @@ func (uc *PmxTranslatorUsecase) SaveTranslatedModel(outputPath string, sourceMod
 // SaveCsvDictionary はCSV出力タブでチェックされた名称を辞書CSVとして保存する。
 func (uc *PmxTranslatorUsecase) SaveCsvDictionary(modelData *model.PmxModel, checkedNames []string, outputPath string, options SaveOptions) error {
 	if modelData == nil {
-		return newPrerequisiteMissingError("置換対象モデル(Pmx)が読み込まれていません")
+		return newPrerequisiteMissingError(errorCsvTargetModelRequired)
 	}
 	if strings.TrimSpace(outputPath) == "" {
-		return newPrerequisiteMissingError("出力Csvファイルパスを指定してください")
+		return newPrerequisiteMissingError(errorOutputCsvPathRequired)
 	}
 	if uc.csvWriter == nil {
-		return newPrerequisiteMissingError("CSV保存リポジトリがありません")
+		return newPrerequisiteMissingError(errorCsvWriterMissing)
 	}
 
 	_, fileName, _ := mfile.SplitPath(modelData.Path())
@@ -215,10 +214,10 @@ func (uc *PmxTranslatorUsecase) BuildAppendNameItems(originalRows []domain.Trans
 // SaveAppendCsv はCSV追加タブのチェック行を結合して保存する。
 func (uc *PmxTranslatorUsecase) SaveAppendCsv(originalRows []domain.TranslationCsvRecord, appendRows []domain.TranslationCsvRecord, checkedItems []domain.AppendNameItem, outputPath string, options SaveOptions) error {
 	if strings.TrimSpace(outputPath) == "" {
-		return newPrerequisiteMissingError("出力Csvファイルパスを指定してください")
+		return newPrerequisiteMissingError(errorOutputCsvPathRequired)
 	}
 	if uc.csvWriter == nil {
-		return newPrerequisiteMissingError("CSV保存リポジトリがありません")
+		return newPrerequisiteMissingError(errorCsvWriterMissing)
 	}
 
 	checkedByNumber := map[int]domain.AppendNameItem{}
@@ -337,10 +336,10 @@ func copyTextureFile(sourcePath string, outputPath string) error {
 		return io_common.NewIoFileNotFound(sourcePath, err)
 	}
 	if err := os.MkdirAll(filepath.Dir(outputPath), 0o755); err != nil {
-		return io_common.NewIoSaveFailed("テクスチャ出力先ディレクトリ作成に失敗しました", err)
+		return io_common.NewIoSaveFailed(errorTextureOutputDirCreateFailed, err)
 	}
 	if err := os.WriteFile(outputPath, textureBytes, 0o644); err != nil {
-		return io_common.NewIoSaveFailed("テクスチャ保存に失敗しました", err)
+		return io_common.NewIoSaveFailed(errorTextureSaveFailed, err)
 	}
 	return nil
 }
@@ -348,7 +347,7 @@ func copyTextureFile(sourcePath string, outputPath string) error {
 // newPrerequisiteMissingError は前提不足エラーを生成する。
 func newPrerequisiteMissingError(message string) error {
 	if strings.TrimSpace(message) == "" {
-		message = "前提不足で処理開始できない"
+		message = errorPrerequisiteMissing
 	}
 	return merr.NewCommonError(prerequisiteMissingErrorID, merr.ErrorKindValidate, message, nil)
 }

@@ -31,7 +31,7 @@ func (uc *PmxTranslatorUsecase) LoadTranslationCsv(reader io.IFileReader, path s
 		repo = uc.csvReader
 	}
 	if repo == nil {
-		return nil, newPrerequisiteMissingError("CSV読み込みリポジトリがありません")
+		return nil, newPrerequisiteMissingError(errorCsvReaderMissing)
 	}
 
 	data, err := repo.Load(path)
@@ -40,7 +40,7 @@ func (uc *PmxTranslatorUsecase) LoadTranslationCsv(reader io.IFileReader, path s
 	}
 	csvModel, ok := data.(*io_csv.CsvModel)
 	if !ok || csvModel == nil {
-		return nil, io_common.NewIoParseFailed("CSVモデル変換に失敗しました", nil)
+		return nil, io_common.NewIoParseFailed(errorCsvModelConvertFailed, nil)
 	}
 	if err := validateTranslationCsvModel(csvModel); err != nil {
 		return nil, err
@@ -143,19 +143,19 @@ func (uc *PmxTranslatorUsecase) BuildTranslateNameItems(modelData *model.PmxMode
 // validateTranslationCsvModel は翻訳CSVの列仕様を検証する。
 func validateTranslationCsvModel(csvModel *io_csv.CsvModel) error {
 	if csvModel == nil {
-		return io_common.NewIoParseFailed("CSVモデルがnilです", nil)
+		return io_common.NewIoParseFailed(errorCsvModelNil, nil)
 	}
 	records := csvModel.Records()
 	if len(records) == 0 {
-		return io_common.NewIoParseFailed("CSVヘッダが見つかりません", nil)
+		return io_common.NewIoParseFailed(errorCsvHeaderNotFound, nil)
 	}
 	if len(records[0]) != translationCsvColumns {
-		return io_common.NewIoParseFailed("翻訳CSVの列数が不正です(行:1 期待:%d 実際:%d)", nil, translationCsvColumns, len(records[0]))
+		return io_common.NewIoParseFailed(errorTranslationCsvColumnsInvalid, nil, 1, translationCsvColumns, len(records[0]))
 	}
 	for i := 1; i < len(records); i++ {
 		if len(records[i]) != translationCsvColumns {
 			return io_common.NewIoParseFailed(
-				"翻訳CSVの列数が不正です(行:%d 期待:%d 実際:%d)",
+				errorTranslationCsvColumnsInvalid,
 				nil,
 				i+1,
 				translationCsvColumns,

@@ -282,5 +282,65 @@
     {
         "id": "追加対象Csvデータの使い方",
         "translation": "・You can specify the target Csv data file"
+    },
+    {
+        "id": "error_csv_reader_missing",
+        "translation": "CSV reader repository is not configured"
+    },
+    {
+        "id": "error_csv_model_convert_failed",
+        "translation": "Failed to convert CSV model"
+    },
+    {
+        "id": "error_csv_model_nil",
+        "translation": "CSV model is nil"
+    },
+    {
+        "id": "error_csv_header_not_found",
+        "translation": "CSV header was not found"
+    },
+    {
+        "id": "error_translation_csv_columns_invalid",
+        "translation": "Translation CSV column count is invalid (row:%d expected:%d actual:%d)"
+    },
+    {
+        "id": "error_translate_target_model_required",
+        "translation": "Replacement target model is not loaded"
+    },
+    {
+        "id": "error_output_model_path_required",
+        "translation": "Please specify the output model (Pmx) file path"
+    },
+    {
+        "id": "error_model_writer_missing",
+        "translation": "Model writer repository is not configured"
+    },
+    {
+        "id": "error_output_dir_create_failed",
+        "translation": "Failed to create output directory"
+    },
+    {
+        "id": "error_csv_target_model_required",
+        "translation": "Replacement target model (Pmx) is not loaded"
+    },
+    {
+        "id": "error_output_csv_path_required",
+        "translation": "Please specify the output CSV file path"
+    },
+    {
+        "id": "error_csv_writer_missing",
+        "translation": "CSV writer repository is not configured"
+    },
+    {
+        "id": "error_texture_output_dir_create_failed",
+        "translation": "Failed to create texture output directory"
+    },
+    {
+        "id": "error_texture_save_failed",
+        "translation": "Failed to save texture"
+    },
+    {
+        "id": "error_prerequisite_missing",
+        "translation": "Cannot start because prerequisites are missing"
     }
 ]
