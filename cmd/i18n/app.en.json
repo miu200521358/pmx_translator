@@ -68,6 +68,10 @@
         "translation": "Output Failed"
     },
     {
+        "id": "読み込み失敗",
+        "translation": "Load Failed"
+    },
+    {
         "id": "出力成功",
         "translation": "Output Successful"
     },
@@ -98,6 +102,14 @@
     {
         "id": "概要説明",
         "translation": "This tool is used to replace the name field of models that contain characters not recognized by Shift-JIS.\nIf the model's path contains characters outside Shift-JIS, the path will also be converted based on the replacement dictionary."
+    },
+    {
+        "id": "ツールについて",
+        "translation": "About This Tool"
+    },
+    {
+        "id": "ツールについて説明",
+        "translation": "・Name Replacement tab: the grid appears after both the target model (Pmx) and dictionary CSV are loaded\n・CSV Output tab: the candidate grid appears after the target model (Pmx) is loaded\n・CSV Append tab: the grid appears after both source CSV and target CSV are loaded"
     },
     {
         "id": "名称置換",

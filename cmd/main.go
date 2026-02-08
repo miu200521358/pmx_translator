@@ -1,0 +1,69 @@
+//go:build windows
+// +build windows
+
+// 指示: miu200521358
+package main
+
+import (
+	"embed"
+	"os"
+	"runtime"
+
+	"github.com/miu200521358/walk/pkg/declarative"
+	"github.com/miu200521358/walk/pkg/walk"
+
+	"github.com/miu200521358/mlib_go/pkg/adapter/audio_api"
+	"github.com/miu200521358/mlib_go/pkg/adapter/io_csv"
+	"github.com/miu200521358/mlib_go/pkg/adapter/io_model"
+	"github.com/miu200521358/mlib_go/pkg/infra/app"
+	"github.com/miu200521358/mlib_go/pkg/infra/controller"
+	"github.com/miu200521358/mlib_go/pkg/shared/base"
+	"github.com/miu200521358/mlib_go/pkg/shared/base/config"
+
+	"github.com/miu200521358/pmx_translator/pkg/infra/controller/ui"
+	"github.com/miu200521358/pmx_translator/pkg/usecase/minteractor"
+)
+
+// env はビルド時の -ldflags で埋め込む環境値。
+var env string
+
+// init はOSスレッド固定とコンソール登録を行う。
+func init() {
+	runtime.LockOSThread()
+
+	walk.AppendToWalkInit(func() {
+		walk.MustRegisterWindowClass(controller.ConsoleViewClass)
+	})
+}
+
+//go:embed app/*
+var appFiles embed.FS
+
+//go:embed i18n/*
+var appI18nFiles embed.FS
+
+// main は pmx_translator を起動する。
+func main() {
+	initialModelPath := app.FindInitialPath(os.Args, ".pmx")
+
+	app.Run(app.RunOptions{
+		ViewerCount: 1,
+		AppFiles:    appFiles,
+		I18nFiles:   appI18nFiles,
+		AdjustConfig: func(appConfig *config.AppConfig) {
+			config.ApplyBuildEnv(appConfig, env)
+		},
+		BuildMenuItems: func(baseServices base.IBaseServices) []declarative.MenuItem {
+			return ui.NewMenuItems(baseServices.I18n(), baseServices.Logger())
+		},
+		BuildTabPages: func(widgets *controller.MWidgets, baseServices base.IBaseServices, audioPlayer audio_api.IAudioPlayer) []declarative.TabPage {
+			viewerUsecase := minteractor.NewPmxTranslatorUsecase(minteractor.PmxTranslatorUsecaseDeps{
+				ModelReader: io_model.NewModelRepository(),
+				ModelWriter: io_model.NewModelRepository(),
+				CsvReader:   io_csv.NewCsvRepository(),
+				CsvWriter:   io_csv.NewCsvRepository(),
+			})
+			return ui.NewTabPages(widgets, baseServices, initialModelPath, audioPlayer, viewerUsecase)
+		},
+	})
+}
