@@ -99,10 +99,7 @@ func NewTabPages(mWidgets *controller.MWidgets, baseServices base.IBaseServices,
 			if strings.TrimSpace(path) == "" {
 				translateModel = nil
 				refreshTranslateRows()
-				if cw != nil {
-					cw.SetModel(previewWindowIndex, previewModelIndex, nil)
-					cw.SetMotion(previewWindowIndex, previewModelIndex, nil)
-				}
+				applyPreviewModel(mWidgets, cw, nil, nil)
 				return
 			}
 
@@ -111,29 +108,20 @@ func NewTabPages(mWidgets *controller.MWidgets, baseServices base.IBaseServices,
 				logErrorTitle(logger, i18n.TranslateOrMark(translator, messages.MessageLoadFailed), err)
 				translateModel = nil
 				refreshTranslateRows()
-				if cw != nil {
-					cw.SetModel(previewWindowIndex, previewModelIndex, nil)
-					cw.SetMotion(previewWindowIndex, previewModelIndex, nil)
-				}
+				applyPreviewModel(mWidgets, cw, nil, nil)
 				return
 			}
 			if modelData == nil {
 				logErrorTitle(logger, i18n.TranslateOrMark(translator, messages.MessageLoadFailed), nil)
 				translateModel = nil
 				refreshTranslateRows()
-				if cw != nil {
-					cw.SetModel(previewWindowIndex, previewModelIndex, nil)
-					cw.SetMotion(previewWindowIndex, previewModelIndex, nil)
-				}
+				applyPreviewModel(mWidgets, cw, nil, nil)
 				return
 			}
 
 			translateModel = modelData
 			refreshTranslateRows()
-			if cw != nil {
-				cw.SetModel(previewWindowIndex, previewModelIndex, modelData)
-				cw.SetMotion(previewWindowIndex, previewModelIndex, previewMotion)
-			}
+			applyPreviewModel(mWidgets, cw, modelData, previewMotion)
 		},
 	)
 
@@ -212,10 +200,7 @@ func NewTabPages(mWidgets *controller.MWidgets, baseServices base.IBaseServices,
 			return
 		}
 
-		if cw != nil && translateModel != nil {
-			cw.SetModel(previewWindowIndex, previewModelIndex, translateModel)
-			cw.SetMotion(previewWindowIndex, previewModelIndex, previewMotion)
-		}
+		applyPreviewModel(mWidgets, cw, translateModel, previewMotion)
 		controller.Beep()
 		logger.Info("%s: %s", i18n.TranslateOrMark(translator, messages.MessageOutputDone), filepath.Base(translateOutputPath))
 	})
@@ -255,10 +240,7 @@ func NewTabPages(mWidgets *controller.MWidgets, baseServices base.IBaseServices,
 			if strings.TrimSpace(path) == "" {
 				csvOutputModel = nil
 				refreshCsvCandidates()
-				if cw != nil {
-					cw.SetModel(previewWindowIndex, previewModelIndex, nil)
-					cw.SetMotion(previewWindowIndex, previewModelIndex, nil)
-				}
+				applyPreviewModel(mWidgets, cw, nil, nil)
 				return
 			}
 
@@ -267,29 +249,20 @@ func NewTabPages(mWidgets *controller.MWidgets, baseServices base.IBaseServices,
 				logErrorTitle(logger, i18n.TranslateOrMark(translator, messages.MessageLoadFailed), err)
 				csvOutputModel = nil
 				refreshCsvCandidates()
-				if cw != nil {
-					cw.SetModel(previewWindowIndex, previewModelIndex, nil)
-					cw.SetMotion(previewWindowIndex, previewModelIndex, nil)
-				}
+				applyPreviewModel(mWidgets, cw, nil, nil)
 				return
 			}
 			if modelData == nil {
 				logErrorTitle(logger, i18n.TranslateOrMark(translator, messages.MessageLoadFailed), nil)
 				csvOutputModel = nil
 				refreshCsvCandidates()
-				if cw != nil {
-					cw.SetModel(previewWindowIndex, previewModelIndex, nil)
-					cw.SetMotion(previewWindowIndex, previewModelIndex, nil)
-				}
+				applyPreviewModel(mWidgets, cw, nil, nil)
 				return
 			}
 
 			csvOutputModel = modelData
 			refreshCsvCandidates()
-			if cw != nil {
-				cw.SetModel(previewWindowIndex, previewModelIndex, modelData)
-				cw.SetMotion(previewWindowIndex, previewModelIndex, previewMotion)
-			}
+			applyPreviewModel(mWidgets, cw, modelData, previewMotion)
 		},
 	)
 
@@ -335,10 +308,7 @@ func NewTabPages(mWidgets *controller.MWidgets, baseServices base.IBaseServices,
 			return
 		}
 
-		if cw != nil {
-			cw.SetModel(previewWindowIndex, previewModelIndex, csvOutputModel)
-			cw.SetMotion(previewWindowIndex, previewModelIndex, previewMotion)
-		}
+		applyPreviewModel(mWidgets, cw, csvOutputModel, previewMotion)
 		controller.Beep()
 		logger.Info("%s: %s", i18n.TranslateOrMark(translator, messages.MessageOutputDone), filepath.Base(csvOutputPath))
 	})
@@ -581,6 +551,31 @@ func NewTabPages(mWidgets *controller.MWidgets, baseServices base.IBaseServices,
 // NewTabPage は先頭タブを返す。
 func NewTabPage(mWidgets *controller.MWidgets, baseServices base.IBaseServices, initialModelPath string, audioPlayer audio_api.IAudioPlayer, viewerUsecase *minteractor.PmxTranslatorUsecase) declarative.TabPage {
 	return NewTabPages(mWidgets, baseServices, initialModelPath, audioPlayer, viewerUsecase)[0]
+}
+
+// applyPreviewModel は名称置換タブのプレビュー用モデル/モーションをビューワーへ反映する。
+func applyPreviewModel(mWidgets *controller.MWidgets, cw *controller.ControlWindow, modelData *model.PmxModel, motionData *motion.VmdMotion) {
+	applied := map[*controller.ControlWindow]struct{}{}
+	apply := func(window *controller.ControlWindow) {
+		if window == nil {
+			return
+		}
+		if _, exists := applied[window]; exists {
+			return
+		}
+		applied[window] = struct{}{}
+
+		// 同一モデル再読込時でも描画キャッシュを確実に更新するため、いったんクリアしてから適用する。
+		window.SetModel(previewWindowIndex, previewModelIndex, nil)
+		window.SetMotion(previewWindowIndex, previewModelIndex, nil)
+		window.SetModel(previewWindowIndex, previewModelIndex, modelData)
+		window.SetMotion(previewWindowIndex, previewModelIndex, motionData)
+	}
+
+	apply(cw)
+	if mWidgets != nil {
+		apply(mWidgets.Window())
+	}
 }
 
 // buildAppendCsvOutputPath はCSV追加出力パスの既定値を生成する。
