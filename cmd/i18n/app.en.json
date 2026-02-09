@@ -9,7 +9,7 @@
     },
     {
         "id": "置換対象モデルの使い方",
-        "translation": "・You can set the Pmx model to be replaced in the name field.\n・The text in the model name field can be selected."
+        "translation": "・Specify the PMX model used by both the Name Replacement and Csv Output tabs.\n・After successful loading, the viewer is updated and the model is used to build table candidates.\n・Use \"Open\" to choose a file and \"History\" to reselect previously used paths."
     },
     {
         "id": "置換辞書データ(Csv)",
@@ -21,7 +21,7 @@
     },
     {
         "id": "置換辞書データの使い方",
-        "translation": "・You can specify the Csv data file that registers the replacement dictionary in the name field."
+        "translation": "・Specify the dictionary Csv used by the Name Replacement tab.\n・Required columns are: file_name, source_name, japanese_name, english_name (4 columns).\n・After loading, replacement candidates are expanded into the Name Replacement table."
     },
     {
         "id": "出力モデル(Pmx)",
@@ -33,7 +33,7 @@
     },
     {
         "id": "出力モデルの使い方",
-        "translation": "・You can set the output destination file path for the replacement result model.\n・The output destination is automatically set, but you can change it to any path."
+        "translation": "・Output PMX path for the name-replaced model.\n・If empty, a path is proposed automatically from replacement results.\n・Required output directories are created automatically when saving."
     },
     {
         "id": "保存",
@@ -41,11 +41,11 @@
     },
     {
         "id": "名称置換使い方",
-        "translation": "・Please specify the Pmx model where you want to replace the language in the name field and the Csv data file for the replacement dictionary.\n・When the Pmx model and dictionary Csv are loaded, a list of replacement values for the name field will appear in the table below.\n・Fields in the name column containing words registered in the dictionary will automatically be checked.\n・Selecting a row outside the checkbox will display a dialog for individually modifying the names.\n・You can save the model with the replacement results using the 'Save' button."
+        "translation": "・Purpose: replace PMX names in bulk using a dictionary Csv, then save a translated PMX.\n・Flow: 1) Open target model (Pmx) 2) Open dictionary (Csv) 3) Review/edit table rows 4) Confirm output model path and click Save.\n・If dictionary Csv is not loaded, the Name Replacement table is not shown."
     },
     {
         "id": "Csv出力使い方",
-        "translation": "・Please specify the Pmx model whose name fields you want to export to Csv.\n・Once the Pmx model is loaded, the list of name fields will be displayed in the table below.\n・Names containing characters that cannot be recognized in Shift-JIS, such as Simplified Chinese, will be automatically checked.\n・You can also manually select which name fields to export to Csv.\n・Replacement patterns for splitting names by symbols or numbers have also been added to the view.\n・Clicking on the header allows you to sort the table.\n・You can save the list of names for the dictionary using the 'Save' button."
+        "translation": "・Purpose: pick model name entries and build a dictionary Csv.\n・Flow: 1) Open target model (Pmx) 2) Adjust checks in the candidate table 3) Confirm output Csv path and click Save.\n・The segmented column shows symbol/number split candidates for vocabulary extraction."
     },
     {
         "id": "生成失敗",
@@ -101,7 +101,7 @@
     },
     {
         "id": "概要説明",
-        "translation": "This tool is used to replace the name field of models that contain characters not recognized by Shift-JIS.\nIf the model's path contains characters outside Shift-JIS, the path will also be converted based on the replacement dictionary."
+        "translation": "A tool to replace PMX names (model/material/bone/morph/display slot/rigid body/joint/texture/path) using dictionary Csv, and manage Csv input/output.\nThe three tabs cover dictionary creation, name replacement, and dictionary merge output."
     },
     {
         "id": "ツールについて",
@@ -109,7 +109,7 @@
     },
     {
         "id": "ツールについて説明",
-        "translation": "・Name Replacement tab: the grid appears after both the target model (Pmx) and dictionary CSV are loaded\n・CSV Output tab: the candidate grid appears after the target model (Pmx) is loaded\n・CSV Append tab: the grid appears after both source CSV and target CSV are loaded"
+        "translation": "・Name Replacement tab: replace PMX names using dictionary Csv and save translated PMX.\n・Csv Output tab: extract candidate names from PMX and save dictionary Csv.\n・Csv Append tab: merge base/additional dictionary Csv files and save merged Csv.\n・Completion is reported in Info log and notification sound."
     },
     {
         "id": "名称置換",
@@ -129,7 +129,7 @@
     },
     {
         "id": "出力Csvファイルパスの使い方",
-        "translation": "・You can set the file path for the Csv data output as the dictionary output.\n・The output destination is automatically set, but you can change it to any path."
+        "translation": "・Output Csv path used by both Csv Output and Csv Append tabs.\n・If empty, a path is auto-proposed from input file names.\n・If an existing file is specified, it is overwritten."
     },
     {
         "id": "Csv出力失敗メッセージ",
@@ -257,7 +257,7 @@
     },
     {
         "id": "Csv追加使い方",
-        "translation": "・Specify the source Csv and the Csv to append to it\n・Once the two Csv files are loaded, a list of names will be displayed in the table below\n・Dictionaries that exist only in the append Csv and not in the source Csv will be automatically checked\n・Click the 'Save' button to create a new Csv by adding the checked dictionary data to the source Csv"
+        "translation": "・Purpose: append vocabulary from an additional dictionary Csv into a base dictionary Csv.\n・Flow: 1) Open base Csv 2) Open additional Csv 3) Select rows in append table 4) Confirm output Csv (merged) and click Save.\n・Rows that exist only in the additional Csv are checked by default."
     },
     {
         "id": "追加元Csvデータ",
@@ -269,7 +269,7 @@
     },
     {
         "id": "追加元Csvデータの使い方",
-        "translation": "・You can specify the source Csv data file"
+        "translation": "・Specify the base dictionary Csv used as merge source.\n・Selected additional rows are appended after this base content."
     },
     {
         "id": "追加対象Csvデータ",
@@ -281,7 +281,79 @@
     },
     {
         "id": "追加対象Csvデータの使い方",
-        "translation": "・You can specify the target Csv data file"
+        "translation": "・Specify the additional dictionary Csv used for comparison.\n・Rows whose source names do not exist in base Csv are auto-checked."
+    },
+    {
+        "id": "名称置換テーブル",
+        "translation": "Name Replacement Table"
+    },
+    {
+        "id": "名称置換テーブルの使い方",
+        "translation": "・Replacement target list (type/idx/source/japanese/english).\n・Only checked rows are reflected when saving.\n・Select a row to edit Japanese/English names individually."
+    },
+    {
+        "id": "Csv出力候補テーブル",
+        "translation": "Csv Output Candidate Table"
+    },
+    {
+        "id": "Csv出力候補テーブルの使い方",
+        "translation": "・Vocabulary candidates to export into dictionary Csv (type/segmented/japanese/english).\n・Checked Japanese names are exported.\n・Use header sort and segmented column to validate vocabulary coverage."
+    },
+    {
+        "id": "Csv追加テーブル",
+        "translation": "Csv Append Table"
+    },
+    {
+        "id": "Csv追加テーブルの使い方",
+        "translation": "・Merged comparison list of base/additional Csv (source/japanese/english).\n・Only checked rows are included in merged output.\n・Turn off rows you do not want to append."
+    },
+    {
+        "id": "保存ボタン(名称置換)",
+        "translation": "Save Button (Name Replacement)"
+    },
+    {
+        "id": "保存ボタン(名称置換)の使い方",
+        "translation": "・Saves PMX with checked rows from Name Replacement table.\n・Info log and notification sound are emitted on completion."
+    },
+    {
+        "id": "保存ボタン(Csv出力)",
+        "translation": "Save Button (Csv Output)"
+    },
+    {
+        "id": "保存ボタン(Csv出力)の使い方",
+        "translation": "・Saves checked rows from Csv Output candidate table as dictionary Csv.\n・Info log and notification sound are emitted on completion."
+    },
+    {
+        "id": "保存ボタン(Csv追加)",
+        "translation": "Save Button (Csv Append)"
+    },
+    {
+        "id": "保存ボタン(Csv追加)の使い方",
+        "translation": "・Merges checked rows from Csv Append table and saves merged Csv.\n・Info log and notification sound are emitted on completion."
+    },
+    {
+        "id": "出力Csv(追加結果)",
+        "translation": "Output Csv (Merged Result)"
+    },
+    {
+        "id": "出力Csv(追加結果)の使い方",
+        "translation": "・Output path for merged Csv created in Csv Append tab.\n・If empty, path is auto-proposed from the base Csv path."
+    },
+    {
+        "id": "開くボタン",
+        "translation": "Open Button"
+    },
+    {
+        "id": "開くボタンの使い方",
+        "translation": "・Opens file dialog to choose input files or output destination.\n・For output pickers, you can also enter a new file name."
+    },
+    {
+        "id": "履歴ボタン",
+        "translation": "History Button"
+    },
+    {
+        "id": "履歴ボタンの使い方",
+        "translation": "・Shows recently used file paths.\n・Selecting an item reloads that path immediately."
     },
     {
         "id": "error_csv_reader_missing",

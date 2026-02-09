@@ -59,7 +59,7 @@ https://seiga.nicovideo.jp/seiga/im11561836
 ■  動作環境
 ----------------------------------------------------------------
 
-・Windows10/11 64bit
+・Windows11 64bit
   ・MMDが動く環境を前提としています
 
 
@@ -181,7 +181,7 @@ miuの実験室：https://discord.gg/MW2Bn47aCN
 ・https://github.com/ftrvxmtrx/tga
 
 
-ソースコードは、Githubで公開しています。(MITライセンス)
+ソースコードは、Githubで公開しています。
 ただし、著作権は放棄しておりません。
 
 https://github.com/miu200521358/pmx_translator

@@ -19,15 +19,31 @@ func NewMenuItems(translator i18n.II18n, logger logging.ILogger) []declarative.M
 		{TitleKey: messages.HelpOverviewTitle, MessageKey: messages.HelpOverviewMessage},
 		{TitleKey: messages.HelpToolAboutTitle, MessageKey: messages.HelpToolAbout},
 		{TitleKey: controller.MenuSeparatorKey},
+
 		{TitleKey: messages.LabelTranslateTab, MessageKey: messages.LabelTranslateTabTip},
-		{TitleKey: messages.LabelCsvOutputTab, MessageKey: messages.LabelCsvOutputTabTip},
-		{TitleKey: messages.LabelCsvAppendTab, MessageKey: messages.LabelCsvAppendTabTip},
-		{TitleKey: controller.MenuSeparatorKey},
 		{TitleKey: messages.LabelOriginalModel, MessageKey: messages.HelpOriginalModel},
 		{TitleKey: messages.LabelDictionaryCsv, MessageKey: messages.HelpDictionaryCsv},
+		{TitleKey: messages.HelpTranslateTableTitle, MessageKey: messages.HelpTranslateTable},
 		{TitleKey: messages.LabelOutputModel, MessageKey: messages.HelpOutputModel},
+		{TitleKey: messages.HelpTranslateSaveTitle, MessageKey: messages.HelpTranslateSave},
+		{TitleKey: controller.MenuSeparatorKey},
+
+		{TitleKey: messages.LabelCsvOutputTab, MessageKey: messages.LabelCsvOutputTabTip},
+		{TitleKey: messages.LabelOriginalModel, MessageKey: messages.HelpOriginalModel},
+		{TitleKey: messages.HelpCsvOutputTableTitle, MessageKey: messages.HelpCsvOutputTable},
 		{TitleKey: messages.LabelOutputCsv, MessageKey: messages.HelpOutputCsv},
+		{TitleKey: messages.HelpCsvOutputSaveTitle, MessageKey: messages.HelpCsvOutputSave},
+		{TitleKey: controller.MenuSeparatorKey},
+
+		{TitleKey: messages.LabelCsvAppendTab, MessageKey: messages.LabelCsvAppendTabTip},
 		{TitleKey: messages.LabelAppendSourceCsv, MessageKey: messages.HelpAppendSourceCsv},
 		{TitleKey: messages.LabelAppendTargetCsv, MessageKey: messages.HelpAppendTargetCsv},
+		{TitleKey: messages.HelpCsvAppendTableTitle, MessageKey: messages.HelpCsvAppendTable},
+		{TitleKey: messages.HelpAppendOutputCsvTitle, MessageKey: messages.HelpAppendOutputCsv},
+		{TitleKey: messages.HelpCsvAppendSaveTitle, MessageKey: messages.HelpCsvAppendSave},
+		{TitleKey: controller.MenuSeparatorKey},
+
+		{TitleKey: messages.HelpOpenButtonTitle, MessageKey: messages.HelpOpenButton},
+		{TitleKey: messages.HelpHistoryButtonTitle, MessageKey: messages.HelpHistoryButton},
 	})
 }

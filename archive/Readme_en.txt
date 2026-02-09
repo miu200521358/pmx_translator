@@ -59,7 +59,7 @@ https://seiga.nicovideo.jp/seiga/im11561836
 ■  System Requirements
 ----------------------------------------------------------------
 
-- Windows10/11 64bit
+- Windows11 64bit
   - This tool is intended for use in environments where MMD (MikuMikuDance) is supported.
 
 
@@ -183,7 +183,7 @@ This tool is created using Go, and includes the following libraries:
 ・https://github.com/petar/GoLLRB
 ・https://github.com/ftrvxmtrx/tga
 
-The source code is available on GitHub (MIT License).
+The source code is available on GitHub.
 However, the copyright is not waived.
 
 https://github.com/miu200521358/pmx_translator

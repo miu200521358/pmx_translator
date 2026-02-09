@@ -42,6 +42,28 @@ const (
 	LabelAppendTargetCsvTip = "追加対象Csvデータファイルを選択してください"
 	HelpAppendTargetCsv     = "追加対象Csvデータの使い方"
 
+	HelpTranslateTableTitle = "名称置換テーブル"
+	HelpTranslateTable      = "名称置換テーブルの使い方"
+	HelpCsvOutputTableTitle = "Csv出力候補テーブル"
+	HelpCsvOutputTable      = "Csv出力候補テーブルの使い方"
+	HelpCsvAppendTableTitle = "Csv追加テーブル"
+	HelpCsvAppendTable      = "Csv追加テーブルの使い方"
+
+	HelpTranslateSaveTitle = "保存ボタン(名称置換)"
+	HelpTranslateSave      = "保存ボタン(名称置換)の使い方"
+	HelpCsvOutputSaveTitle = "保存ボタン(Csv出力)"
+	HelpCsvOutputSave      = "保存ボタン(Csv出力)の使い方"
+	HelpCsvAppendSaveTitle = "保存ボタン(Csv追加)"
+	HelpCsvAppendSave      = "保存ボタン(Csv追加)の使い方"
+
+	HelpAppendOutputCsvTitle = "出力Csv(追加結果)"
+	HelpAppendOutputCsv      = "出力Csv(追加結果)の使い方"
+
+	HelpOpenButtonTitle    = "開くボタン"
+	HelpOpenButton         = "開くボタンの使い方"
+	HelpHistoryButtonTitle = "履歴ボタン"
+	HelpHistoryButton      = "履歴ボタンの使い方"
+
 	LabelTableType         = "種類"
 	LabelTableIndex        = "インデックス"
 	LabelTableSegmented    = "分割"
