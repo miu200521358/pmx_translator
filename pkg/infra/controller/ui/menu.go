@@ -15,35 +15,51 @@ import (
 
 // NewMenuItems は pmx_translator のメニュー項目を生成する。
 func NewMenuItems(translator i18n.II18n, logger logging.ILogger) []declarative.MenuItem {
-	return controller.BuildMenuItemsWithMessages(translator, logger, []controller.MenuMessageItem{
+	menuItems := controller.BuildMenuItemsWithMessages(translator, logger, []controller.MenuMessageItem{
 		{TitleKey: messages.HelpOverviewTitle, MessageKey: messages.HelpOverviewMessage},
 		{TitleKey: messages.HelpToolAboutTitle, MessageKey: messages.HelpToolAbout},
-		{TitleKey: controller.MenuSeparatorKey},
-
-		{TitleKey: messages.LabelTranslateTab, MessageKey: messages.LabelTranslateTabTip},
-		{TitleKey: messages.LabelOriginalModel, MessageKey: messages.HelpOriginalModel},
-		{TitleKey: messages.LabelDictionaryCsv, MessageKey: messages.HelpDictionaryCsv},
-		{TitleKey: messages.HelpTranslateTableTitle, MessageKey: messages.HelpTranslateTable},
-		{TitleKey: messages.LabelOutputModel, MessageKey: messages.HelpOutputModel},
-		{TitleKey: messages.HelpTranslateSaveTitle, MessageKey: messages.HelpTranslateSave},
-		{TitleKey: controller.MenuSeparatorKey},
-
-		{TitleKey: messages.LabelCsvOutputTab, MessageKey: messages.LabelCsvOutputTabTip},
-		{TitleKey: messages.LabelOriginalModel, MessageKey: messages.HelpOriginalModel},
-		{TitleKey: messages.HelpCsvOutputTableTitle, MessageKey: messages.HelpCsvOutputTable},
-		{TitleKey: messages.LabelOutputCsv, MessageKey: messages.HelpOutputCsv},
-		{TitleKey: messages.HelpCsvOutputSaveTitle, MessageKey: messages.HelpCsvOutputSave},
-		{TitleKey: controller.MenuSeparatorKey},
-
-		{TitleKey: messages.LabelCsvAppendTab, MessageKey: messages.LabelCsvAppendTabTip},
-		{TitleKey: messages.LabelAppendSourceCsv, MessageKey: messages.HelpAppendSourceCsv},
-		{TitleKey: messages.LabelAppendTargetCsv, MessageKey: messages.HelpAppendTargetCsv},
-		{TitleKey: messages.HelpCsvAppendTableTitle, MessageKey: messages.HelpCsvAppendTable},
-		{TitleKey: messages.HelpAppendOutputCsvTitle, MessageKey: messages.HelpAppendOutputCsv},
-		{TitleKey: messages.HelpCsvAppendSaveTitle, MessageKey: messages.HelpCsvAppendSave},
-		{TitleKey: controller.MenuSeparatorKey},
-
-		{TitleKey: messages.HelpOpenButtonTitle, MessageKey: messages.HelpOpenButton},
-		{TitleKey: messages.HelpHistoryButtonTitle, MessageKey: messages.HelpHistoryButton},
 	})
+
+	menuItems = append(menuItems, declarative.Separator{})
+	menuItems = append(menuItems, declarative.Menu{
+		Text: i18n.TranslateOrMark(translator, messages.LabelTranslateTab),
+		Items: controller.BuildMenuItemsWithMessages(translator, logger, []controller.MenuMessageItem{
+			{TitleKey: messages.LabelTranslateTab, MessageKey: messages.LabelTranslateTabTip},
+			{TitleKey: messages.LabelOriginalModel, MessageKey: messages.HelpOriginalModel},
+			{TitleKey: messages.LabelDictionaryCsv, MessageKey: messages.HelpDictionaryCsv},
+			{TitleKey: messages.HelpTranslateTableTitle, MessageKey: messages.HelpTranslateTable},
+			{TitleKey: messages.LabelOutputModel, MessageKey: messages.HelpOutputModel},
+			{TitleKey: messages.HelpTranslateSaveTitle, MessageKey: messages.HelpTranslateSave},
+		}),
+	})
+	menuItems = append(menuItems, declarative.Menu{
+		Text: i18n.TranslateOrMark(translator, messages.LabelCsvOutputTab),
+		Items: controller.BuildMenuItemsWithMessages(translator, logger, []controller.MenuMessageItem{
+			{TitleKey: messages.LabelCsvOutputTab, MessageKey: messages.LabelCsvOutputTabTip},
+			{TitleKey: messages.LabelOriginalModel, MessageKey: messages.HelpOriginalModel},
+			{TitleKey: messages.HelpCsvOutputTableTitle, MessageKey: messages.HelpCsvOutputTable},
+			{TitleKey: messages.LabelOutputCsv, MessageKey: messages.HelpOutputCsv},
+			{TitleKey: messages.HelpCsvOutputSaveTitle, MessageKey: messages.HelpCsvOutputSave},
+		}),
+	})
+	menuItems = append(menuItems, declarative.Menu{
+		Text: i18n.TranslateOrMark(translator, messages.LabelCsvAppendTab),
+		Items: controller.BuildMenuItemsWithMessages(translator, logger, []controller.MenuMessageItem{
+			{TitleKey: messages.LabelCsvAppendTab, MessageKey: messages.LabelCsvAppendTabTip},
+			{TitleKey: messages.LabelAppendSourceCsv, MessageKey: messages.HelpAppendSourceCsv},
+			{TitleKey: messages.LabelAppendTargetCsv, MessageKey: messages.HelpAppendTargetCsv},
+			{TitleKey: messages.HelpCsvAppendTableTitle, MessageKey: messages.HelpCsvAppendTable},
+			{TitleKey: messages.HelpAppendOutputCsvTitle, MessageKey: messages.HelpAppendOutputCsv},
+			{TitleKey: messages.HelpCsvAppendSaveTitle, MessageKey: messages.HelpCsvAppendSave},
+		}),
+	})
+	menuItems = append(menuItems, declarative.Menu{
+		Text: i18n.TranslateOrMark(translator, messages.LabelCommonOperationMenu),
+		Items: controller.BuildMenuItemsWithMessages(translator, logger, []controller.MenuMessageItem{
+			{TitleKey: messages.HelpOpenButtonTitle, MessageKey: messages.HelpOpenButton},
+			{TitleKey: messages.HelpHistoryButtonTitle, MessageKey: messages.HelpHistoryButton},
+		}),
+	})
+
+	return menuItems
 }

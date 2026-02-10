@@ -9,10 +9,11 @@ const (
 	HelpToolAboutTitle  = "ツールについて"
 	HelpToolAbout       = "ツールについて説明"
 
-	LabelTranslateTab = "名称置換"
-	LabelCsvOutputTab = "Csv出力"
-	LabelCsvAppendTab = "Csv追加"
-	LabelSave         = "保存"
+	LabelTranslateTab        = "名称置換"
+	LabelCsvOutputTab        = "Csv出力"
+	LabelCsvAppendTab        = "Csv追加"
+	LabelCommonOperationMenu = "共通操作"
+	LabelSave                = "保存"
 
 	LabelTranslateTabTip = "名称置換使い方"
 	LabelCsvOutputTabTip = "Csv出力使い方"
@@ -87,10 +88,12 @@ const (
 	TypeRigidBody   = "剛体"
 	TypeJoint       = "ジョイント"
 
-	MessageLoadFailed   = "読み込み失敗"
-	MessageOutputFailed = "出力失敗"
-	MessageBuildFailed  = "生成失敗"
-	MessageOutputDone   = "出力成功"
+	MessageLoadFailed          = "読み込み失敗"
+	MessageOutputFailed        = "出力失敗"
+	MessageBuildFailed         = "生成失敗"
+	MessageOutputDone          = "出力成功"
+	MessageOutputDoneDetail    = "出力成功メッセージ"
+	MessageCsvOutputDoneDetail = "Csv出力成功メッセージ"
 
 	ErrorCsvReaderMissing             = "error_csv_reader_missing"
 	ErrorCsvModelConvertFailed        = "error_csv_model_convert_failed"

@@ -5,7 +5,6 @@
 package ui
 
 import (
-	"path/filepath"
 	"strings"
 
 	"github.com/miu200521358/mlib_go/pkg/adapter/audio_api"
@@ -202,7 +201,12 @@ func NewTabPages(mWidgets *controller.MWidgets, baseServices base.IBaseServices,
 
 		applyPreviewModel(mWidgets, cw, translateModel, previewMotion)
 		controller.Beep()
-		logger.Info("%s: %s", i18n.TranslateOrMark(translator, messages.MessageOutputDone), filepath.Base(translateOutputPath))
+		logInfoTitle(
+			logger,
+			i18n.TranslateOrMark(translator, messages.MessageOutputDone),
+			messages.MessageOutputDoneDetail,
+			translateOutputPath,
+		)
 	})
 
 	csvOutputModel := (*model.PmxModel)(nil)
@@ -310,7 +314,12 @@ func NewTabPages(mWidgets *controller.MWidgets, baseServices base.IBaseServices,
 
 		applyPreviewModel(mWidgets, cw, csvOutputModel, previewMotion)
 		controller.Beep()
-		logger.Info("%s: %s", i18n.TranslateOrMark(translator, messages.MessageOutputDone), filepath.Base(csvOutputPath))
+		logInfoTitle(
+			logger,
+			i18n.TranslateOrMark(translator, messages.MessageOutputDone),
+			messages.MessageCsvOutputDoneDetail,
+			csvOutputPath,
+		)
 	})
 
 	appendSourceRows := []domain.TranslationCsvRecord{}
@@ -442,7 +451,12 @@ func NewTabPages(mWidgets *controller.MWidgets, baseServices base.IBaseServices,
 		}
 
 		controller.Beep()
-		logger.Info("%s: %s", i18n.TranslateOrMark(translator, messages.MessageOutputDone), filepath.Base(appendOutputPath))
+		logInfoTitle(
+			logger,
+			i18n.TranslateOrMark(translator, messages.MessageOutputDone),
+			messages.MessageCsvOutputDoneDetail,
+			appendOutputPath,
+		)
 	})
 
 	if mWidgets != nil {
@@ -602,4 +616,19 @@ func logErrorTitle(logger logging.ILogger, title string, err error) {
 		return
 	}
 	logger.Error("%s: %s", title, err.Error())
+}
+
+// logInfoTitle はタイトル付き情報ログを出力する。
+func logInfoTitle(logger logging.ILogger, title, message string, params ...any) {
+	if logger == nil {
+		logger = logging.DefaultLogger()
+	}
+	if titled, ok := logger.(interface {
+		InfoTitle(title, msg string, params ...any)
+	}); ok {
+		titled.InfoTitle(title, message, params...)
+		return
+	}
+	logger.Info("%s", title)
+	logger.Info(message, params...)
 }

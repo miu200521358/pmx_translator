@@ -81,7 +81,7 @@
     },
     {
         "id": "出力成功メッセージ",
-        "translation": "Successfully output the replacement model.\n\n{{.Path}}"
+        "translation": "Successfully output the replacement model.\n\nOutput path: %s"
     },
     {
         "id": "出力モデルなし",
@@ -137,7 +137,7 @@
     },
     {
         "id": "Csv出力成功メッセージ",
-        "translation": "Successfully output Csv data.\n\n{{.Path}}"
+        "translation": "Successfully output Csv data.\n\nOutput path: %s"
     },
     {
         "id": "インデックス",
@@ -264,8 +264,12 @@
         "translation": "Add Csv"
     },
     {
+        "id": "共通操作",
+        "translation": "Common Operations"
+    },
+    {
         "id": "Csv追加使い方",
-        "translation": "・Purpose: append vocabulary from an additional dictionary Csv into a base dictionary Csv.\n・Flow: 1) Open base Csv 2) Open additional Csv 3) Select rows in append table 4) Confirm output Csv (merged) and click Save.\n・Rows that exist only in the additional Csv are checked by default."
+        "translation": "・Purpose: append vocabulary from an additional dictionary Csv into a base dictionary Csv.\n・Flow: 1) Open base Csv 2) Open additional Csv 3) Select rows in append table 4) Confirm output Csv (merged) and click Save.\n・Duplicate detection is based on source name. Rows that exist only in the additional Csv are checked by default.\n・Turn off rows you want to keep unchanged and output only the differences."
     },
     {
         "id": "追加元Csvデータ",
@@ -297,7 +301,7 @@
     },
     {
         "id": "名称置換テーブルの使い方",
-        "translation": "・Replacement target list (type/idx/source/japanese/english).\n・Only checked rows are reflected when saving.\n・Select a row to edit Japanese/English names individually."
+        "translation": "・Replacement target list (type/idx/source/japanese/english/remarks).\n・Only checked rows are reflected when saving.\n・Select a row to edit Japanese/English names individually.\n・If type is Bone and Japanese name exceeds 15 bytes in Shift-JIS, the row is shown in red and remarks displays \"Bone name exceeds 15 bytes\"."
     },
     {
         "id": "Csv出力候補テーブル",
