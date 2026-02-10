@@ -301,7 +301,7 @@
     },
     {
         "id": "名称置換テーブルの使い方",
-        "translation": "・Replacement target list (type/idx/source/japanese/english/remarks).\n・Only checked rows are reflected when saving.\n・Select a row to edit Japanese/English names individually.\n・If type is Bone and Japanese name exceeds 15 bytes in Shift-JIS, the row is shown in red and remarks displays \"Bone name exceeds 15 bytes\"."
+        "translation": "・Replacement target list (type/idx/source/japanese/english/remarks).\n・Only checked rows are reflected when saving.\n・Select a row to edit Japanese/English names individually.\n・If type is Bone and Japanese name exceeds 15 bytes in Shift-JIS, the row is shown in red and remarks displays \"Bone name exceeds 15 bytes\".\n・This warning exists because bone names are truncated to 15 bytes when saving VMD. If overlength names remain, motion may not apply correctly when loading that VMD on a new model."
     },
     {
         "id": "Csv出力候補テーブル",
