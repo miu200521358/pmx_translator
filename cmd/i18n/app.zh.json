@@ -192,6 +192,14 @@
         "translation": "原名称"
     },
     {
+        "id": "備考",
+        "translation": "备注"
+    },
+    {
+        "id": "ボーン名15byte超過",
+        "translation": "骨骼名称超过15字节"
+    },
+    {
         "id": "翻訳名称",
         "translation": "翻译名称"
     },

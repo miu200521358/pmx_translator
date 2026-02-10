@@ -11,9 +11,15 @@ import (
 	"github.com/miu200521358/mlib_go/pkg/shared/base/i18n"
 	"github.com/miu200521358/walk/pkg/declarative"
 	"github.com/miu200521358/walk/pkg/walk"
+	"golang.org/x/text/encoding/japanese"
 
 	"github.com/miu200521358/pmx_translator/pkg/adapter/mpresenter/messages"
 	"github.com/miu200521358/pmx_translator/pkg/domain"
+)
+
+const (
+	// boneNameShiftJISMaxBytes は PMX ボーン名の Shift-JIS 最大バイト数を表す。
+	boneNameShiftJISMaxBytes = 15
 )
 
 // TranslateTableView は名称置換タブの一覧を表す。
@@ -53,8 +59,14 @@ func (tv *TranslateTableView) Widgets() declarative.Composite {
 					{Title: tv.t(messages.LabelTableSourceName), Width: 170},
 					{Title: tv.t(messages.LabelTableJapaneseName), Width: 170},
 					{Title: tv.t(messages.LabelTableEnglishName), Width: 170},
+					{Title: tv.t(messages.LabelTableRemark), Width: 170},
 				},
 				StyleCell: func(style *walk.CellStyle) {
+					if tv.model.IsBoneNameShiftJISOverflow(style.Row()) {
+						style.TextColor = walk.RGB(255, 0, 0)
+					} else {
+						style.TextColor = walk.RGB(0, 0, 0)
+					}
 					if tv.model.Checked(style.Row()) {
 						style.BackgroundColor = walk.RGB(159, 255, 243)
 						return
@@ -229,6 +241,11 @@ func (m *TranslateNameTableModel) Value(row int, col int) interface{} {
 		return item.JapaneseNameText
 	case 6:
 		return item.EnglishNameText
+	case 7:
+		if isBoneNameShiftJISOverflow(item) {
+			return i18n.TranslateOrMark(m.translator, messages.LabelBoneNameShiftJISOverflow)
+		}
+		return ""
 	default:
 		return ""
 	}
@@ -285,6 +302,8 @@ func (m *TranslateNameTableModel) Sort(col int, order walk.SortOrder) error {
 			less = a.JapaneseNameText < b.JapaneseNameText
 		case 6:
 			less = a.EnglishNameText < b.EnglishNameText
+		case 7:
+			less = boolToInt(isBoneNameShiftJISOverflow(a)) < boolToInt(isBoneNameShiftJISOverflow(b))
 		default:
 			less = a.Number < b.Number
 		}
@@ -326,6 +345,34 @@ func (m *TranslateNameTableModel) Record(row int) *domain.TranslateNameItem {
 		return nil
 	}
 	return m.records[row]
+}
+
+// IsBoneNameShiftJISOverflow は指定行のボーン名が Shift-JIS 15byte を超えるかを返す。
+func (m *TranslateNameTableModel) IsBoneNameShiftJISOverflow(row int) bool {
+	item := m.Record(row)
+	return isBoneNameShiftJISOverflow(item)
+}
+
+// isBoneNameShiftJISOverflow はボーン名が Shift-JIS 15byte を超えるかを返す。
+func isBoneNameShiftJISOverflow(item *domain.TranslateNameItem) bool {
+	if item == nil || item.TypeKey != domain.NameTypeBone || item.JapaneseNameText == "" {
+		return false
+	}
+
+	size, err := shiftJISByteLen(item.JapaneseNameText)
+	if err != nil {
+		return false
+	}
+	return size > boneNameShiftJISMaxBytes
+}
+
+// shiftJISByteLen は文字列を Shift-JIS エンコードした時のバイト数を返す。
+func shiftJISByteLen(text string) (int, error) {
+	encoded, err := japanese.ShiftJIS.NewEncoder().Bytes([]byte(text))
+	if err != nil {
+		return 0, err
+	}
+	return len(encoded), nil
 }
 
 // boolToInt は bool を 0/1 に変換する。

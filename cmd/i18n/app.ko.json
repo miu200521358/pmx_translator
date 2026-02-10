@@ -192,6 +192,14 @@
         "translation": "원래 이름"
     },
     {
+        "id": "備考",
+        "translation": "비고"
+    },
+    {
+        "id": "ボーン名15byte超過",
+        "translation": "본 이름 15바이트 초과"
+    },
+    {
         "id": "翻訳名称",
         "translation": "번역 이름"
     },

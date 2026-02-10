@@ -192,6 +192,14 @@
         "translation": "Original Name"
     },
     {
+        "id": "備考",
+        "translation": "Remarks"
+    },
+    {
+        "id": "ボーン名15byte超過",
+        "translation": "Bone name exceeds 15 bytes"
+    },
+    {
         "id": "翻訳名称",
         "translation": "Translated Name"
     },

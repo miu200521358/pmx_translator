@@ -192,6 +192,14 @@
         "translation": "元名称"
     },
     {
+        "id": "備考",
+        "translation": "備考"
+    },
+    {
+        "id": "ボーン名15byte超過",
+        "translation": "ボーン名15byte超過"
+    },
+    {
         "id": "翻訳名称",
         "translation": "翻訳名称"
     },
